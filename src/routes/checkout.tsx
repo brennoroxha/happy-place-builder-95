@@ -59,10 +59,14 @@ function CheckoutPage() {
   const [payment] = useState("pix");
   const time = useCountdown(14 * 60 + 38);
   const [address, setAddress] = useState<null | {
-    nome: string; sobrenome: string; telefone: string;
+    nome: string; sobrenome: string; telefone: string; email: string; cpf: string;
     rua: string; numero: string; complemento?: string;
     bairro: string; cidade: string; estado: string; cep: string;
   }>(null);
+  const navigate = useNavigate();
+  const createTx = useServerFn(createKlivoTransaction);
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
 
   useEffect(() => {
     try {
