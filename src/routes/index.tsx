@@ -389,7 +389,7 @@ function ProductPage() {
             <MessageCircle className="h-5 w-5" />
             <span>Chat</span>
           </button>
-          <button className="relative grid h-10 w-10 place-items-center rounded-full border border-rose-200 bg-rose-50">
+          <button className="relative grid h-10 w-10 place-items-center rounded-lg border border-rose-200 bg-rose-50">
             <ShoppingCart className="h-5 w-5 text-rose-500" />
             <span className="absolute -top-1 -right-1 grid h-4 min-w-4 place-items-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white">+</span>
           </button>
