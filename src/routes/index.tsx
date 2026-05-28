@@ -205,7 +205,7 @@ function ProductPage() {
         <div className="px-4 pt-4">
           <div className="flex items-start justify-between">
             <div>
-              <span className="inline-block rounded bg-rose-100 px-2 py-0.5 text-[11px] font-semibold text-rose-600">PROMO 07.05</span>
+              
               <h1 className="mt-2 text-xl font-bold leading-tight">Cinta Modeladora Slim Belly — Cintura Alta</h1>
               <div className="mt-1 flex items-center gap-2 text-xs text-zinc-600">
                 <div className="flex items-center gap-0.5 text-amber-500">
