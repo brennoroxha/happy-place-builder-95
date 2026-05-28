@@ -14,21 +14,24 @@ import {
   Grid3x3,
   Ticket,
 } from "lucide-react";
+import slimBellyBege from "@/assets/slim-belly-bege.png";
+import slimBellyPreta from "@/assets/slim-belly-preta.png";
+import slimBellyVermelha from "@/assets/slim-belly-vermelha.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Jogo De Panelas — Style Cook 10 peças" },
+      { title: "Cinta Modeladora Slim Belly — Cintura Alta" },
       {
         name: "description",
         content:
-          "Conjunto de Panelas Style Cook com revestimento cerâmico, 10 peças. Frete grátis e oferta relâmpago.",
+          "Cinta Modeladora Slim Belly com cintura alta. Modela, afina e dá conforto. Disponível em 3 cores.",
       },
-      { property: "og:title", content: "Jogo De Panelas — Style Cook 10 peças" },
+      { property: "og:title", content: "Cinta Modeladora Slim Belly — Cintura Alta" },
       {
         property: "og:description",
         content:
-          "Conjunto de Panelas Style Cook com revestimento cerâmico, 10 peças. Frete grátis e oferta relâmpago.",
+          "Cinta Modeladora Slim Belly com cintura alta. Modela, afina e dá conforto.",
       },
     ],
   }),
@@ -36,27 +39,17 @@ export const Route = createFileRoute("/")({
 });
 
 const productImages = [
-  "https://http2.mlstatic.com/D_NQ_NP_2X_692916-MLB81131091254_122024-F.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_992618-MLB81131091236_122024-F.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_715968-MLB81131226166_122024-F.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_718745-MLB81131091238_122024-F.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_707644-MLB81131216544_122024-F.webp",
+  slimBellyBege,
+  slimBellyPreta,
+  slimBellyVermelha,
 ];
 
 const colorVariants = [
-  {
-    name: "Mármore",
-    img: "https://http2.mlstatic.com/D_NQ_NP_2X_689204-MLB82249899483_022025-F.webp",
-  },
-  {
-    name: "Preta",
-    img: "https://http2.mlstatic.com/D_Q_NP_785690-MLB81968522488_022025-C.webp",
-  },
-  {
-    name: "Cinza",
-    img: "https://http2.mlstatic.com/D_NQ_NP_2X_883567-MLB81968591092_022025-F.webp",
-  },
+  { name: "Bege", img: slimBellyBege },
+  { name: "Preta", img: slimBellyPreta },
+  { name: "Vermelha", img: slimBellyVermelha },
 ];
+
 
 const customerPhotos = [
   "https://http2.mlstatic.com/D_NQ_NP_2X_721323-MLA82057212384_022025-O.webp",
@@ -150,7 +143,7 @@ function ProductPage() {
         {/* Gallery */}
         <div className="relative bg-white">
           <div className="relative aspect-square w-full overflow-hidden">
-            <img src={productImages[current]} alt="Jogo De Panelas" className="h-full w-full object-contain" />
+            <img src={productImages[current]} alt="Cinta Modeladora Slim Belly" className="h-full w-full object-contain" />
             <button onClick={() => setCurrent((c) => (c - 1 + productImages.length) % productImages.length)} className="absolute left-2 top-1/2 -translate-y-1/2 grid h-9 w-9 place-items-center rounded-full bg-white/80 shadow">
               <ChevronLeft className="h-5 w-5" />
             </button>
@@ -195,7 +188,7 @@ function ProductPage() {
           <div className="flex items-start justify-between">
             <div>
               <span className="inline-block rounded bg-rose-100 px-2 py-0.5 text-[11px] font-semibold text-rose-600">PROMO 07.05</span>
-              <h1 className="mt-2 text-xl font-bold leading-tight">Jogo De Panelas</h1>
+              <h1 className="mt-2 text-xl font-bold leading-tight">Cinta Modeladora Slim Belly — Cintura Alta</h1>
               <div className="mt-1 flex items-center gap-2 text-xs text-zinc-600">
                 <div className="flex items-center gap-0.5 text-amber-500">
                   <Star className="h-3.5 w-3.5 fill-amber-500" />
@@ -314,59 +307,52 @@ function ProductPage() {
         <section className="mt-6 px-4">
           <h2 className="text-base font-bold">Sobre este produto</h2>
           <div className="mt-3 grid grid-cols-2 gap-2">
-            <img src="https://http2.mlstatic.com/D_Q_NP_2X_998146-MLA101655638867_122025-F.webp" alt="" className="w-full rounded-lg object-cover" />
-            <img src="https://http2.mlstatic.com/D_Q_NP_2X_912945-MLA101156020414_122025-F.webp" alt="" className="w-full rounded-lg object-cover" />
+            <img src={slimBellyBege} alt="Slim Belly Bege" className="w-full rounded-lg object-cover" />
+            <img src={slimBellyPreta} alt="Slim Belly Preta" className="w-full rounded-lg object-cover" />
           </div>
 
-          <h3 className="mt-5 text-lg font-bold">Conjunto de Panelas Style Cook</h3>
+          <h3 className="mt-5 text-lg font-bold">Cinta Modeladora Slim Belly</h3>
           <p className="mt-2 text-sm leading-relaxed text-zinc-700">
-            Dê um toque de sofisticação à sua cozinha com o <strong>Conjunto de Panelas Style Cook</strong>. Elegância,
-            praticidade e tecnologia se unem em um produto ideal para tornar suas experiências culinárias ainda mais
-            agradáveis e eficientes.
+            A <strong>Cinta Modeladora Slim Belly</strong> de cintura alta foi desenvolvida para modelar o abdômen,
+            afinar a cintura e dar suporte à postura. Tecido respirável com tecnologia de pontos em favo de mel para
+            conforto o dia todo, sob qualquer roupa.
           </p>
 
           <h4 className="mt-4 text-sm font-bold">✨ Características</h4>
           <ul className="mt-2 space-y-1 text-sm text-zinc-700">
-            <li>• <strong>Revestimento Cerâmico:</strong> antiaderente, fácil limpeza.</li>
-            <li>• <strong>Fundo de Indução:</strong> compatível com todos os fogões.</li>
-            <li>• <strong>Cabos Soft-Touch:</strong> conforto e segurança.</li>
-            <li>• <strong>Tampas de Vidro Temperado.</strong></li>
-            <li>• <strong>Espessura de 3 mm.</strong></li>
+            <li>• <strong>Cintura Alta:</strong> modela barriga e cintura.</li>
+            <li>• <strong>Tecnologia Favo de Mel:</strong> massagem e compressão.</li>
+            <li>• <strong>Tecido Respirável:</strong> não marca a roupa.</li>
+            <li>• <strong>Costura Sem Emenda:</strong> conforto invisível.</li>
+            <li>• <strong>Alta Compressão:</strong> efeito modelador imediato.</li>
           </ul>
 
           <h4 className="mt-4 text-sm font-bold">🔥 Benefícios</h4>
           <ul className="mt-2 space-y-1 text-sm text-zinc-700">
-            <li>• Praticidade no dia a dia</li>
-            <li>• Alta durabilidade com design elegante</li>
-            <li>• Versátil para qualquer tipo de fogão</li>
-            <li>• Economia de tempo e menos uso de óleo</li>
+            <li>• Afina a cintura instantaneamente</li>
+            <li>• Melhora a postura</li>
+            <li>• Disfarça gordurinhas localizadas</li>
+            <li>• Conforto para usar o dia todo</li>
           </ul>
 
           <h4 className="mt-4 text-sm font-bold">📦 Conteúdo da Embalagem</h4>
           <ul className="mt-2 space-y-1 text-sm text-zinc-700">
-            <li>• 2 Caçarolas com tampas</li>
-            <li>• 2 Panelas com tampas</li>
-            <li>• 2 Frigideiras</li>
-            <li>• 1 Leiteira</li>
-            <li>• 1 Colher de arroz</li>
-            <li>• 1 Colher vazada</li>
-            <li>• 1 Espátula</li>
+            <li>• 1 Cinta Modeladora Slim Belly</li>
           </ul>
 
           <div className="mt-5 rounded-xl bg-zinc-50 p-4 text-sm">
-            <div className="font-semibold text-zinc-800">Garantia do vendedor: 2 anos</div>
+            <div className="font-semibold text-zinc-800">Garantia do vendedor: 90 dias</div>
           </div>
 
           <dl className="mt-4 divide-y divide-zinc-100 text-sm">
             {[
-              ["Material", "Alumínio com revestimento cerâmico, baquelite, inox e vidro temperado"],
-              ["Espessura", "3 mm"],
-              ["Cor", "Marmol"],
-              ["Marca", "Mimo Style"],
-              ["INMETRO", "003005/2022"],
-              ["Garantia", "2 anos"],
-              ["Compatibilidade", "Fogões a gás, elétricos, vitrocerâmicos e de indução"],
-              ["Peças", "10 peças (2 caçarolas, 2 panelas, 2 frigideiras, 1 leiteira, 3 utensílios)"],
+              ["Material", "Poliamida e elastano"],
+              ["Modelo", "Cintura alta"],
+              ["Cores", "Bege, Preta e Vermelha"],
+              ["Tamanhos", "P, M, G, GG"],
+              ["Compressão", "Alta"],
+              ["Garantia", "90 dias"],
+              ["Indicação", "Uso diário, pós-parto, academia"],
             ].map(([k, v]) => (
               <div key={k} className="grid grid-cols-[120px_1fr] gap-3 py-2">
                 <dt className="text-zinc-500">{k}</dt>
