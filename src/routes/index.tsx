@@ -119,6 +119,7 @@ function useCountdown(initialSeconds: number) {
 }
 
 function ProductPage() {
+  const navigate = useNavigate();
   const [current, setCurrent] = useState(0);
   const time = useCountdown(573);
   const [pickerOpen, setPickerOpen] = useState(false);
