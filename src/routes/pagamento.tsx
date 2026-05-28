@@ -2,11 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ChevronLeft, Copy, Check, ChevronDown, Smartphone, Camera, ClipboardCopy, Clipboard } from "lucide-react";
 
-type Search = { total?: number };
+type Search = { total?: number; code?: string; hash?: string };
 
 export const Route = createFileRoute("/pagamento")({
   validateSearch: (s: Record<string, unknown>): Search => ({
     total: typeof s.total === "number" ? s.total : Number(s.total) || undefined,
+    code: typeof s.code === "string" ? s.code : undefined,
+    hash: typeof s.hash === "string" ? s.hash : undefined,
   }),
   head: () => ({
     meta: [
@@ -17,8 +19,7 @@ export const Route = createFileRoute("/pagamento")({
   component: PaymentPage,
 });
 
-const PIX_CODE =
-  "00020101021226820014br.gov.bcb.pix2560pix.stone.com.br/pix/v2/ab4f06ef-a673-4996-82dd-1ebf80a70fb65204000053039865406169.805802BR5925PagarMe Instituicao De P6014RIO DE JANEIRO62290525eed18b5fc5a2a0e463064d0296304D485";
+const FALLBACK_PIX = "";
 
 const brl = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
