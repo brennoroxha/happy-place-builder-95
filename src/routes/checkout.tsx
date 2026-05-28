@@ -75,6 +75,8 @@ function CheckoutPage() {
     try {
       const raw = localStorage.getItem("slimbelly:address");
       if (raw) setAddress(JSON.parse(raw));
+      const p = localStorage.getItem("slimbelly:provider");
+      if (p === "klivopay" || p === "freepay") setProvider(p);
     } catch {}
   }, []);
 
