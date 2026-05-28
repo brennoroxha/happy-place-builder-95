@@ -17,6 +17,9 @@ import {
 import slimBellyBege from "@/assets/slim-belly-bege.png";
 import slimBellyPreta from "@/assets/slim-belly-preta.png";
 import slimBellyVermelha from "@/assets/slim-belly-vermelha.png";
+import slimBellyCostas from "@/assets/slim-belly-costas.png";
+import slimBellyPretaUso from "@/assets/slim-belly-preta-uso.png";
+import slimBellyBegeUso from "@/assets/slim-belly-bege-uso.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -42,6 +45,9 @@ const productImages = [
   slimBellyBege,
   slimBellyPreta,
   slimBellyVermelha,
+  slimBellyPretaUso,
+  slimBellyBegeUso,
+  slimBellyCostas,
 ];
 
 const colorVariants = [
