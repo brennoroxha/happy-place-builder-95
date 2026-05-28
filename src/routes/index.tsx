@@ -399,10 +399,7 @@ function ProductPage() {
             </svg>
           </button>
           <button
-            onClick={() => {
-              if (!selectedColor || !selectedSize) { setPickerOpen(true); return; }
-              navigate({ to: "/checkout" });
-            }}
+            onClick={() => navigate({ to: "/checkout" })}
             className="flex flex-1 flex-col items-center justify-center rounded-lg bg-rose-500 px-3 py-2 text-white shadow"
           >
             <span className="text-base font-bold leading-tight">R$ 59,90</span>
