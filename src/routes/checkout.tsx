@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { createKlivoTransaction } from "@/lib/klivopay.functions";
+import { createFreepayTransaction } from "@/lib/freepay.functions";
 import { ChevronLeft, ChevronRight, MapPin, Plus, Truck, Ticket, Shield, RefreshCw, Lock, Smile } from "lucide-react";
 import slimBellyBege from "@/assets/slim-belly-bege.png";
 import slimBellyPreta from "@/assets/slim-belly-preta.png";
@@ -64,14 +65,18 @@ function CheckoutPage() {
     bairro: string; cidade: string; estado: string; cep: string;
   }>(null);
   const navigate = useNavigate();
-  const createTx = useServerFn(createKlivoTransaction);
+  const klivo = useServerFn(createKlivoTransaction);
+  const freepay = useServerFn(createFreepayTransaction);
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
+  const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem("slimbelly:address");
       if (raw) setAddress(JSON.parse(raw));
+      const p = localStorage.getItem("slimbelly:provider");
+      if (p === "klivopay" || p === "freepay") setProvider(p);
     } catch {}
   }, []);
 
@@ -308,7 +313,8 @@ function CheckoutPage() {
               try {
                 const phone = address.telefone.replace(/\D/g, "").replace(/^55/, "");
                 const document = address.cpf.replace(/\D/g, "");
-                const res = await createTx({
+                const fn = provider === "freepay" ? freepay : klivo;
+                const res = await fn({
                   data: {
                     amount: Math.round(total * 100),
                     customer: {
