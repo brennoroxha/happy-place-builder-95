@@ -50,6 +50,8 @@ const brl = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 function CheckoutPage() {
+  const { color, size } = Route.useSearch();
+  const productImage = (color && colorImages[color]) || slimBellyBege;
   const [qty, setQty] = useState(2);
   const [shipping, setShipping] = useState("free");
   const [payment] = useState("pix");
