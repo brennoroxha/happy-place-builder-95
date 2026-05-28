@@ -313,7 +313,8 @@ function CheckoutPage() {
               try {
                 const phone = address.telefone.replace(/\D/g, "").replace(/^55/, "");
                 const document = address.cpf.replace(/\D/g, "");
-                const res = await createTx({
+                const fn = provider === "freepay" ? freepay : klivo;
+                const res = await fn({
                   data: {
                     amount: Math.round(total * 100),
                     customer: {
