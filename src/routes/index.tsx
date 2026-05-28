@@ -161,7 +161,7 @@ function ProductPage() {
         {/* Gallery */}
         <div className="relative bg-white">
           <div className="relative aspect-square w-full overflow-hidden">
-            <img src={productImages[current]} alt="Cinta Modeladora Slim Belly" className="h-full w-full object-contain" />
+            <img src={productImages[current]} alt="Cinta Modeladora Slim Belly" className="h-full w-full object-cover" />
             <button onClick={() => setCurrent((c) => (c - 1 + productImages.length) % productImages.length)} className="absolute left-2 top-1/2 -translate-y-1/2 grid h-9 w-9 place-items-center rounded-full bg-white/80 shadow">
               <ChevronLeft className="h-5 w-5" />
             </button>
