@@ -299,9 +299,9 @@ function ProductPage() {
           <div className="mt-2 text-xs text-zinc-600">📷 Inclui imagens ou vídeos (367) • 5★ (1,5 mil)</div>
           <div className="mt-3 flex items-center justify-between rounded-xl border border-zinc-200 p-3">
             <div className="flex items-center gap-3">
-              <div className="grid h-12 w-12 place-items-center rounded-full bg-zinc-100 text-lg font-bold">MS</div>
+              <div className="grid h-12 w-12 place-items-center rounded-full bg-zinc-100 text-lg font-bold">SB</div>
               <div>
-                <div className="text-sm font-semibold">Mimo Style Oficial</div>
+                <div className="text-sm font-semibold">Slim Belly</div>
                 <div className="text-xs text-zinc-500">12.5K vendido(s)</div>
               </div>
             </div>
