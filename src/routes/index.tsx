@@ -17,6 +17,9 @@ import {
 import slimBellyBege from "@/assets/slim-belly-bege.png";
 import slimBellyPreta from "@/assets/slim-belly-preta.png";
 import slimBellyVermelha from "@/assets/slim-belly-vermelha.png";
+import slimBellyCostas from "@/assets/slim-belly-costas.png";
+import slimBellyPretaUso from "@/assets/slim-belly-preta-uso.png";
+import slimBellyBegeUso from "@/assets/slim-belly-bege-uso.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -42,6 +45,9 @@ const productImages = [
   slimBellyBege,
   slimBellyPreta,
   slimBellyVermelha,
+  slimBellyPretaUso,
+  slimBellyBegeUso,
+  slimBellyCostas,
 ];
 
 const colorVariants = [
@@ -311,8 +317,10 @@ function ProductPage() {
         <section className="mt-6 px-4">
           <h2 className="text-base font-bold">Sobre este produto</h2>
           <div className="mt-3 grid grid-cols-2 gap-2">
+            <img src={slimBellyPretaUso} alt="Slim Belly Preta em uso" className="w-full rounded-lg object-cover" />
+            <img src={slimBellyBegeUso} alt="Slim Belly Bege em uso" className="w-full rounded-lg object-cover" />
+            <img src={slimBellyCostas} alt="Slim Belly visão traseira" className="w-full rounded-lg object-cover" />
             <img src={slimBellyBege} alt="Slim Belly Bege" className="w-full rounded-lg object-cover" />
-            <img src={slimBellyPreta} alt="Slim Belly Preta" className="w-full rounded-lg object-cover" />
           </div>
 
           <h3 className="mt-5 text-lg font-bold">Cinta Modeladora Slim Belly</h3>
