@@ -177,10 +177,10 @@ function ProductPage() {
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <span className="rounded-full bg-white/25 px-2 py-0.5 text-xs font-semibold">76%</span>
-                <span className="text-2xl font-bold">R$ 61,52</span>
+                <span className="rounded-full bg-white/25 px-2 py-0.5 text-xs font-semibold">67%</span>
+                <span className="text-2xl font-bold">R$ 59,90</span>
               </div>
-              <div className="mt-1 text-xs line-through opacity-80">R$ 548,52</div>
+              <div className="mt-1 text-xs line-through opacity-80">R$ 179,90</div>
             </div>
             <div className="text-right">
               <div className="flex items-center justify-end gap-1 text-sm font-semibold">
@@ -196,7 +196,7 @@ function ProductPage() {
         <button className="mx-3 mt-3 flex w-[calc(100%-1.5rem)] items-center justify-between rounded-xl bg-rose-50 px-3 py-3 text-rose-600">
           <div className="flex items-center gap-2">
             <Ticket className="h-5 w-5" />
-            <span className="text-sm font-semibold">Economize R$ 486,49</span>
+            <span className="text-sm font-semibold">Economize R$ 120,00</span>
           </div>
           <ChevronRight className="h-4 w-4" />
         </button>
@@ -399,9 +399,9 @@ function ProductPage() {
               <img src={productImages[current]} alt="" className="h-16 w-16 rounded-lg border border-zinc-200 object-cover" />
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-xl font-bold text-rose-500">R$ 61,52</span>
-                  <span className="text-xs text-zinc-400 line-through">R$ 548,52</span>
-                  <span className="rounded bg-rose-100 px-1.5 py-0.5 text-[11px] font-semibold text-rose-600">76%</span>
+                  <span className="text-xl font-bold text-rose-500">R$ 59,90</span>
+                  <span className="text-xs text-zinc-400 line-through">R$ 179,90</span>
+                  <span className="rounded bg-rose-100 px-1.5 py-0.5 text-[11px] font-semibold text-rose-600">67%</span>
                 </div>
                 <span className="mt-1 inline-block rounded bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">Frete grátis</span>
               </div>
