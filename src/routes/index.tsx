@@ -126,6 +126,13 @@ function useCountdown(initialSeconds: number) {
 function ProductPage() {
   const [current, setCurrent] = useState(0);
   const time = useCountdown(573);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const selectionLabel =
+    selectedColor && selectedSize
+      ? `${selectedColor}, ${selectedSize}`
+      : "Selecionar opções";
 
   return (
     <div className="min-h-screen bg-white text-zinc-900">
@@ -217,17 +224,12 @@ function ProductPage() {
           <ChevronRight className="h-4 w-4 text-zinc-400" />
         </button>
 
-        {/* Colors */}
-        <button className="mx-3 mt-3 flex w-[calc(100%-1.5rem)] items-center justify-between rounded-xl border border-zinc-200 px-3 py-3">
-          <div className="flex items-center gap-2">
-            <Grid3x3 className="h-5 w-5 text-zinc-500" />
-            <div className="flex -space-x-1">
-              {colorVariants.map((c) => (
-                <img key={c.name} src={c.img} alt={c.name} className="h-9 w-9 rounded-md border-2 border-white object-cover ring-1 ring-zinc-200" />
-              ))}
-            </div>
-            <span className="ml-2 text-sm text-zinc-700">3 opções dispo…</span>
-          </div>
+        {/* Selecionar opções */}
+        <button
+          onClick={() => setPickerOpen(true)}
+          className="mx-3 mt-3 flex w-[calc(100%-1.5rem)] items-center justify-between rounded-xl border border-zinc-200 px-3 py-3"
+        >
+          <span className="text-sm font-bold text-zinc-900">{selectionLabel}</span>
           <ChevronRight className="h-4 w-4 text-zinc-400" />
         </button>
 
