@@ -68,7 +68,7 @@ export const createFreepayTransaction = createServerFn({ method: "POST" })
             },
             items,
             pix: { expires_in_days: 1 },
-            metadata: JSON.stringify({ provider_name: "checkout" }),
+            metadata: { provider_name: "checkout" },
           }),
         },
       );
