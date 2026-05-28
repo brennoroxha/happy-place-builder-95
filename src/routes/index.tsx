@@ -129,6 +129,13 @@ function ProductPage() {
       ? `${selectedColor}, ${selectedSize}`
       : "Selecionar opções";
 
+  const monthsAbbr = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+  const fmt = (d: Date) => `${d.getDate()} de ${monthsAbbr[d.getMonth()]}`;
+  const today = new Date();
+  const start = new Date(today); start.setDate(today.getDate() + 2);
+  const end = new Date(today); end.setDate(today.getDate() + 4);
+  const deliveryRange = `${fmt(start)} até ${fmt(end)}`;
+
   return (
     <div className="min-h-screen bg-white text-zinc-900">
       <div className="mx-auto max-w-[480px] pb-28">
@@ -219,7 +226,7 @@ function ProductPage() {
           <div className="flex items-center gap-3">
             <Truck className="h-5 w-5 text-emerald-600" />
             <div className="text-left">
-              <div className="text-sm"><span className="font-semibold text-emerald-600">Frete grátis</span> <span className="text-zinc-700">Receba de 30 de mai até 2 de jun</span></div>
+              <div className="text-sm"><span className="font-semibold text-emerald-600">Frete grátis</span> <span className="text-zinc-700">Receba de {deliveryRange}</span></div>
               <div className="mt-0.5 text-xs text-zinc-500">Taxa de envio: <span className="line-through">R$ 9,60</span></div>
             </div>
           </div>
