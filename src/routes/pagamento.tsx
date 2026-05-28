@@ -39,7 +39,7 @@ function PaymentPage() {
   const amount = total ?? 169.8;
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
-  const [qrOpen, setQrOpen] = useState(true);
+  const [qrOpen, setQrOpen] = useState(false);
   const time = useCountdown(30 * 60);
 
   useEffect(() => {
