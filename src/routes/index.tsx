@@ -11,8 +11,8 @@ import {
   Store,
   MessageCircle,
   Star,
-  Grid3x3,
   Ticket,
+  X,
 } from "lucide-react";
 import slimBellyBege from "@/assets/slim-belly-bege.png";
 import slimBellyPreta from "@/assets/slim-belly-preta.png";
@@ -49,6 +49,8 @@ const colorVariants = [
   { name: "Preta", img: slimBellyPreta },
   { name: "Vermelha", img: slimBellyVermelha },
 ];
+
+const sizes = ["P", "M", "G", "GG", "XG", "XXG", "G2"];
 
 
 const customerPhotos = [
