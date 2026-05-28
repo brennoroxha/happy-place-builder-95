@@ -373,21 +373,13 @@ function ProductPage() {
 
       {/* Bottom bar */}
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-zinc-200 bg-white">
-        <div className="mx-auto flex max-w-[480px] items-stretch gap-2 px-3 py-2">
-          <button className="flex flex-col items-center justify-center px-2 text-[11px] text-zinc-600">
-            <Store className="h-5 w-5" /> Loja
-          </button>
-          <button className="flex flex-col items-center justify-center px-2 text-[11px] text-zinc-600">
-            <MessageCircle className="h-5 w-5" /> Chat
-          </button>
-          <button className="flex-1 rounded-full border border-zinc-300 px-3 text-sm font-semibold text-zinc-800">
-            Adicionar ao carrinho
-          </button>
-          <button className="flex-1 rounded-full bg-rose-500 px-3 py-3 text-sm font-bold text-white shadow">
+        <div className="mx-auto flex max-w-[480px] px-3 py-2">
+          <button className="w-full rounded-full bg-rose-500 px-3 py-3 text-sm font-bold text-white shadow">
             Comprar Agora
           </button>
         </div>
       </div>
+
 
       {/* Bottom sheet: opções */}
       {pickerOpen && (
