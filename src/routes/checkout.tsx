@@ -293,14 +293,60 @@ function CheckoutPage() {
             <span className="text-sm font-bold">Total ({qty} {qty === 1 ? "item" : "itens"})</span>
             <span className="text-lg font-bold text-rose-500">{brl(total)}</span>
           </div>
-          <Link
-            to="/pagamento"
-            search={{ total }}
-            className="mt-2 block w-full rounded-lg bg-rose-500 py-3 text-center text-white shadow"
+          {payError && (
+            <div className="mt-2 rounded-md bg-rose-50 px-2 py-1 text-xs text-rose-600">{payError}</div>
+          )}
+          <button
+            disabled={paying}
+            onClick={async () => {
+              setPayError(null);
+              if (!address) {
+                setPayError("Adicione um endereço de entrega.");
+                return;
+              }
+              setPaying(true);
+              try {
+                const phone = address.telefone.replace(/\D/g, "").replace(/^55/, "");
+                const document = address.cpf.replace(/\D/g, "");
+                const res = await createTx({
+                  data: {
+                    amount: Math.round(total * 100),
+                    customer: {
+                      name: `${address.nome} ${address.sobrenome}`.trim(),
+                      email: address.email,
+                      phone,
+                      document,
+                    },
+                    cart: [
+                      {
+                        name: `Cinta Slim Belly${color ? ` - ${color}` : ""}${size ? ` ${size}` : ""}`,
+                        quantity: qty,
+                        unit_price: Math.round(UNIT_PRICE * 100),
+                      },
+                    ],
+                  },
+                });
+                if (!res.ok) {
+                  setPayError(res.error);
+                  return;
+                }
+                navigate({
+                  to: "/pagamento",
+                  search: { total, code: res.pix_copy_paste, hash: res.hash },
+                });
+              } catch (e) {
+                setPayError("Erro de conexão. Tente novamente.");
+              } finally {
+                setPaying(false);
+              }
+            }}
+            className="mt-2 block w-full rounded-lg bg-rose-500 py-3 text-center text-white shadow disabled:opacity-70"
           >
-            <div className="text-base font-bold leading-tight">Fazer Pedido</div>
+            <div className="text-base font-bold leading-tight">
+              {paying ? "Gerando pagamento..." : "Fazer Pedido"}
+            </div>
             <div className="text-[11px] leading-tight">O cupom expira em {time}</div>
-          </Link>
+          </button>
         </div>
       </div>
     </div>
