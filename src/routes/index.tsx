@@ -374,7 +374,7 @@ function ProductPage() {
       {/* Bottom bar */}
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-zinc-200 bg-white">
         <div className="mx-auto flex max-w-[480px] px-3 py-2">
-          <button className="w-full rounded-full bg-rose-500 px-3 py-3 text-sm font-bold text-white shadow">
+          <button className="w-full rounded-full bg-rose-500 px-3 py-4 text-base font-bold text-white shadow">
             Comprar Agora
           </button>
         </div>
