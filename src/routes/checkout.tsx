@@ -103,13 +103,20 @@ function CheckoutPage() {
           </div>
 
           <div className="mt-3 flex gap-3">
-            <img src={slimBellyBege} alt="" className="h-20 w-20 rounded-md object-cover" />
+            <img src={productImage} alt="" className="h-20 w-20 rounded-md object-cover" />
             <div className="flex-1">
               <div className="text-sm font-medium leading-snug">
                 Cinta Modeladora Slim Belly — Cintura Alta
               </div>
+              {(color || size) && (
+                <div className="mt-1 inline-block rounded bg-zinc-100 px-2 py-0.5 text-[11px] text-zinc-600">
+                  {[color, size].filter(Boolean).join(", ")}
+                </div>
+              )}
               <div className="mt-1 flex items-center gap-2">
                 <span className="text-base font-bold text-rose-500">{brl(UNIT_PRICE)}</span>
+                <Ticket className="h-4 w-4 text-rose-500" />
+              </div>
                 <Ticket className="h-4 w-4 text-rose-500" />
               </div>
               <div className="mt-0.5 flex items-center gap-2 text-xs">
