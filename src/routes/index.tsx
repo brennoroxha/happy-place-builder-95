@@ -238,7 +238,7 @@ function ProductPage() {
           onClick={() => setPickerOpen(true)}
           className="mx-3 mt-3 flex w-[calc(100%-1.5rem)] items-center justify-between rounded-xl border border-zinc-200 px-3 py-3"
         >
-          <span className="text-sm font-bold text-zinc-900">{selectionLabel}</span>
+          <span className="text-base font-bold text-zinc-900">{selectionLabel}</span>
           <ChevronRight className="h-4 w-4 text-zinc-400" />
         </button>
 
