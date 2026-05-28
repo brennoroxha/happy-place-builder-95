@@ -59,63 +59,37 @@ const colorVariants = [
 const sizes = ["P", "M", "G", "GG", "XG", "XXG", "G2"];
 
 
-const customerPhotos = [
-  "https://http2.mlstatic.com/D_NQ_NP_2X_721323-MLA82057212384_022025-O.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_864841-MLA82057212386_022025-O.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_852531-MLA82057202574_022025-O.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_620244-MLA81769467358_012025-O.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_733648-MLA83299364440_042025-O.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_989807-MLA82140075200_022025-O.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_973040-MLA82139913150_022025-O.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_764956-MLA82139951390_022025-O.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_881953-MLA82676151265_022025-O.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_926970-MLA82676151259_022025-O.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_615687-MLA82391316226_022025-O.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_650045-MLA82425876307_022025-O.webp",
-];
+import review1 from "@/assets/review-1.png";
+import review2 from "@/assets/review-2.png";
+import review3 from "@/assets/review-3.png";
+import review4 from "@/assets/review-4.png";
+import review5 from "@/assets/review-5.png";
+
+const customerPhotos = [review1, review2, review3, review4, review5];
 
 const reviews = [
   {
     name: "Camilla S.",
-    text: "As panelas são maravilhosas. Vieram em perfeito estado e muito bem embaladas. Ainda não as preparei para uso. Assim que usar volto para dar um melhor feedback.",
-    photos: [
-      "https://http2.mlstatic.com/D_NQ_NP_2X_721323-MLA82057212384_022025-O.webp",
-      "https://http2.mlstatic.com/D_NQ_NP_2X_864841-MLA82057212386_022025-O.webp",
-      "https://http2.mlstatic.com/D_NQ_NP_2X_852531-MLA82057202574_022025-O.webp",
-    ],
+    text: "Chegou super rápido e bem embalada. O tecido é firme, comprime bem a barriga e não marca a roupa. Estou amando!",
+    photos: [review1, review2],
   },
   {
     name: "Fernanda M.",
-    text: "Produto excelente, recomendo!",
-    photos: ["https://http2.mlstatic.com/D_NQ_NP_2X_620244-MLA81769467358_012025-O.webp"],
+    text: "Produto excelente, recomendo! Modela muito bem e é confortável pra usar o dia todo.",
+    photos: [review3],
   },
   {
     name: "Juliana R.",
-    text: "Demorei muito pra achar a cor, diz que pode em fogão de gás, porém acho que ela são para indução, não manchou no a gás… eu não tenho fogão a indução mas realmente a cor é a quantidade são perfeitas!",
-    photos: ["https://http2.mlstatic.com/D_NQ_NP_2X_733648-MLA83299364440_042025-O.webp"],
-  },
-  {
-    name: "Patrícia L.",
-    text: "Material muito bom, e são lindas também, amei!",
-    photos: [
-      "https://http2.mlstatic.com/D_NQ_NP_2X_989807-MLA82140075200_022025-O.webp",
-      "https://http2.mlstatic.com/D_NQ_NP_2X_973040-MLA82139913150_022025-O.webp",
-    ],
-  },
-  {
-    name: "Ana Clara D.",
-    text: "São maravilhosas, bem grossas e bem bonitas. A cor então é show amei amei.",
-    photos: [
-      "https://http2.mlstatic.com/D_NQ_NP_2X_881953-MLA82676151265_022025-O.webp",
-      "https://http2.mlstatic.com/D_NQ_NP_2X_926970-MLA82676151259_022025-O.webp",
-    ],
+    text: "Demorei pra achar o tamanho certo, mas vale muito a pena. A compressão é alta e o efeito favo de mel faz diferença mesmo.",
+    photos: [review4],
   },
   {
     name: "Beatriz C.",
-    text: "Lindas, chic no último!!!! Maravilhosas!!!",
-    photos: ["https://http2.mlstatic.com/D_NQ_NP_2X_650045-MLA82425876307_022025-O.webp"],
+    text: "Veio bem embalada e idêntica às fotos. Qualidade ótima pelo preço!",
+    photos: [review5],
   },
 ];
+
 
 function useCountdown(initialSeconds: number) {
   const [s, setS] = useState(initialSeconds);
