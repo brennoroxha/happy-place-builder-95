@@ -2,11 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ChevronLeft, Copy, Check, ChevronDown, Smartphone, Camera, ClipboardCopy, Clipboard } from "lucide-react";
 
-type Search = { total?: number };
+type Search = { total?: number; code?: string; hash?: string };
 
 export const Route = createFileRoute("/pagamento")({
   validateSearch: (s: Record<string, unknown>): Search => ({
     total: typeof s.total === "number" ? s.total : Number(s.total) || undefined,
+    code: typeof s.code === "string" ? s.code : undefined,
+    hash: typeof s.hash === "string" ? s.hash : undefined,
   }),
   head: () => ({
     meta: [
@@ -17,8 +19,7 @@ export const Route = createFileRoute("/pagamento")({
   component: PaymentPage,
 });
 
-const PIX_CODE =
-  "00020101021226820014br.gov.bcb.pix2560pix.stone.com.br/pix/v2/ab4f06ef-a673-4996-82dd-1ebf80a70fb65204000053039865406169.805802BR5925PagarMe Instituicao De P6014RIO DE JANEIRO62290525eed18b5fc5a2a0e463064d0296304D485";
+const FALLBACK_PIX = "";
 
 const brl = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -35,8 +36,9 @@ function useCountdown(initialSec: number) {
 }
 
 function PaymentPage() {
-  const { total } = Route.useSearch();
+  const { total, code } = Route.useSearch();
   const amount = total ?? 169.8;
+  const pixCode = code || FALLBACK_PIX;
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
@@ -57,7 +59,7 @@ function PaymentPage() {
 
   const onCopy = async () => {
     try {
-      await navigator.clipboard.writeText(PIX_CODE);
+      await navigator.clipboard.writeText(pixCode);
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {}
@@ -78,7 +80,7 @@ function PaymentPage() {
     );
   }
 
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=0&data=${encodeURIComponent(PIX_CODE)}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=0&data=${encodeURIComponent(pixCode)}`;
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
@@ -105,7 +107,7 @@ function PaymentPage() {
         <div className="mx-3 rounded-lg bg-white p-4 shadow-sm">
           <div className="text-sm font-bold">Pagamento via Pix</div>
           <div className="mt-3 break-all rounded-md bg-zinc-100 p-3 text-[11px] leading-relaxed text-zinc-700">
-            {PIX_CODE}
+            {pixCode}
           </div>
           <button
             onClick={onCopy}
