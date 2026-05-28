@@ -390,8 +390,12 @@ function ProductPage() {
             <span>Chat</span>
           </button>
           <button className="relative grid h-10 w-10 place-items-center rounded-lg border border-rose-200 bg-rose-50">
-            <ShoppingCart className="h-5 w-5 text-rose-500" />
-            <span className="absolute -top-1 -right-1 grid h-4 min-w-4 place-items-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white">+</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 text-rose-500">
+              <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H7" />
+              <circle cx="10" cy="20" r="1.2" />
+              <circle cx="17" cy="20" r="1.2" />
+              <path d="M14 2v6M11 5h6" />
+            </svg>
           </button>
           <button
             onClick={() => {
