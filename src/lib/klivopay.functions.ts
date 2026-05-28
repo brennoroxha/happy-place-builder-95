@@ -1,8 +1,26 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const OFFER_HASH = "kdgz7sbksb";
 const PRODUCT_HASH = "opez6nfwqo";
+
+const trackingSchema = z
+  .object({
+    utm_source: z.string().max(500).optional(),
+    utm_medium: z.string().max(500).optional(),
+    utm_campaign: z.string().max(500).optional(),
+    utm_content: z.string().max(500).optional(),
+    utm_term: z.string().max(500).optional(),
+    src: z.string().max(500).optional(),
+    sck: z.string().max(500).optional(),
+    utmify_pixel: z.string().max(500).optional(),
+    fbclid: z.string().max(500).optional(),
+    gclid: z.string().max(500).optional(),
+  })
+  .partial()
+  .optional();
 
 const inputSchema = z.object({
   amount: z.number().int().positive(),
@@ -21,7 +39,23 @@ const inputSchema = z.object({
       }),
     )
     .optional(),
+  tracking: trackingSchema,
 });
+
+function getClientIp(): string | null {
+  try {
+    const req = getRequest();
+    const h = req.headers;
+    return (
+      h.get("cf-connecting-ip") ||
+      h.get("x-real-ip") ||
+      (h.get("x-forwarded-for") || "").split(",")[0].trim() ||
+      null
+    );
+  } catch {
+    return null;
+  }
+}
 
 export const createKlivoTransaction = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => inputSchema.parse(input))
@@ -30,6 +64,9 @@ export const createKlivoTransaction = createServerFn({ method: "POST" })
     if (!token) {
       return { ok: false as const, error: "Pagamento não configurado." };
     }
+
+    const ip = getClientIp();
+    const tracking = data.tracking ?? {};
 
     const cart = (data.cart ?? [
       { title: "Pedido", quantity: 1, price: data.amount },
@@ -57,6 +94,8 @@ export const createKlivoTransaction = createServerFn({ method: "POST" })
               document: data.customer.document,
             },
             cart,
+            tracking,
+            metadata: { client_ip: ip, ...tracking },
           }),
         },
       );
@@ -65,7 +104,7 @@ export const createKlivoTransaction = createServerFn({ method: "POST" })
         | Record<string, unknown>
         | null;
 
-      if (!res.ok || !json || (json.success === false)) {
+      if (!res.ok || !json || json.success === false) {
         console.error("Klivopay error", res.status, json);
         return {
           ok: false as const,
@@ -81,11 +120,45 @@ export const createKlivoTransaction = createServerFn({ method: "POST" })
         return { ok: false as const, error: "Pix não retornado pela API." };
       }
 
+      const hash = String(json.hash ?? "");
+      const amountCents = Number(json.amount ?? data.amount);
+
+      // Persist initial waiting_payment record (tracking will be merged on webhook)
+      try {
+        const rawPayload = JSON.parse(
+          JSON.stringify({
+            provider: "klivopay",
+            checkout_tracking: tracking,
+            tracking,
+            metadata: { client_ip: ip },
+            customer: { ...data.customer, ip },
+            cart,
+            initial_response: json,
+          }),
+        );
+        await supabaseAdmin.from("sales").upsert(
+          {
+            transaction_hash: hash,
+            status: "waiting_payment",
+            payment_method: "pix",
+            amount_cents: amountCents,
+            customer_name: data.customer.name,
+            customer_email: data.customer.email,
+            customer_phone: data.customer.phone,
+            customer_document: data.customer.document,
+            raw_payload: rawPayload,
+          },
+          { onConflict: "transaction_hash" },
+        );
+      } catch (err) {
+        console.error("[klivopay] failed to persist sale", err);
+      }
+
       return {
         ok: true as const,
-        hash: String(json.hash ?? ""),
+        hash,
         pix_copy_paste: code,
-        amount: Number(json.amount ?? data.amount),
+        amount: amountCents,
         expires_at: null,
       };
     } catch (err) {

@@ -14,6 +14,8 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AddressRouteImport } from './routes/address'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicKlivopayWebhookRouteImport } from './routes/api/public/klivopay-webhook'
+import { Route as ApiPublicFreepayWebhookRouteImport } from './routes/api/public/freepay-webhook'
 
 const PagamentoRoute = PagamentoRouteImport.update({
   id: '/pagamento',
@@ -40,6 +42,17 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicKlivopayWebhookRoute =
+  ApiPublicKlivopayWebhookRouteImport.update({
+    id: '/api/public/klivopay-webhook',
+    path: '/api/public/klivopay-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicFreepayWebhookRoute = ApiPublicFreepayWebhookRouteImport.update({
+  id: '/api/public/freepay-webhook',
+  path: '/api/public/freepay-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +60,8 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
+  '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
+  '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +69,8 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
+  '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
+  '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +79,37 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
+  '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
+  '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/address' | '/admin' | '/checkout' | '/pagamento'
+  fullPaths:
+    | '/'
+    | '/address'
+    | '/admin'
+    | '/checkout'
+    | '/pagamento'
+    | '/api/public/freepay-webhook'
+    | '/api/public/klivopay-webhook'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/address' | '/admin' | '/checkout' | '/pagamento'
-  id: '__root__' | '/' | '/address' | '/admin' | '/checkout' | '/pagamento'
+  to:
+    | '/'
+    | '/address'
+    | '/admin'
+    | '/checkout'
+    | '/pagamento'
+    | '/api/public/freepay-webhook'
+    | '/api/public/klivopay-webhook'
+  id:
+    | '__root__'
+    | '/'
+    | '/address'
+    | '/admin'
+    | '/checkout'
+    | '/pagamento'
+    | '/api/public/freepay-webhook'
+    | '/api/public/klivopay-webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +118,8 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   CheckoutRoute: typeof CheckoutRoute
   PagamentoRoute: typeof PagamentoRoute
+  ApiPublicFreepayWebhookRoute: typeof ApiPublicFreepayWebhookRoute
+  ApiPublicKlivopayWebhookRoute: typeof ApiPublicKlivopayWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +159,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/klivopay-webhook': {
+      id: '/api/public/klivopay-webhook'
+      path: '/api/public/klivopay-webhook'
+      fullPath: '/api/public/klivopay-webhook'
+      preLoaderRoute: typeof ApiPublicKlivopayWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/freepay-webhook': {
+      id: '/api/public/freepay-webhook'
+      path: '/api/public/freepay-webhook'
+      fullPath: '/api/public/freepay-webhook'
+      preLoaderRoute: typeof ApiPublicFreepayWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +182,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   CheckoutRoute: CheckoutRoute,
   PagamentoRoute: PagamentoRoute,
+  ApiPublicFreepayWebhookRoute: ApiPublicFreepayWebhookRoute,
+  ApiPublicKlivopayWebhookRoute: ApiPublicKlivopayWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
