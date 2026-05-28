@@ -1,5 +1,23 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
+
+const trackingSchema = z
+  .object({
+    utm_source: z.string().max(500).optional(),
+    utm_medium: z.string().max(500).optional(),
+    utm_campaign: z.string().max(500).optional(),
+    utm_content: z.string().max(500).optional(),
+    utm_term: z.string().max(500).optional(),
+    src: z.string().max(500).optional(),
+    sck: z.string().max(500).optional(),
+    utmify_pixel: z.string().max(500).optional(),
+    fbclid: z.string().max(500).optional(),
+    gclid: z.string().max(500).optional(),
+  })
+  .partial()
+  .optional();
 
 const inputSchema = z.object({
   amount: z.number().int().positive(),
@@ -18,6 +36,7 @@ const inputSchema = z.object({
       }),
     )
     .optional(),
+  tracking: trackingSchema,
 });
 
 type Item = { qr_code?: string; url?: string; expiration_date?: string };
@@ -25,6 +44,21 @@ type ArrOrObj<T> = T | T[] | undefined;
 
 const pick = <T,>(v: ArrOrObj<T>): T | undefined =>
   Array.isArray(v) ? v[0] : v;
+
+function getClientIp(): string | null {
+  try {
+    const req = getRequest();
+    const h = req.headers;
+    return (
+      h.get("cf-connecting-ip") ||
+      h.get("x-real-ip") ||
+      (h.get("x-forwarded-for") || "").split(",")[0].trim() ||
+      null
+    );
+  } catch {
+    return null;
+  }
+}
 
 export const createFreepayTransaction = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => inputSchema.parse(input))
@@ -35,6 +69,9 @@ export const createFreepayTransaction = createServerFn({ method: "POST" })
       return { ok: false as const, error: "Freepay não configurado." };
     }
 
+    const ip = getClientIp();
+    const tracking = data.tracking ?? {};
+
     const items = (data.cart ?? [
       { title: "Pedido", quantity: 1, price: data.amount },
     ]).map((i) => ({
@@ -44,22 +81,19 @@ export const createFreepayTransaction = createServerFn({ method: "POST" })
       tangible: true,
     }));
 
-    const auth =
-      "Basic " + Buffer.from(`${pub}:${sec}`).toString("base64");
+    const auth = "Basic " + Buffer.from(`${pub}:${sec}`).toString("base64");
 
     try {
       const res = await fetch(
         "https://api.freepaybrasil.com/v1/payment-transaction/create",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: auth,
-          },
+          headers: { "Content-Type": "application/json", Authorization: auth },
           body: JSON.stringify({
             amount: data.amount,
             payment_method: "pix",
-            postback_url: "https://example.com/webhook",
+            postback_url:
+              "https://happy-place-builder-95.lovable.app/api/public/freepay-webhook",
             customer: {
               name: data.customer.name,
               email: data.customer.email,
@@ -68,7 +102,7 @@ export const createFreepayTransaction = createServerFn({ method: "POST" })
             },
             items,
             pix: { expires_in_days: 1 },
-            metadata: { provider_name: "checkout" },
+            metadata: { provider_name: "checkout", client_ip: ip, ...tracking },
           }),
         },
       );
@@ -97,11 +131,44 @@ export const createFreepayTransaction = createServerFn({ method: "POST" })
         return { ok: false as const, error: "Pix não retornado pela API." };
       }
 
+      const hash = String(root.id ?? "");
+      const amountCents = Number(root.amount ?? data.amount);
+
+      try {
+        const rawPayload = JSON.parse(
+          JSON.stringify({
+            provider: "freepay",
+            checkout_tracking: tracking,
+            tracking,
+            metadata: { client_ip: ip },
+            customer: { ...data.customer, ip },
+            items,
+            initial_response: json,
+          }),
+        );
+        await supabaseAdmin.from("sales").upsert(
+          {
+            transaction_hash: hash,
+            status: "waiting_payment",
+            payment_method: "pix",
+            amount_cents: amountCents,
+            customer_name: data.customer.name,
+            customer_email: data.customer.email,
+            customer_phone: data.customer.phone,
+            customer_document: data.customer.document,
+            raw_payload: rawPayload,
+          },
+          { onConflict: "transaction_hash" },
+        );
+      } catch (err) {
+        console.error("[freepay] failed to persist sale", err);
+      }
+
       return {
         ok: true as const,
-        hash: String(root.id ?? ""),
+        hash,
         pix_copy_paste: code,
-        amount: Number(root.amount ?? data.amount),
+        amount: amountCents,
         expires_at: pixObj?.expiration_date ?? null,
       };
     } catch (err) {
