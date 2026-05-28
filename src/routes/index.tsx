@@ -399,7 +399,10 @@ function ProductPage() {
             </svg>
           </button>
           <button
-            onClick={() => navigate({ to: "/checkout" })}
+            onClick={() => {
+              if (!selectedColor || !selectedSize) { setPickerOpen(true); return; }
+              navigate({ to: "/checkout", search: { color: selectedColor, size: selectedSize } });
+            }}
             className="flex flex-1 flex-col items-center justify-center rounded-lg bg-rose-500 px-3 py-2 text-white shadow"
           >
             <span className="text-base font-bold leading-tight">R$ 59,90</span>
@@ -470,7 +473,7 @@ function ProductPage() {
 
             <div className="sticky bottom-0 border-t border-zinc-100 bg-white p-3">
               <button
-                onClick={() => { setPickerOpen(false); navigate({ to: "/checkout" }); }}
+                onClick={() => { setPickerOpen(false); navigate({ to: "/checkout", search: { color: selectedColor!, size: selectedSize! } }); }}
                 className="w-full rounded-full bg-rose-500 py-3 text-sm font-bold text-white shadow disabled:opacity-50"
                 disabled={!selectedColor || !selectedSize}
               >

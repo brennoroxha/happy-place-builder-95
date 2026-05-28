@@ -2,8 +2,22 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ChevronLeft, Plus, Truck, Ticket, Shield, RefreshCw, Lock, Smile } from "lucide-react";
 import slimBellyBege from "@/assets/slim-belly-bege.png";
+import slimBellyPreta from "@/assets/slim-belly-preta.png";
+import slimBellyVermelha from "@/assets/slim-belly-vermelha.png";
+
+type CheckoutSearch = { color?: string; size?: string };
+
+const colorImages: Record<string, string> = {
+  Bege: slimBellyBege,
+  Preta: slimBellyPreta,
+  Vermelha: slimBellyVermelha,
+};
 
 export const Route = createFileRoute("/checkout")({
+  validateSearch: (search: Record<string, unknown>): CheckoutSearch => ({
+    color: typeof search.color === "string" ? search.color : undefined,
+    size: typeof search.size === "string" ? search.size : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Resumo do Pedido — Checkout" },
@@ -36,6 +50,8 @@ const brl = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 function CheckoutPage() {
+  const { color, size } = Route.useSearch();
+  const productImage = (color && colorImages[color]) || slimBellyBege;
   const [qty, setQty] = useState(2);
   const [shipping, setShipping] = useState("free");
   const [payment] = useState("pix");
@@ -87,11 +103,16 @@ function CheckoutPage() {
           </div>
 
           <div className="mt-3 flex gap-3">
-            <img src={slimBellyBege} alt="" className="h-20 w-20 rounded-md object-cover" />
+            <img src={productImage} alt="" className="h-20 w-20 rounded-md object-cover" />
             <div className="flex-1">
               <div className="text-sm font-medium leading-snug">
                 Cinta Modeladora Slim Belly — Cintura Alta
               </div>
+              {(color || size) && (
+                <div className="mt-1 inline-block rounded bg-zinc-100 px-2 py-0.5 text-[11px] text-zinc-600">
+                  {[color, size].filter(Boolean).join(", ")}
+                </div>
+              )}
               <div className="mt-1 flex items-center gap-2">
                 <span className="text-base font-bold text-rose-500">{brl(UNIT_PRICE)}</span>
                 <Ticket className="h-4 w-4 text-rose-500" />
