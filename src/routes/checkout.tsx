@@ -2,8 +2,22 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ChevronLeft, Plus, Truck, Ticket, Shield, RefreshCw, Lock, Smile } from "lucide-react";
 import slimBellyBege from "@/assets/slim-belly-bege.png";
+import slimBellyPreta from "@/assets/slim-belly-preta.png";
+import slimBellyVermelha from "@/assets/slim-belly-vermelha.png";
+
+type CheckoutSearch = { color?: string; size?: string };
+
+const colorImages: Record<string, string> = {
+  Bege: slimBellyBege,
+  Preta: slimBellyPreta,
+  Vermelha: slimBellyVermelha,
+};
 
 export const Route = createFileRoute("/checkout")({
+  validateSearch: (search: Record<string, unknown>): CheckoutSearch => ({
+    color: typeof search.color === "string" ? search.color : undefined,
+    size: typeof search.size === "string" ? search.size : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Resumo do Pedido — Checkout" },
