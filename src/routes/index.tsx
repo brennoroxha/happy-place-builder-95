@@ -196,7 +196,7 @@ function ProductPage() {
         <button className="mx-3 mt-3 flex w-[calc(100%-1.5rem)] items-center justify-between rounded-xl bg-rose-50 px-3 py-3 text-rose-600">
           <div className="flex items-center gap-2">
             <Ticket className="h-5 w-5" />
-            <span className="text-sm font-semibold">Economize R$ 486,49</span>
+            <span className="text-sm font-semibold">Economize R$ 120,00</span>
           </div>
           <ChevronRight className="h-4 w-4" />
         </button>
