@@ -380,14 +380,27 @@ function ProductPage() {
 
       {/* Bottom bar */}
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-zinc-200 bg-white">
-        <div className="mx-auto flex max-w-[480px] px-3 py-2">
+        <div className="mx-auto flex max-w-[480px] items-center gap-3 px-3 py-2">
+          <button className="flex flex-col items-center justify-center text-[11px] text-zinc-700">
+            <Store className="h-5 w-5" />
+            <span>Loja</span>
+          </button>
+          <button className="flex flex-col items-center justify-center text-[11px] text-zinc-700">
+            <MessageCircle className="h-5 w-5" />
+            <span>Chat</span>
+          </button>
+          <button className="relative flex items-center justify-center px-1">
+            <ShoppingCart className="h-6 w-6 text-rose-500" />
+            <span className="absolute -top-1 -right-0 grid h-4 w-4 place-items-center rounded-full bg-rose-500 text-[10px] font-bold text-white">+</span>
+          </button>
           <button
             onClick={() => {
               if (!selectedColor || !selectedSize) setPickerOpen(true);
             }}
-            className="w-full rounded-full bg-rose-500 px-3 py-4 text-base font-bold text-white shadow"
+            className="flex flex-1 flex-col items-center justify-center rounded-full bg-rose-500 px-3 py-2 text-white shadow"
           >
-            Comprar Agora
+            <span className="text-base font-bold leading-tight">R$ 59,90</span>
+            <span className="text-[11px] leading-tight">Comprar agora | Frete grátis</span>
           </button>
         </div>
       </div>
