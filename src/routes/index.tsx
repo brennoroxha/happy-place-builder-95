@@ -127,7 +127,7 @@ function ProductPage() {
   const selectionLabel =
     selectedColor && selectedSize
       ? `${selectedColor}, ${selectedSize}`
-      : "Selecionar opções";
+      : "Selecionar Tamanho/Cor";
 
   const monthsAbbr = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
   const fmt = (d: Date) => `${d.getDate()} de ${monthsAbbr[d.getMonth()]}`;
