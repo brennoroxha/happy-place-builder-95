@@ -11,8 +11,8 @@ import {
   Store,
   MessageCircle,
   Star,
-  Grid3x3,
   Ticket,
+  X,
 } from "lucide-react";
 import slimBellyBege from "@/assets/slim-belly-bege.png";
 import slimBellyPreta from "@/assets/slim-belly-preta.png";
@@ -49,6 +49,8 @@ const colorVariants = [
   { name: "Preta", img: slimBellyPreta },
   { name: "Vermelha", img: slimBellyVermelha },
 ];
+
+const sizes = ["P", "M", "G", "GG", "XG", "XXG", "G2"];
 
 
 const customerPhotos = [
@@ -124,6 +126,13 @@ function useCountdown(initialSeconds: number) {
 function ProductPage() {
   const [current, setCurrent] = useState(0);
   const time = useCountdown(573);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const selectionLabel =
+    selectedColor && selectedSize
+      ? `${selectedColor}, ${selectedSize}`
+      : "Selecionar opções";
 
   return (
     <div className="min-h-screen bg-white text-zinc-900">
@@ -215,17 +224,12 @@ function ProductPage() {
           <ChevronRight className="h-4 w-4 text-zinc-400" />
         </button>
 
-        {/* Colors */}
-        <button className="mx-3 mt-3 flex w-[calc(100%-1.5rem)] items-center justify-between rounded-xl border border-zinc-200 px-3 py-3">
-          <div className="flex items-center gap-2">
-            <Grid3x3 className="h-5 w-5 text-zinc-500" />
-            <div className="flex -space-x-1">
-              {colorVariants.map((c) => (
-                <img key={c.name} src={c.img} alt={c.name} className="h-9 w-9 rounded-md border-2 border-white object-cover ring-1 ring-zinc-200" />
-              ))}
-            </div>
-            <span className="ml-2 text-sm text-zinc-700">3 opções dispo…</span>
-          </div>
+        {/* Selecionar opções */}
+        <button
+          onClick={() => setPickerOpen(true)}
+          className="mx-3 mt-3 flex w-[calc(100%-1.5rem)] items-center justify-between rounded-xl border border-zinc-200 px-3 py-3"
+        >
+          <span className="text-sm font-bold text-zinc-900">{selectionLabel}</span>
           <ChevronRight className="h-4 w-4 text-zinc-400" />
         </button>
 
@@ -380,6 +384,78 @@ function ProductPage() {
           </button>
         </div>
       </div>
+
+      {/* Bottom sheet: opções */}
+      {pickerOpen && (
+        <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/50" onClick={() => setPickerOpen(false)}>
+          <div
+            className="w-full max-w-[480px] max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start gap-3 border-b border-zinc-100 p-4">
+              <img src={productImages[current]} alt="" className="h-16 w-16 rounded-lg border border-zinc-200 object-cover" />
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl font-bold text-rose-500">R$ 61,52</span>
+                  <span className="text-xs text-zinc-400 line-through">R$ 548,52</span>
+                  <span className="rounded bg-rose-100 px-1.5 py-0.5 text-[11px] font-semibold text-rose-600">76%</span>
+                </div>
+                <span className="mt-1 inline-block rounded bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">Frete grátis</span>
+              </div>
+              <button onClick={() => setPickerOpen(false)} className="p-1 text-zinc-500"><X className="h-5 w-5" /></button>
+            </div>
+
+            <div className="p-4">
+              <div className="text-sm font-bold">
+                Cor: <span className="font-normal text-zinc-600">{selectedColor ?? "Selecione"}</span>
+              </div>
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                {colorVariants.map((c, i) => {
+                  const active = selectedColor === c.name;
+                  return (
+                    <button
+                      key={c.name}
+                      onClick={() => { setSelectedColor(c.name); setCurrent(i); }}
+                      className={`flex flex-col items-center rounded-xl border p-2 ${active ? "border-rose-500 ring-2 ring-rose-200" : "border-zinc-200"}`}
+                    >
+                      <img src={c.img} alt={c.name} className="aspect-square w-full rounded-md object-cover" />
+                      <span className="mt-1.5 text-xs text-zinc-700">{c.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="mt-5 text-sm font-bold">
+                Tamanho: <span className="font-normal text-zinc-600">{selectedSize ?? "Selecione"}</span>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {sizes.map((s) => {
+                  const active = selectedSize === s;
+                  return (
+                    <button
+                      key={s}
+                      onClick={() => setSelectedSize(s)}
+                      className={`min-w-[52px] rounded-lg border px-4 py-2 text-sm font-semibold ${active ? "border-rose-500 bg-rose-50 text-rose-600" : "border-zinc-300 text-zinc-700"}`}
+                    >
+                      {s}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="sticky bottom-0 border-t border-zinc-100 bg-white p-3">
+              <button
+                onClick={() => setPickerOpen(false)}
+                className="w-full rounded-full bg-rose-500 py-3 text-sm font-bold text-white shadow disabled:opacity-50"
+                disabled={!selectedColor || !selectedSize}
+              >
+                Comprar Agora
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
