@@ -394,7 +394,7 @@ function ProductPage() {
               <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H7" />
               <circle cx="10" cy="20" r="1.2" />
               <circle cx="17" cy="20" r="1.2" />
-              <path d="M14 2v6M11 5h6" />
+              <path d="M14 0v6M11 3h6" />
             </svg>
           </button>
           <button
