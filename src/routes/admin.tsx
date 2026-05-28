@@ -201,6 +201,18 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
             <ChevronLeft className="h-6 w-6" />
           </Link>
           <h1 className="text-base font-bold">Admin</h1>
+          <button
+            onClick={() => {
+              try {
+                sessionStorage.removeItem(AUTH_KEY);
+              } catch {}
+              onLogout();
+            }}
+            className="absolute right-3 flex items-center gap-1 p-1 text-xs font-bold text-zinc-600"
+            title="Sair"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
         </header>
 
         {/* Provedor */}
