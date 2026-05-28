@@ -473,7 +473,7 @@ function ProductPage() {
 
             <div className="sticky bottom-0 border-t border-zinc-100 bg-white p-3">
               <button
-                onClick={() => setPickerOpen(false)}
+                onClick={() => { setPickerOpen(false); navigate({ to: "/checkout" }); }}
                 className="w-full rounded-full bg-rose-500 py-3 text-sm font-bold text-white shadow disabled:opacity-50"
                 disabled={!selectedColor || !selectedSize}
               >
