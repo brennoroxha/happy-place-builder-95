@@ -129,6 +129,13 @@ function ProductPage() {
       ? `${selectedColor}, ${selectedSize}`
       : "Selecionar opções";
 
+  const monthsAbbr = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+  const fmt = (d: Date) => `${d.getDate()} de ${monthsAbbr[d.getMonth()]}`;
+  const today = new Date();
+  const start = new Date(today); start.setDate(today.getDate() + 2);
+  const end = new Date(today); end.setDate(today.getDate() + 4);
+  const deliveryRange = `${fmt(start)} até ${fmt(end)}`;
+
   return (
     <div className="min-h-screen bg-white text-zinc-900">
       <div className="mx-auto max-w-[480px] pb-28">
