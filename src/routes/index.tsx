@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   ChevronLeft,
@@ -119,6 +119,7 @@ function useCountdown(initialSeconds: number) {
 }
 
 function ProductPage() {
+  const navigate = useNavigate();
   const [current, setCurrent] = useState(0);
   const time = useCountdown(573);
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -399,7 +400,8 @@ function ProductPage() {
           </button>
           <button
             onClick={() => {
-              if (!selectedColor || !selectedSize) setPickerOpen(true);
+              if (!selectedColor || !selectedSize) { setPickerOpen(true); return; }
+              navigate({ to: "/checkout" });
             }}
             className="flex flex-1 flex-col items-center justify-center rounded-lg bg-rose-500 px-3 py-2 text-white shadow"
           >
@@ -471,7 +473,7 @@ function ProductPage() {
 
             <div className="sticky bottom-0 border-t border-zinc-100 bg-white p-3">
               <button
-                onClick={() => setPickerOpen(false)}
+                onClick={() => { setPickerOpen(false); navigate({ to: "/checkout" }); }}
                 className="w-full rounded-full bg-rose-500 py-3 text-sm font-bold text-white shadow disabled:opacity-50"
                 disabled={!selectedColor || !selectedSize}
               >
