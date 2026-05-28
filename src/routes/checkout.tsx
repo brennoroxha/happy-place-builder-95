@@ -83,9 +83,9 @@ function CheckoutPage() {
 
         {/* Endereço e CPF */}
         <div className="space-y-2 p-3">
-          <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-100 px-4 py-3 text-sm font-bold">
+          <Link to="/address" className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-100 px-4 py-3 text-sm font-bold">
             <Plus className="h-4 w-4" /> Adicionar endereço de entrega
-          </button>
+          </Link>
           <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-100 px-4 py-3 text-sm font-bold">
             <Plus className="h-4 w-4" /> Adicionar CPF
           </button>
