@@ -155,7 +155,7 @@ const fmtDate = (iso: string) => {
 const fmtTime = (iso: string) =>
   new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
-function AdminPage() {
+function AdminPage({ onLogout }: { onLogout: () => void }) {
   const [provider, setProvider] = useState<Provider>("klivopay");
   const [saved, setSaved] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
