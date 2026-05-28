@@ -95,9 +95,27 @@ function CheckoutPage() {
 
         {/* Endereço e CPF */}
         <div className="space-y-2 p-3">
-          <Link to="/address" className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-100 px-4 py-3 text-sm font-bold">
-            <Plus className="h-4 w-4" /> Adicionar endereço de entrega
-          </Link>
+          {address ? (
+            <Link to="/address" className="block w-full rounded-lg bg-white px-4 py-3 shadow-sm">
+              <div className="flex items-start gap-2">
+                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-zinc-700" />
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-bold leading-tight">
+                    {address.nome} {address.sobrenome}, {address.telefone}
+                  </div>
+                  <div className="mt-1 text-xs text-zinc-600 leading-snug">
+                    {address.rua}, {address.numero}
+                    {address.complemento ? `, ${address.complemento}` : ""}, {address.bairro}, {address.cidade}, {address.estado}, {address.cep}
+                  </div>
+                </div>
+                <ChevronRight className="mt-1 h-5 w-5 shrink-0 text-zinc-400" />
+              </div>
+            </Link>
+          ) : (
+            <Link to="/address" className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-100 px-4 py-3 text-sm font-bold">
+              <Plus className="h-4 w-4" /> Adicionar endereço de entrega
+            </Link>
+          )}
           <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-100 px-4 py-3 text-sm font-bold">
             <Plus className="h-4 w-4" /> Adicionar CPF
           </button>
