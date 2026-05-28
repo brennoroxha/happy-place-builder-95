@@ -161,8 +161,21 @@ function ProductPage() {
 
         {/* Gallery */}
         <div className="relative bg-white">
-          <div className="relative aspect-square w-full overflow-hidden">
-            <img src={productImages[current]} alt="Cinta Modeladora Slim Belly" className="h-full w-full object-cover" />
+          <div
+            className="relative aspect-square w-full overflow-hidden touch-pan-y"
+            onTouchStart={(e) => { (e.currentTarget as any)._tx = e.touches[0].clientX; }}
+            onTouchEnd={(e) => {
+              const start = (e.currentTarget as any)._tx as number | undefined;
+              if (start == null) return;
+              const dx = e.changedTouches[0].clientX - start;
+              if (Math.abs(dx) > 40) {
+                setCurrent((c) => dx < 0
+                  ? (c + 1) % productImages.length
+                  : (c - 1 + productImages.length) % productImages.length);
+              }
+            }}
+          >
+            <img src={productImages[current]} alt="Cinta Modeladora Slim Belly" draggable={false} className="h-full w-full object-cover select-none" />
             <button onClick={() => setCurrent((c) => (c - 1 + productImages.length) % productImages.length)} className="absolute left-2 top-1/2 -translate-y-1/2 grid h-9 w-9 place-items-center rounded-full bg-white/80 shadow">
               <ChevronLeft className="h-5 w-5" />
             </button>
