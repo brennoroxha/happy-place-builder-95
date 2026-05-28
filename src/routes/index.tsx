@@ -134,7 +134,14 @@ function ProductPage() {
       <div className="mx-auto max-w-[480px] pb-28">
         {/* Header */}
         <header className="sticky top-0 z-20 flex items-center justify-between bg-white/95 px-4 py-3 backdrop-blur border-b border-zinc-100">
-          <button className="p-1"><ChevronLeft className="h-6 w-6" /></button>
+          <div className="flex items-center gap-2">
+            <button className="p-1"><ChevronLeft className="h-6 w-6" /></button>
+            <img
+              src="https://sf16-website.neutral.ttwstatic.com/obj/tiktok_web_static/i18n_ecom_fe/tiktok_shop_web_mono/packages/apps/pdp_h5/static/image/tts-logo-light.28ce4ad8.png"
+              alt="TikTok Shop"
+              className="h-6 w-auto"
+            />
+          </div>
           <div className="flex items-center gap-4">
             <Share2 className="h-5 w-5" />
             <div className="relative">
