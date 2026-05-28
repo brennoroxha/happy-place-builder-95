@@ -56,6 +56,18 @@ function CheckoutPage() {
   const [shipping, setShipping] = useState("free");
   const [payment] = useState("pix");
   const time = useCountdown(14 * 60 + 38);
+  const [address, setAddress] = useState<null | {
+    nome: string; sobrenome: string; telefone: string;
+    rua: string; numero: string; complemento?: string;
+    bairro: string; cidade: string; estado: string; cep: string;
+  }>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("slimbelly:address");
+      if (raw) setAddress(JSON.parse(raw));
+    } catch {}
+  }, []);
 
   const subtotal = ORIGINAL_PRICE * qty;
   const discounted = UNIT_PRICE * qty;
