@@ -125,6 +125,17 @@ export const createKlivoTransaction = createServerFn({ method: "POST" })
 
       // Persist initial waiting_payment record (tracking will be merged on webhook)
       try {
+        const rawPayload = JSON.parse(
+          JSON.stringify({
+            provider: "klivopay",
+            checkout_tracking: tracking,
+            tracking,
+            metadata: { client_ip: ip },
+            customer: { ...data.customer, ip },
+            cart,
+            initial_response: json,
+          }),
+        );
         await supabaseAdmin.from("sales").upsert(
           {
             transaction_hash: hash,
@@ -135,15 +146,7 @@ export const createKlivoTransaction = createServerFn({ method: "POST" })
             customer_email: data.customer.email,
             customer_phone: data.customer.phone,
             customer_document: data.customer.document,
-            raw_payload: {
-              provider: "klivopay",
-              checkout_tracking: tracking,
-              tracking,
-              metadata: { client_ip: ip },
-              customer: { ...data.customer, ip },
-              cart,
-              initial_response: json,
-            },
+            raw_payload: rawPayload,
           },
           { onConflict: "transaction_hash" },
         );
