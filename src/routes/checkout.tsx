@@ -287,10 +287,14 @@ function CheckoutPage() {
             <span className="text-sm font-bold">Total ({qty} {qty === 1 ? "item" : "itens"})</span>
             <span className="text-lg font-bold text-rose-500">{brl(total)}</span>
           </div>
-          <button className="mt-2 w-full rounded-lg bg-rose-500 py-3 text-white shadow">
+          <Link
+            to="/pagamento"
+            search={{ total }}
+            className="mt-2 block w-full rounded-lg bg-rose-500 py-3 text-center text-white shadow"
+          >
             <div className="text-base font-bold leading-tight">Fazer Pedido</div>
             <div className="text-[11px] leading-tight">O cupom expira em {time}</div>
-          </button>
+          </Link>
         </div>
       </div>
     </div>
