@@ -64,31 +64,42 @@ import review2 from "@/assets/review-2.png";
 import review3 from "@/assets/review-3.png";
 import review4 from "@/assets/review-4.png";
 import review5 from "@/assets/review-5.png";
+import review6 from "@/assets/review-6.png";
+import review7 from "@/assets/review-7.png";
+import review8 from "@/assets/review-8.png";
+import review9 from "@/assets/review-9.png";
+import review10 from "@/assets/review-10.png";
+import review11 from "@/assets/review-11.jpg";
+import review12 from "@/assets/review-12.jpg";
 
-const customerPhotos = [review1, review2, review3, review4, review5];
+const customerPhotos = [
+  review1, review2, review3, review4, review5, review6,
+  review7, review8, review9, review10, review11, review12,
+];
 
 const reviews = [
   {
     name: "Camilla S.",
     text: "Chegou super rápido e bem embalada. O tecido é firme, comprime bem a barriga e não marca a roupa. Estou amando!",
-    photos: [review1, review2],
+    photos: [review1, review2, review3],
   },
   {
     name: "Fernanda M.",
-    text: "Produto excelente, recomendo! Modela muito bem e é confortável pra usar o dia todo.",
-    photos: [review3],
+    text: "Produto excelente, recomendo! Modela muito bem e é super confortável pra usar o dia todo, mesmo no calor.",
+    photos: [review4, review5, review6],
   },
   {
     name: "Juliana R.",
     text: "Demorei pra achar o tamanho certo, mas vale muito a pena. A compressão é alta e o efeito favo de mel faz diferença mesmo.",
-    photos: [review4],
+    photos: [review7, review8, review9],
   },
   {
     name: "Beatriz C.",
-    text: "Veio bem embalada e idêntica às fotos. Qualidade ótima pelo preço!",
-    photos: [review5],
+    text: "Veio bem embalada e idêntica às fotos. Qualidade ótima pelo preço, já comprei outra cor!",
+    photos: [review10, review11, review12],
   },
 ];
+
 
 
 function useCountdown(initialSeconds: number) {
