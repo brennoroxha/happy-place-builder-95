@@ -178,7 +178,7 @@ function ProductPage() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="rounded-full bg-white/25 px-2 py-0.5 text-xs font-semibold">67%</span>
-                <span className="text-2xl font-bold">R$ 59,90</span>
+                <span className="text-3xl font-bold">R$ 59,90</span>
               </div>
               <div className="mt-1 text-xs line-through opacity-80">R$ 179,90</div>
             </div>
