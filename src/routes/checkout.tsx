@@ -116,9 +116,6 @@ function CheckoutPage() {
               <Plus className="h-4 w-4" /> Adicionar endereço de entrega
             </Link>
           )}
-          <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-100 px-4 py-3 text-sm font-bold">
-            <Plus className="h-4 w-4" /> Adicionar CPF
-          </button>
         </div>
 
         {/* Linha decorativa */}
