@@ -400,7 +400,8 @@ function ProductPage() {
           </button>
           <button
             onClick={() => {
-              if (!selectedColor || !selectedSize) setPickerOpen(true);
+              if (!selectedColor || !selectedSize) { setPickerOpen(true); return; }
+              navigate({ to: "/checkout" });
             }}
             className="flex flex-1 flex-col items-center justify-center rounded-lg bg-rose-500 px-3 py-2 text-white shadow"
           >
