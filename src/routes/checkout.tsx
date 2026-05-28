@@ -65,9 +65,11 @@ function CheckoutPage() {
     bairro: string; cidade: string; estado: string; cep: string;
   }>(null);
   const navigate = useNavigate();
-  const createTx = useServerFn(createKlivoTransaction);
+  const klivo = useServerFn(createKlivoTransaction);
+  const freepay = useServerFn(createFreepayTransaction);
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
+  const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
 
   useEffect(() => {
     try {
