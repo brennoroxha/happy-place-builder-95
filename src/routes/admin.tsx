@@ -26,8 +26,110 @@ export const Route = createFileRoute("/admin")({
       { name: "description", content: "Escolha o gateway de pagamento." },
     ],
   }),
-  component: AdminPage,
+  component: AdminGate,
 });
+
+const ADMIN_EMAIL = "admin@gmail.com";
+const ADMIN_PASSWORD = "g!8594221G";
+const AUTH_KEY = "slimbelly:admin-auth";
+
+function AdminGate() {
+  const [authed, setAuthed] = useState(false);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    try {
+      setAuthed(sessionStorage.getItem(AUTH_KEY) === "1");
+    } catch {}
+    setReady(true);
+  }, []);
+
+  if (!ready) return null;
+  if (!authed) return <LoginScreen onSuccess={() => setAuthed(true)} />;
+  return <AdminPage onLogout={() => setAuthed(false)} />;
+}
+
+function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    if (
+      email.trim().toLowerCase() === ADMIN_EMAIL &&
+      password === ADMIN_PASSWORD
+    ) {
+      try {
+        sessionStorage.setItem(AUTH_KEY, "1");
+      } catch {}
+      onSuccess();
+    } else {
+      setError("E-mail ou senha inválidos.");
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-zinc-50 text-zinc-900">
+      <div className="mx-auto max-w-[420px] px-4 pt-20">
+        <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-rose-100">
+            <Lock className="h-6 w-6 text-rose-500" />
+          </div>
+          <h1 className="mt-4 text-center text-lg font-extrabold">
+            Acesso restrito
+          </h1>
+          <p className="mt-1 text-center text-xs text-zinc-500">
+            Entre com suas credenciais de administrador.
+          </p>
+
+          <form onSubmit={submit} className="mt-5 space-y-3">
+            <div>
+              <label className="text-xs font-bold text-zinc-700">E-mail</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                required
+                className="mt-1 w-full rounded-lg border border-zinc-200 px-3 py-2.5 text-sm outline-none focus:border-rose-500"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-zinc-700">Senha</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                required
+                className="mt-1 w-full rounded-lg border border-zinc-200 px-3 py-2.5 text-sm outline-none focus:border-rose-500"
+              />
+            </div>
+            {error && (
+              <div className="rounded-md bg-rose-50 px-2 py-1 text-xs text-rose-600">
+                {error}
+              </div>
+            )}
+            <button
+              type="submit"
+              className="w-full rounded-lg bg-rose-500 py-3 text-sm font-bold text-white shadow"
+            >
+              Entrar
+            </button>
+          </form>
+
+          <div className="mt-4 text-center">
+            <Link to="/" className="text-xs text-zinc-500 underline">
+              Voltar para a loja
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 type Provider = "klivopay" | "freepay";
 const KEY = "slimbelly:provider";
