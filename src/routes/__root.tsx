@@ -104,7 +104,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         src: "https://cdn.utmify.com.br/scripts/utms/latest.js",
         async: true,
         defer: true,
-      },
+        "data-utmify-prevent-xcod-sck": "",
+        "data-utmify-prevent-subids": "",
+      } as any,
       // Google Ads gtag loader
       {
         src: `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`,
