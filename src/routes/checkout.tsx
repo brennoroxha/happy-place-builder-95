@@ -327,11 +327,12 @@ function CheckoutPage() {
                     },
                     cart: [
                       {
-                        name: `Cinta Slim Belly${color ? ` - ${color}` : ""}${size ? ` ${size}` : ""}`,
+                        title: `Cinta Slim Belly${color ? ` - ${color}` : ""}${size ? ` ${size}` : ""}`,
                         quantity: qty,
-                        unit_price: Math.round(UNIT_PRICE * 100),
+                        price: Math.round(UNIT_PRICE * 100),
                       },
                     ],
+                    tracking: getTracking(),
                   },
                 });
                 if (!res.ok) {
