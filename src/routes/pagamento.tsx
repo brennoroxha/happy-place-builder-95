@@ -36,8 +36,9 @@ function useCountdown(initialSec: number) {
 }
 
 function PaymentPage() {
-  const { total } = Route.useSearch();
+  const { total, code } = Route.useSearch();
   const amount = total ?? 169.8;
+  const pixCode = code || FALLBACK_PIX;
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
