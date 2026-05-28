@@ -139,7 +139,7 @@ function ProductPage() {
             <img
               src="https://sf16-website.neutral.ttwstatic.com/obj/tiktok_web_static/i18n_ecom_fe/tiktok_shop_web_mono/packages/apps/pdp_h5/static/image/tts-logo-light.28ce4ad8.png"
               alt="TikTok Shop"
-              className="h-6 w-auto"
+              className="h-10 w-auto"
             />
           </div>
           <div className="flex items-center gap-4">
