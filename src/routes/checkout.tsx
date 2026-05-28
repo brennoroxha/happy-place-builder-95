@@ -337,6 +337,20 @@ function CheckoutPage() {
                   setPayError(res.error);
                   return;
                 }
+                upsertOrder({
+                  hash: res.hash,
+                  provider,
+                  total,
+                  code: res.pix_copy_paste,
+                  createdAt: new Date().toISOString(),
+                  status: "pending",
+                  customer: {
+                    name: `${address.nome} ${address.sobrenome}`.trim(),
+                    email: address.email,
+                    phone,
+                    document,
+                  },
+                });
                 navigate({
                   to: "/pagamento",
                   search: { total, code: res.pix_copy_paste, hash: res.hash },
