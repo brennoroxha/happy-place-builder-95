@@ -162,7 +162,7 @@ function ProductPage() {
         </div>
 
         {/* Price banner */}
-        <div className="mx-3 mt-3 rounded-2xl bg-gradient-to-r from-rose-500 to-orange-400 p-4 text-white shadow-md">
+        <div className="mt-3 bg-gradient-to-r from-rose-500 to-orange-400 p-4 text-white shadow-md">
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
@@ -179,6 +179,7 @@ function ProductPage() {
             </div>
           </div>
         </div>
+
 
         {/* Coupon */}
         <button className="mx-3 mt-3 flex w-[calc(100%-1.5rem)] items-center justify-between rounded-xl bg-rose-50 px-3 py-3 text-rose-600">
