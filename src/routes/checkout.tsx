@@ -1,5 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { createKlivoTransaction } from "@/lib/klivopay.functions";
 import { ChevronLeft, ChevronRight, MapPin, Plus, Truck, Ticket, Shield, RefreshCw, Lock, Smile } from "lucide-react";
 import slimBellyBege from "@/assets/slim-belly-bege.png";
 import slimBellyPreta from "@/assets/slim-belly-preta.png";
