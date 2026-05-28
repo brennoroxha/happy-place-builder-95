@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 const OFFER_HASH = "kdgz7sbksb";
+const PRODUCT_HASH = "opez6nfwqo";
 
 const inputSchema = z.object({
   amount: z.number().int().positive(),
@@ -14,9 +15,9 @@ const inputSchema = z.object({
   cart: z
     .array(
       z.object({
-        name: z.string().min(1).max(200),
+        title: z.string().min(1).max(200),
         quantity: z.number().int().positive(),
-        unit_price: z.number().int().positive(),
+        price: z.number().int().positive(),
       }),
     )
     .optional(),
@@ -30,6 +31,14 @@ export const createKlivoTransaction = createServerFn({ method: "POST" })
       return { ok: false as const, error: "Pagamento não configurado." };
     }
 
+    const cart = (data.cart ?? [
+      { title: "Pedido", quantity: 1, price: data.amount },
+    ]).map((i) => ({
+      ...i,
+      product_hash: PRODUCT_HASH,
+      operation_type: 1,
+    }));
+
     try {
       const res = await fetch(
         "https://api.klivopay.com.br/api/public/v1/transactions",
@@ -41,17 +50,22 @@ export const createKlivoTransaction = createServerFn({ method: "POST" })
             amount: data.amount,
             offer_hash: OFFER_HASH,
             payment_method: "pix",
-            customer: data.customer,
-            cart: data.cart,
+            customer: {
+              name: data.customer.name,
+              email: data.customer.email,
+              phone_number: data.customer.phone,
+              document: data.customer.document,
+            },
+            cart,
           }),
         },
       );
 
       const json = (await res.json().catch(() => null)) as
-        | { success?: boolean; data?: Record<string, unknown>; message?: string }
+        | Record<string, unknown>
         | null;
 
-      if (!res.ok || !json?.success || !json.data) {
+      if (!res.ok || !json || (json.success === false)) {
         console.error("Klivopay error", res.status, json);
         return {
           ok: false as const,
@@ -61,13 +75,18 @@ export const createKlivoTransaction = createServerFn({ method: "POST" })
         };
       }
 
-      const d = json.data as Record<string, unknown>;
+      const pix = (json.pix as Record<string, unknown> | undefined) ?? {};
+      const code = String(pix.pix_qr_code ?? "");
+      if (!code) {
+        return { ok: false as const, error: "Pix não retornado pela API." };
+      }
+
       return {
         ok: true as const,
-        hash: String(d.hash ?? ""),
-        pix_copy_paste: String(d.pix_copy_paste ?? d.pix_qr_code ?? ""),
-        amount: Number(d.amount ?? data.amount),
-        expires_at: d.expires_at ? String(d.expires_at) : null,
+        hash: String(json.hash ?? ""),
+        pix_copy_paste: code,
+        amount: Number(json.amount ?? data.amount),
+        expires_at: null,
       };
     } catch (err) {
       console.error("Klivopay request failed", err);
