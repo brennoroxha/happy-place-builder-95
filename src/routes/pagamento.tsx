@@ -59,7 +59,7 @@ function PaymentPage() {
 
   const onCopy = async () => {
     try {
-      await navigator.clipboard.writeText(PIX_CODE);
+      await navigator.clipboard.writeText(pixCode);
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {}
@@ -80,7 +80,7 @@ function PaymentPage() {
     );
   }
 
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=0&data=${encodeURIComponent(PIX_CODE)}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=0&data=${encodeURIComponent(pixCode)}`;
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
@@ -107,7 +107,7 @@ function PaymentPage() {
         <div className="mx-3 rounded-lg bg-white p-4 shadow-sm">
           <div className="text-sm font-bold">Pagamento via Pix</div>
           <div className="mt-3 break-all rounded-md bg-zinc-100 p-3 text-[11px] leading-relaxed text-zinc-700">
-            {PIX_CODE}
+            {pixCode}
           </div>
           <button
             onClick={onCopy}
