@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PagamentoRouteImport } from './routes/pagamento'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as AddressRouteImport } from './routes/address'
 import { Route as IndexRouteImport } from './routes/index'
 
+const PagamentoRoute = PagamentoRouteImport.update({
+  id: '/pagamento',
+  path: '/pagamento',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
@@ -33,34 +39,45 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/address': typeof AddressRoute
   '/checkout': typeof CheckoutRoute
+  '/pagamento': typeof PagamentoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/address': typeof AddressRoute
   '/checkout': typeof CheckoutRoute
+  '/pagamento': typeof PagamentoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/address': typeof AddressRoute
   '/checkout': typeof CheckoutRoute
+  '/pagamento': typeof PagamentoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/address' | '/checkout'
+  fullPaths: '/' | '/address' | '/checkout' | '/pagamento'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/address' | '/checkout'
-  id: '__root__' | '/' | '/address' | '/checkout'
+  to: '/' | '/address' | '/checkout' | '/pagamento'
+  id: '__root__' | '/' | '/address' | '/checkout' | '/pagamento'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AddressRoute: typeof AddressRoute
   CheckoutRoute: typeof CheckoutRoute
+  PagamentoRoute: typeof PagamentoRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/pagamento': {
+      id: '/pagamento'
+      path: '/pagamento'
+      fullPath: '/pagamento'
+      preLoaderRoute: typeof PagamentoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/checkout': {
       id: '/checkout'
       path: '/checkout'
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AddressRoute: AddressRoute,
   CheckoutRoute: CheckoutRoute,
+  PagamentoRoute: PagamentoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
