@@ -14,21 +14,24 @@ import {
   Grid3x3,
   Ticket,
 } from "lucide-react";
+import slimBellyBege from "@/assets/slim-belly-bege.png";
+import slimBellyPreta from "@/assets/slim-belly-preta.png";
+import slimBellyVermelha from "@/assets/slim-belly-vermelha.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Jogo De Panelas — Style Cook 10 peças" },
+      { title: "Cinta Modeladora Slim Belly — Cintura Alta" },
       {
         name: "description",
         content:
-          "Conjunto de Panelas Style Cook com revestimento cerâmico, 10 peças. Frete grátis e oferta relâmpago.",
+          "Cinta Modeladora Slim Belly com cintura alta. Modela, afina e dá conforto. Disponível em 3 cores.",
       },
-      { property: "og:title", content: "Jogo De Panelas — Style Cook 10 peças" },
+      { property: "og:title", content: "Cinta Modeladora Slim Belly — Cintura Alta" },
       {
         property: "og:description",
         content:
-          "Conjunto de Panelas Style Cook com revestimento cerâmico, 10 peças. Frete grátis e oferta relâmpago.",
+          "Cinta Modeladora Slim Belly com cintura alta. Modela, afina e dá conforto.",
       },
     ],
   }),
@@ -36,27 +39,17 @@ export const Route = createFileRoute("/")({
 });
 
 const productImages = [
-  "https://http2.mlstatic.com/D_NQ_NP_2X_692916-MLB81131091254_122024-F.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_992618-MLB81131091236_122024-F.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_715968-MLB81131226166_122024-F.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_718745-MLB81131091238_122024-F.webp",
-  "https://http2.mlstatic.com/D_NQ_NP_2X_707644-MLB81131216544_122024-F.webp",
+  slimBellyBege,
+  slimBellyPreta,
+  slimBellyVermelha,
 ];
 
 const colorVariants = [
-  {
-    name: "Mármore",
-    img: "https://http2.mlstatic.com/D_NQ_NP_2X_689204-MLB82249899483_022025-F.webp",
-  },
-  {
-    name: "Preta",
-    img: "https://http2.mlstatic.com/D_Q_NP_785690-MLB81968522488_022025-C.webp",
-  },
-  {
-    name: "Cinza",
-    img: "https://http2.mlstatic.com/D_NQ_NP_2X_883567-MLB81968591092_022025-F.webp",
-  },
+  { name: "Bege", img: slimBellyBege },
+  { name: "Preta", img: slimBellyPreta },
+  { name: "Vermelha", img: slimBellyVermelha },
 ];
+
 
 const customerPhotos = [
   "https://http2.mlstatic.com/D_NQ_NP_2X_721323-MLA82057212384_022025-O.webp",
