@@ -389,15 +389,15 @@ function ProductPage() {
             <MessageCircle className="h-5 w-5" />
             <span>Chat</span>
           </button>
-          <button className="relative flex items-center justify-center px-1">
-            <ShoppingCart className="h-6 w-6 text-rose-500" />
-            <span className="absolute -top-1 -right-0 grid h-4 w-4 place-items-center rounded-full bg-rose-500 text-[10px] font-bold text-white">+</span>
+          <button className="relative grid h-10 w-10 place-items-center rounded-full border border-rose-200 bg-rose-50">
+            <ShoppingCart className="h-5 w-5 text-rose-500" />
+            <span className="absolute -top-1 -right-1 grid h-4 min-w-4 place-items-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white">+</span>
           </button>
           <button
             onClick={() => {
               if (!selectedColor || !selectedSize) setPickerOpen(true);
             }}
-            className="flex flex-1 flex-col items-center justify-center rounded-full bg-rose-500 px-3 py-2 text-white shadow"
+            className="flex flex-1 flex-col items-center justify-center rounded-lg bg-rose-500 px-3 py-2 text-white shadow"
           >
             <span className="text-base font-bold leading-tight">R$ 59,90</span>
             <span className="text-[11px] leading-tight">Comprar agora | Frete grátis</span>
