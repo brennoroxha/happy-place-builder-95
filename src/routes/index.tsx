@@ -399,9 +399,9 @@ function ProductPage() {
               <img src={productImages[current]} alt="" className="h-16 w-16 rounded-lg border border-zinc-200 object-cover" />
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-xl font-bold text-rose-500">R$ 61,52</span>
-                  <span className="text-xs text-zinc-400 line-through">R$ 548,52</span>
-                  <span className="rounded bg-rose-100 px-1.5 py-0.5 text-[11px] font-semibold text-rose-600">76%</span>
+                  <span className="text-xl font-bold text-rose-500">R$ 59,90</span>
+                  <span className="text-xs text-zinc-400 line-through">R$ 179,90</span>
+                  <span className="rounded bg-rose-100 px-1.5 py-0.5 text-[11px] font-semibold text-rose-600">67%</span>
                 </div>
                 <span className="mt-1 inline-block rounded bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">Frete grátis</span>
               </div>
