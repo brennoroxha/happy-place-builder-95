@@ -1,6 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ChevronLeft, Check } from "lucide-react";
+import {
+  ChevronLeft,
+  Check,
+  AlertTriangle,
+  Image as ImageIcon,
+  RefreshCw,
+  Trash2,
+} from "lucide-react";
+import {
+  groupByDate,
+  isPaymentDeviation,
+  loadOrders,
+  saveOrders,
+  updateOrder,
+  type Order,
+} from "@/lib/orders";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -20,15 +35,36 @@ const OPTIONS: { id: Provider; name: string; desc: string }[] = [
   { id: "freepay", name: "Freepay", desc: "Gateway Pix via Freepay Brasil." },
 ];
 
+const brl = (v: number) =>
+  v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+const fmtDate = (iso: string) => {
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("pt-BR", {
+    weekday: "long",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+};
+
+const fmtTime = (iso: string) =>
+  new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+
 function AdminPage() {
   const [provider, setProvider] = useState<Provider>("klivopay");
   const [saved, setSaved] = useState(false);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [preview, setPreview] = useState<string | null>(null);
+
+  const refresh = () => setOrders(loadOrders());
 
   useEffect(() => {
     try {
       const v = localStorage.getItem(KEY) as Provider | null;
       if (v === "klivopay" || v === "freepay") setProvider(v);
     } catch {}
+    refresh();
   }, []);
 
   const save = () => {
@@ -39,9 +75,23 @@ function AdminPage() {
     } catch {}
   };
 
+  const grouped = groupByDate(orders);
+  const deviations = orders.filter(isPaymentDeviation);
+
+  const markConfirmed = (hash: string) => {
+    updateOrder(hash, { status: "confirmed" });
+    refresh();
+  };
+
+  const clearAll = () => {
+    if (!confirm("Apagar todos os pedidos locais?")) return;
+    saveOrders([]);
+    refresh();
+  };
+
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
-      <div className="mx-auto max-w-[480px] pb-10">
+      <div className="mx-auto max-w-[640px] pb-10">
         <header className="sticky top-0 z-20 flex items-center justify-center bg-white px-4 py-3 border-b border-zinc-100">
           <Link to="/" className="absolute left-3 p-1">
             <ChevronLeft className="h-6 w-6" />
@@ -49,6 +99,7 @@ function AdminPage() {
           <h1 className="text-base font-bold">Admin</h1>
         </header>
 
+        {/* Provedor */}
         <div className="m-3 rounded-lg bg-white p-4 shadow-sm">
           <h2 className="text-sm font-bold">Provedor de pagamento Pix</h2>
           <p className="mt-1 text-xs text-zinc-500">
@@ -95,11 +146,166 @@ function AdminPage() {
           </div>
         </div>
 
+        {/* Alerta de desvio */}
+        {deviations.length > 0 && (
+          <div className="mx-3 mt-3 rounded-lg border-2 border-amber-400 bg-amber-50 p-3">
+            <div className="flex items-center gap-2 text-sm font-bold text-amber-700">
+              <AlertTriangle className="h-4 w-4" />
+              {deviations.length} desvio(s) de pagamento do gateway
+            </div>
+            <p className="mt-1 text-xs text-amber-700">
+              Pedidos com comprovante enviado, mas ainda pendentes no gateway.
+              Verifique manualmente.
+            </p>
+          </div>
+        )}
+
+        {/* Pedidos */}
+        <div className="mx-3 mt-3 rounded-lg bg-white p-4 shadow-sm">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-bold">Pedidos ({orders.length})</h2>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={refresh}
+                className="grid h-8 w-8 place-items-center rounded-md border border-zinc-200"
+                title="Atualizar"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </button>
+              {orders.length > 0 && (
+                <button
+                  onClick={clearAll}
+                  className="grid h-8 w-8 place-items-center rounded-md border border-zinc-200 text-rose-600"
+                  title="Limpar pedidos"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {orders.length === 0 ? (
+            <p className="mt-3 text-xs text-zinc-500">Nenhum pedido registrado ainda.</p>
+          ) : (
+            <div className="mt-3 space-y-5">
+              {grouped.map(({ date, items }) => (
+                <div key={date}>
+                  <div className="mb-2 text-xs font-bold uppercase tracking-wide text-zinc-500">
+                    {fmtDate(date)}
+                  </div>
+                  <div className="space-y-2">
+                    {items.map((o) => {
+                      const deviation = isPaymentDeviation(o);
+                      return (
+                        <div
+                          key={o.hash}
+                          className={`rounded-lg border p-3 ${
+                            deviation
+                              ? "border-amber-400 bg-amber-50"
+                              : "border-zinc-200 bg-white"
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0 flex-1">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="text-sm font-bold">
+                                  {brl(o.total)}
+                                </span>
+                                <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold uppercase text-zinc-600">
+                                  {o.provider}
+                                </span>
+                                {o.status === "confirmed" ? (
+                                  <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700">
+                                    Confirmado
+                                  </span>
+                                ) : (
+                                  <span className="rounded bg-zinc-200 px-1.5 py-0.5 text-[10px] font-bold text-zinc-700">
+                                    Pendente
+                                  </span>
+                                )}
+                                {deviation && (
+                                  <span className="flex items-center gap-1 rounded bg-amber-200 px-1.5 py-0.5 text-[10px] font-bold text-amber-800">
+                                    <AlertTriangle className="h-3 w-3" />
+                                    Desvio do gateway
+                                  </span>
+                                )}
+                              </div>
+                              <div className="mt-1 text-xs text-zinc-700">
+                                {o.customer?.name || "—"}
+                              </div>
+                              <div className="text-[11px] text-zinc-500">
+                                {o.customer?.email}
+                                {o.customer?.phone ? ` · ${o.customer.phone}` : ""}
+                              </div>
+                              <div className="mt-1 text-[11px] text-zinc-400">
+                                {fmtTime(o.createdAt)} · hash {o.hash.slice(0, 10)}…
+                              </div>
+                            </div>
+                            {o.proofDataUrl && (
+                              <button
+                                onClick={() => setPreview(o.proofDataUrl!)}
+                                className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-md border border-zinc-200 bg-zinc-50"
+                                title="Ver comprovante"
+                              >
+                                <img
+                                  src={o.proofDataUrl}
+                                  alt="comprovante"
+                                  className="h-full w-full object-cover"
+                                />
+                              </button>
+                            )}
+                          </div>
+
+                          {o.proofDataUrl ? (
+                            <div className="mt-2 flex items-center gap-2 text-[11px] text-zinc-600">
+                              <ImageIcon className="h-3 w-3" />
+                              Comprovante enviado
+                              {o.proofUploadedAt
+                                ? ` ${fmtTime(o.proofUploadedAt)}`
+                                : ""}
+                            </div>
+                          ) : (
+                            <div className="mt-2 text-[11px] text-zinc-400">
+                              Sem comprovante
+                            </div>
+                          )}
+
+                          {o.status === "pending" && (
+                            <button
+                              onClick={() => markConfirmed(o.hash)}
+                              className="mt-2 w-full rounded-md bg-emerald-600 py-1.5 text-xs font-bold text-white"
+                            >
+                              Marcar como confirmado
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <div className="mx-3 mt-3 rounded-lg bg-white p-4 shadow-sm text-xs text-zinc-500">
-          As chaves de cada provedor ficam guardadas como secrets no servidor.
-          Esta tela apenas alterna qual será usado no botão "Fazer Pedido".
+          Pedidos e comprovantes ficam salvos localmente neste navegador.
         </div>
       </div>
+
+      {/* Preview modal */}
+      {preview && (
+        <div
+          onClick={() => setPreview(null)}
+          className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4"
+        >
+          <img
+            src={preview}
+            alt="Comprovante"
+            className="max-h-[90vh] max-w-full rounded-lg bg-white"
+          />
+        </div>
+      )}
     </div>
   );
 }

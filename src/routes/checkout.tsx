@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { createKlivoTransaction } from "@/lib/klivopay.functions";
 import { createFreepayTransaction } from "@/lib/freepay.functions";
+import { upsertOrder } from "@/lib/orders";
 import { ChevronLeft, ChevronRight, MapPin, Plus, Truck, Ticket, Shield, RefreshCw, Lock, Smile } from "lucide-react";
 import slimBellyBege from "@/assets/slim-belly-bege.png";
 import slimBellyPreta from "@/assets/slim-belly-preta.png";
@@ -336,6 +337,20 @@ function CheckoutPage() {
                   setPayError(res.error);
                   return;
                 }
+                upsertOrder({
+                  hash: res.hash,
+                  provider,
+                  total,
+                  code: res.pix_copy_paste,
+                  createdAt: new Date().toISOString(),
+                  status: "pending",
+                  customer: {
+                    name: `${address.nome} ${address.sobrenome}`.trim(),
+                    email: address.email,
+                    phone,
+                    document,
+                  },
+                });
                 navigate({
                   to: "/pagamento",
                   search: { total, code: res.pix_copy_paste, hash: res.hash },
