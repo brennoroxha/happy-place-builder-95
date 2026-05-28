@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   ChevronLeft,
   Check,
@@ -7,6 +7,8 @@ import {
   Image as ImageIcon,
   RefreshCw,
   Trash2,
+  Lock,
+  LogOut,
 } from "lucide-react";
 import {
   groupByDate,
