@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as AddressRouteImport } from './routes/address'
 import { Route as IndexRouteImport } from './routes/index'
 
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AddressRoute = AddressRouteImport.update({
+  id: '/address',
+  path: '/address',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,27 +31,31 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/address': typeof AddressRoute
   '/checkout': typeof CheckoutRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/address': typeof AddressRoute
   '/checkout': typeof CheckoutRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/address': typeof AddressRoute
   '/checkout': typeof CheckoutRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/checkout'
+  fullPaths: '/' | '/address' | '/checkout'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/checkout'
-  id: '__root__' | '/' | '/checkout'
+  to: '/' | '/address' | '/checkout'
+  id: '__root__' | '/' | '/address' | '/checkout'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AddressRoute: typeof AddressRoute
   CheckoutRoute: typeof CheckoutRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/checkout'
       fullPath: '/checkout'
       preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/address': {
+      id: '/address'
+      path: '/address'
+      fullPath: '/address'
+      preLoaderRoute: typeof AddressRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AddressRoute: AddressRoute,
   CheckoutRoute: CheckoutRoute,
 }
 export const routeTree = rootRouteImport
