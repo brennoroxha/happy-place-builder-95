@@ -117,8 +117,6 @@ function CheckoutPage() {
                 <span className="text-base font-bold text-rose-500">{brl(UNIT_PRICE)}</span>
                 <Ticket className="h-4 w-4 text-rose-500" />
               </div>
-                <Ticket className="h-4 w-4 text-rose-500" />
-              </div>
               <div className="mt-0.5 flex items-center gap-2 text-xs">
                 <span className="text-zinc-400 line-through">{brl(ORIGINAL_PRICE)}</span>
                 <span className="rounded bg-rose-100 px-1 py-0.5 font-semibold text-rose-600">-67%</span>
