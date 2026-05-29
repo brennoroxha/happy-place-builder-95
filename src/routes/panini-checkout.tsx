@@ -669,12 +669,12 @@ function PaniniCheckoutPage() {
               Você está economizando <strong>{brl(discount)}</strong> neste pedido.
             </span>
           </div>
-          <div className="mt-1 flex items-center justify-between">
-            <span className="pl-1 text-sm text-zinc-600">
-              Total ({count} {count === 1 ? "item" : "itens"})
-            </span>
-            <span className="pr-1 text-lg font-extrabold text-zinc-900">{brl(subtotal)}</span>
-          </div>
+        </div>
+        <div className="flex items-center justify-between bg-white px-4 py-2.5">
+          <span className="pl-1 text-sm text-zinc-600">
+            Total ({count} {count === 1 ? "item" : "itens"})
+          </span>
+          <span className="pr-1 text-lg font-extrabold text-zinc-900">{brl(subtotal)}</span>
         </div>
         <div className="bg-rose-600 py-2.5 text-center text-sm font-bold text-white">
           O cupom expira em {hh}:{mm}:{ss}
