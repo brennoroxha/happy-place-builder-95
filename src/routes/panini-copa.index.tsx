@@ -191,10 +191,10 @@ function PaniniCopaPage() {
         </div>
 
         {tab === "categorias" ? (
-          <div className="flex flex-col items-center justify-center bg-white py-20 px-4">
-            <div className="text-6xl mb-4">📦</div>
+          <div className="flex min-h-[500px] flex-col items-center justify-center bg-white px-4 py-20">
+            <div className="mb-4 text-6xl">📦</div>
             <div className="text-lg font-bold text-zinc-900">Em breve</div>
-            <div className="text-sm text-zinc-500 mt-1 text-center">As categorias estarão disponíveis em breve.</div>
+            <div className="mt-1 text-center text-sm text-zinc-500">As categorias estarão disponíveis em breve.</div>
           </div>
         ) : tab === "inicio" ? (
           <div className="bg-white px-3 py-3 space-y-5">
