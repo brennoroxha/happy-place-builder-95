@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PaniniCheckoutRouteImport } from './routes/panini-checkout'
 import { Route as PagamentoRouteImport } from './routes/pagamento'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as BrindeRouteImport } from './routes/brinde'
@@ -20,6 +21,11 @@ import { Route as PaniniCopaSlugRouteImport } from './routes/panini-copa.$slug'
 import { Route as ApiPublicKlivopayWebhookRouteImport } from './routes/api/public/klivopay-webhook'
 import { Route as ApiPublicFreepayWebhookRouteImport } from './routes/api/public/freepay-webhook'
 
+const PaniniCheckoutRoute = PaniniCheckoutRouteImport.update({
+  id: '/panini-checkout',
+  path: '/panini-checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PagamentoRoute = PagamentoRouteImport.update({
   id: '/pagamento',
   path: '/pagamento',
@@ -79,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/brinde': typeof BrindeRoute
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
+  '/panini-checkout': typeof PaniniCheckoutRoute
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
   '/panini-copa/': typeof PaniniCopaIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
@@ -91,6 +98,7 @@ export interface FileRoutesByTo {
   '/brinde': typeof BrindeRoute
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
+  '/panini-checkout': typeof PaniniCheckoutRoute
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
   '/panini-copa': typeof PaniniCopaIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   '/brinde': typeof BrindeRoute
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
+  '/panini-checkout': typeof PaniniCheckoutRoute
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
   '/panini-copa/': typeof PaniniCopaIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
@@ -118,6 +127,7 @@ export interface FileRouteTypes {
     | '/brinde'
     | '/checkout'
     | '/pagamento'
+    | '/panini-checkout'
     | '/panini-copa/$slug'
     | '/panini-copa/'
     | '/api/public/freepay-webhook'
@@ -130,6 +140,7 @@ export interface FileRouteTypes {
     | '/brinde'
     | '/checkout'
     | '/pagamento'
+    | '/panini-checkout'
     | '/panini-copa/$slug'
     | '/panini-copa'
     | '/api/public/freepay-webhook'
@@ -142,6 +153,7 @@ export interface FileRouteTypes {
     | '/brinde'
     | '/checkout'
     | '/pagamento'
+    | '/panini-checkout'
     | '/panini-copa/$slug'
     | '/panini-copa/'
     | '/api/public/freepay-webhook'
@@ -155,6 +167,7 @@ export interface RootRouteChildren {
   BrindeRoute: typeof BrindeRoute
   CheckoutRoute: typeof CheckoutRoute
   PagamentoRoute: typeof PagamentoRoute
+  PaniniCheckoutRoute: typeof PaniniCheckoutRoute
   PaniniCopaSlugRoute: typeof PaniniCopaSlugRoute
   PaniniCopaIndexRoute: typeof PaniniCopaIndexRoute
   ApiPublicFreepayWebhookRoute: typeof ApiPublicFreepayWebhookRoute
@@ -163,6 +176,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/panini-checkout': {
+      id: '/panini-checkout'
+      path: '/panini-checkout'
+      fullPath: '/panini-checkout'
+      preLoaderRoute: typeof PaniniCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pagamento': {
       id: '/pagamento'
       path: '/pagamento'
@@ -243,6 +263,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrindeRoute: BrindeRoute,
   CheckoutRoute: CheckoutRoute,
   PagamentoRoute: PagamentoRoute,
+  PaniniCheckoutRoute: PaniniCheckoutRoute,
   PaniniCopaSlugRoute: PaniniCopaSlugRoute,
   PaniniCopaIndexRoute: PaniniCopaIndexRoute,
   ApiPublicFreepayWebhookRoute: ApiPublicFreepayWebhookRoute,
@@ -251,3 +272,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
