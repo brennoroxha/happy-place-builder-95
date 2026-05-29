@@ -162,6 +162,7 @@ function PaniniCheckoutPage() {
   const [upsellQty, setUpsellQty] = useState<Record<string, number>>({});
   const [upsellAdded, setUpsellAdded] = useState<Record<string, number>>({});
   const selectedShipping = shippingOptions.find((s) => s.id === shipping)!;
+  const upsellTotal = upsells.reduce((sum, u) => sum + (upsellAdded[u.id] ?? 0) * u.price, 0);
   const [cepLoading, setCepLoading] = useState(false);
   const maskCep = (v: string) => {
     const d = onlyDigits(v).slice(0, 8);
