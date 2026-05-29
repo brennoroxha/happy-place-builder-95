@@ -71,8 +71,8 @@ function PaniniProductPage() {
   const monthsAbbr = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
   const fmt = (d: Date) => `${d.getDate()} de ${monthsAbbr[d.getMonth()]}`;
   const today = new Date();
-  const start = new Date(today); start.setDate(today.getDate() + 2);
-  const end = new Date(today); end.setDate(today.getDate() + 4);
+  const start = new Date(today); start.setDate(today.getDate() + 4);
+  const end = new Date(today); end.setDate(today.getDate() + 6);
   const deliveryRange = `${fmt(start)} até ${fmt(end)}`;
 
   const images = product.fotos.length ? product.fotos : [];
