@@ -186,7 +186,7 @@ function PaniniCheckoutPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-[640px] px-4 pb-32 pt-4">
+      <main className="px-4 pb-32 pt-4">
         {/* Stepper */}
         <div className="mb-5 flex items-start justify-between">
           {[
