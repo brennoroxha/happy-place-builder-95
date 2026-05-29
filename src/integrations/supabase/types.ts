@@ -32,6 +32,33 @@ export type Database = {
         }
         Relationships: []
       }
+      page_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          path: string
+          session_id: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          path: string
+          session_id: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          path?: string
+          session_id?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       sales: {
         Row: {
           amount_cents: number | null
