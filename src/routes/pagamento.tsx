@@ -19,6 +19,7 @@ import {
   updateOrder,
   type Order,
 } from "@/lib/orders";
+import { usePageTracking } from "@/hooks/use-page-tracking";
 
 type Search = { total?: number; code?: string; hash?: string };
 
@@ -54,6 +55,7 @@ function useCountdown(initialSec: number) {
 }
 
 function PaymentPage() {
+  usePageTracking("presence:pagamento", "/pagamento");
   const { total, code, hash } = Route.useSearch();
   const amount = total ?? 169.8;
   const pixCode = code || FALLBACK_PIX;

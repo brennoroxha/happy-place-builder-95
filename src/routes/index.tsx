@@ -20,6 +20,7 @@ import slimBellyVermelha from "@/assets/slim-belly-vermelha.png";
 import slimBellyCostas from "@/assets/slim-belly-costas.png";
 import slimBellyPretaUso from "@/assets/slim-belly-preta-uso.png";
 import slimBellyBegeUso from "@/assets/slim-belly-bege-uso.png";
+import { usePageTracking } from "@/hooks/use-page-tracking";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -119,6 +120,7 @@ function useCountdown(initialSeconds: number) {
 }
 
 function ProductPage() {
+  usePageTracking("presence:home", "/");
   const navigate = useNavigate();
   const [current, setCurrent] = useState(0);
   const time = useCountdown(573);

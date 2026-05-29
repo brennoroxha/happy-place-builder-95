@@ -8,6 +8,7 @@ import { createFreepayTransaction } from "@/lib/freepay.functions";
 import { getActiveProvider } from "@/lib/admin.functions";
 import { upsertOrder } from "@/lib/orders";
 import { getTracking } from "@/lib/tracking";
+import { usePageTracking } from "@/hooks/use-page-tracking";
 
 type Search = { total?: number; hash?: string };
 
@@ -37,6 +38,7 @@ type Address = {
 };
 
 function BrindePage() {
+  usePageTracking("presence:brinde", "/brinde");
   const { hash } = Route.useSearch();
   const navigate = useNavigate();
   const klivo = useServerFn(createKlivoTransaction);

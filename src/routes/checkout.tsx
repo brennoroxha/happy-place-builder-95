@@ -10,6 +10,7 @@ import { ChevronLeft, ChevronRight, MapPin, Plus, Truck, Ticket, Shield, Refresh
 import slimBellyBege from "@/assets/slim-belly-bege.png";
 import slimBellyPreta from "@/assets/slim-belly-preta.png";
 import slimBellyVermelha from "@/assets/slim-belly-vermelha.png";
+import { usePageTracking } from "@/hooks/use-page-tracking";
 
 type CheckoutSearch = { color?: string; size?: string };
 
@@ -56,6 +57,7 @@ const brl = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 function CheckoutPage() {
+  usePageTracking("presence:checkout", "/checkout");
   const { color, size } = Route.useSearch();
   const productImage = (color && colorImages[color]) || slimBellyBege;
   const [qty, setQty] = useState(1);
