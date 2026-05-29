@@ -153,7 +153,7 @@ function PaniniCheckoutPage() {
       original: 79.9,
       price: 29.9,
     },
-  ] as const;
+  ];
   const [upsellQty, setUpsellQty] = useState<Record<string, number>>({});
   const [upsellAdded, setUpsellAdded] = useState<Record<string, number>>({});
   const selectedShipping = shippingOptions.find((s) => s.id === shipping)!;
