@@ -25,22 +25,23 @@ export const Route = createFileRoute("/panini-copa")({
 
 type Product = {
   name: string;
+  slug: string;
   price: number;
   oldPrice: number;
   img: string;
 };
 
 const products: Product[] = [
-  { name: "Combo 2000 figurinhas [Revenda Atacado] 🔥", price: 152.9, oldPrice: 670.0, img: p1 },
-  { name: "Kit Com 650 Envelopes", price: 62.06, oldPrice: 494.9, img: p2 },
-  { name: "Kit Com 400 Envelopes", price: 43.08, oldPrice: 394.9, img: p3 },
-  { name: "Álbum 2026", price: 31.43, oldPrice: 74.9, img: p4 },
-  { name: "Kit Com 200 Envelopes", price: 29.93, oldPrice: 194.9, img: p5 },
-  { name: "Álbum Dourado Capa Dura", price: 25.31, oldPrice: 74.9, img: p6 },
-  { name: "Álbum Prata Capa Dura", price: 24.08, oldPrice: 74.9, img: p7 },
-  { name: "Kit Com 100 Envelopes", price: 21.05, oldPrice: 74.9, img: p8 },
-  { name: "Álbum Tradicional Capa Dura", price: 20.77, oldPrice: 74.9, img: p9 },
-  { name: "Álbum Tradicional Capa Mole", price: 14.29, oldPrice: 74.9, img: p10 },
+  { name: "Combo 2000 figurinhas [Revenda Atacado] 🔥", slug: "combo-2000-figurinhas-revenda-atacado", price: 152.9, oldPrice: 670.0, img: p1 },
+  { name: "Kit Com 650 Envelopes", slug: "kit-com-650-envelopes", price: 62.06, oldPrice: 494.9, img: p2 },
+  { name: "Kit Com 400 Envelopes", slug: "kit-com-400-envelopes", price: 43.08, oldPrice: 394.9, img: p3 },
+  { name: "Álbum 2026", slug: "album-2026", price: 31.43, oldPrice: 74.9, img: p4 },
+  { name: "Kit Com 200 Envelopes", slug: "kit-com-200-envelopes", price: 29.93, oldPrice: 194.9, img: p5 },
+  { name: "Álbum Dourado Capa Dura", slug: "album-dourado-capa-dura", price: 25.31, oldPrice: 74.9, img: p6 },
+  { name: "Álbum Prata Capa Dura", slug: "album-prata-capa-dura", price: 24.08, oldPrice: 74.9, img: p7 },
+  { name: "Kit Com 100 Envelopes", slug: "kit-com-100-envelopes", price: 21.05, oldPrice: 74.9, img: p8 },
+  { name: "Álbum Tradicional Capa Dura", slug: "album-tradicional-capa-dura", price: 20.77, oldPrice: 74.9, img: p9 },
+  { name: "Álbum Tradicional Capa Mole", slug: "album-tradicional-capa-mole", price: 14.29, oldPrice: 74.9, img: p10 },
 ];
 
 const brl = (v: number) =>
@@ -191,7 +192,7 @@ function PaniniCopaPage() {
           {products.map((p, i) => (
             <div key={i} className="flex w-full max-w-[500px] flex-row rounded-lg bg-white">
               <button
-                onClick={() => navigate({ to: "/checkout", search: { color: p.name, size: "Único" } })}
+                onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
                 className="mr-3 flex-shrink-0"
                 style={{ width: 110, height: 120 }}
               >
@@ -226,7 +227,7 @@ function PaniniCopaPage() {
                       <ShoppingBag className="h-3.5 w-3.5" />
                     </button>
                     <button
-                      onClick={() => navigate({ to: "/checkout", search: { color: p.name, size: "Único" } })}
+                      onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
                       className="flex h-8 items-center bg-rose-600 px-3 text-[12px] font-semibold text-white hover:bg-rose-700"
                       style={{ borderRadius: "0 8px 8px 0" }}
                     >
