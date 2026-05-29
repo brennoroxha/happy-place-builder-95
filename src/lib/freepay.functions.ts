@@ -184,7 +184,7 @@ export const createFreepayTransaction = createServerFn({ method: "POST" })
             id: `item-${idx + 1}`,
             name: c.title ?? `Item ${idx + 1}`,
             quantity: c.quantity ?? 1,
-            priceInCents: c.unit_price ?? c.price ?? amountCents,
+            priceInCents: c.unit_price ?? amountCents,
           })),
           tracking: {
             src: tracking.src ?? null,
