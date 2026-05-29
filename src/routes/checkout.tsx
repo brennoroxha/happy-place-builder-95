@@ -356,17 +356,6 @@ function CheckoutPage() {
           })}
         </div>
 
-        {/* Dados pessoais resumo (passos 2 e 3) */}
-        {(step === 2 || step === 3) && (
-          <section className="mb-4 rounded-2xl bg-white p-5 shadow-sm">
-            <PersonalSummary
-              email={v.email}
-              nome={v.nome}
-              telefone={v.telefone}
-              onEdit={() => setStep(1)}
-            />
-          </section>
-        )}
 
         {/* Step card */}
         <section className="rounded-2xl bg-white p-5 shadow-sm">
