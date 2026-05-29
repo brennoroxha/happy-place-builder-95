@@ -94,7 +94,7 @@ export function CartDrawer() {
           <button
             onClick={finalize}
             disabled={items.length === 0}
-            className="w-full rounded-full bg-rose-600 py-3 text-sm font-bold text-white shadow-sm disabled:cursor-not-allowed disabled:bg-zinc-300"
+            className="w-full rounded-lg bg-rose-600 py-3 text-sm font-bold text-white shadow-sm disabled:cursor-not-allowed disabled:bg-zinc-300"
           >
             Finalizar compra
           </button>
