@@ -569,16 +569,10 @@ function PaniniCheckoutPage() {
 
               <button
                 onClick={() => setStep(3)}
-                className="mt-4 w-full rounded-lg bg-zinc-900 py-3.5 text-sm font-bold text-white"
+                disabled={!step2Valid}
+                className="mt-4 w-full rounded-lg bg-zinc-900 py-3.5 text-sm font-bold text-white transition-opacity disabled:cursor-not-allowed disabled:bg-zinc-300"
               >
                 Ir para pagamento
-              </button>
-
-              <button
-                onClick={() => setStep(1)}
-                className="mt-3 w-full text-center text-xs font-semibold text-zinc-500 underline"
-              >
-                Voltar
               </button>
             </section>
 
