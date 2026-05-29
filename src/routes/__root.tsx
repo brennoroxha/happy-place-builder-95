@@ -117,6 +117,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         src: `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`,
         async: true,
       },
+      // Google Analytics 4 (GA4) gtag loader
+      {
+        src: `https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`,
+        async: true,
+      },
       { children: gtagScript },
     ],
   }),
