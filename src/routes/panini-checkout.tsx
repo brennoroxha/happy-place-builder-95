@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ShieldCheck, Truck, X, Gift } from "lucide-react";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
+import { trackInitiateCheckout, trackPurchase } from "@/lib/track";
 import upsellNeymarLote from "@/assets/upsell-neymar-lote.png";
 import upsellFigurinhasLegend from "@/assets/upsell-figurinhas-legend.png";
 import upsellCaixinha from "@/assets/upsell-caixinha.png";
