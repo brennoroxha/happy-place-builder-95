@@ -190,25 +190,42 @@ function PaniniProductPage() {
           </div>
         </div>
 
-        {/* Shipping */}
-        <button className="mx-3 mt-4 flex w-[calc(100%-1.5rem)] items-center justify-between rounded-xl border border-zinc-200 px-3 py-3">
-          <div className="flex items-center gap-3">
-            <Truck className="h-5 w-5 text-emerald-600" />
-            <div className="text-left">
-              <div className="text-sm"><span className="font-semibold text-emerald-600">Frete grátis</span> <span className="text-zinc-700">Receba de {deliveryRange}</span></div>
+        {/* Shipping + Devoluções + Opções */}
+        <div className="mx-3 mt-4 overflow-hidden rounded-xl border border-zinc-200 bg-white">
+          {/* Frete grátis */}
+          <div className="flex items-start gap-2 px-4 py-3">
+            <Truck className="mt-0.5 h-4 w-4 flex-shrink-0 text-zinc-700" />
+            <div className="flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded bg-cyan-50 px-1.5 py-0.5 text-[11px] font-semibold text-teal-500">frete grátis</span>
+                <span className="text-[12px] text-zinc-900">Receba {deliveryRange}</span>
+              </div>
+              <div className="mt-0.5 ml-0 text-[11px] text-zinc-400 line-through">Taxa de envio: R$ 20,90</div>
             </div>
           </div>
-          <ChevronRight className="h-4 w-4 text-zinc-400" />
-        </button>
 
-        {/* Selecionar opções */}
-        <button
-          onClick={goCheckout}
-          className="mx-3 mt-3 flex w-[calc(100%-1.5rem)] items-center justify-between rounded-xl border border-zinc-200 px-3 py-3"
-        >
-          <span className="text-base font-bold text-zinc-900">Comprar agora</span>
-          <ChevronRight className="h-4 w-4 text-zinc-400" />
-        </button>
+          <div className="h-px bg-zinc-100" />
+
+          {/* Devoluções */}
+          <div className="flex items-center gap-2 px-4 py-3">
+            <ShieldCheck className="h-4 w-4 flex-shrink-0 text-zinc-700" />
+            <div className="text-[12px] text-zinc-900">Devoluções gratuitas em 30 dias • Cancelamento fácil</div>
+          </div>
+
+          <div className="h-px bg-zinc-100" />
+
+          {/* Opções disponíveis */}
+          <button onClick={goCheckout} className="flex w-full items-center gap-3 px-4 py-3 text-left">
+            <LayoutGrid className="h-4 w-4 flex-shrink-0 text-zinc-500" />
+            <div className="flex gap-1.5">
+              {images.slice(0, 4).map((src, i) => (
+                <img key={i} src={src} alt="" className="h-7 w-7 rounded-md border border-zinc-200 object-cover" />
+              ))}
+            </div>
+            <span className="ml-1 text-[14px] text-zinc-500">{Math.max(images.length, 1)} opções disponíveis</span>
+            <ChevronRight className="ml-auto h-5 w-5 text-zinc-400" />
+          </button>
+        </div>
 
         {/* Reviews */}
         {product.comentarios.length > 0 && (
