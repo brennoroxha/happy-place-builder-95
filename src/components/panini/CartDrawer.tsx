@@ -12,8 +12,7 @@ export function CartDrawer() {
   const finalize = () => {
     if (!items.length) return;
     setOpen(false);
-    const first = items[0];
-    navigate({ to: "/checkout", search: { color: first.name, size: "Único" } });
+    navigate({ to: "/panini-checkout" });
   };
 
   return (
