@@ -20,6 +20,7 @@ import {
   type Order,
 } from "@/lib/orders";
 import { usePageTracking } from "@/hooks/use-page-tracking";
+import { trackPurchase } from "@/lib/track";
 
 type Search = { total?: number; code?: string; hash?: string };
 
