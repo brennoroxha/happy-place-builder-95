@@ -57,7 +57,7 @@ const brl = (v: number) =>
 function CheckoutPage() {
   const { color, size } = Route.useSearch();
   const productImage = (color && colorImages[color]) || slimBellyBege;
-  const [qty, setQty] = useState(2);
+  const [qty, setQty] = useState(1);
   const [shipping, setShipping] = useState("free");
   const [payment] = useState("pix");
   const time = useCountdown(14 * 60 + 38);
