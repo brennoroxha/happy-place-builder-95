@@ -907,8 +907,7 @@ function PaniniCheckoutPage() {
                     return;
                   }
                   setPixCode(res.pix_copy_paste);
-                  setSaleHash(res.hash);
-                  setSaleAmount(total);
+                  trackPurchase(total, res.hash);
                   setStep(4);
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 } catch {
