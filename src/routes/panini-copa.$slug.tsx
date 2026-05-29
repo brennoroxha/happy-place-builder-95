@@ -399,22 +399,7 @@ function PaniniProductPage() {
         </div>
 
         {/* Vídeos dos criadores */}
-        <section className="mt-6 px-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <Video className="h-5 w-5 text-zinc-900" />
-              <h2 className="text-base font-bold leading-tight">Vídeos dos<br />criadores</h2>
-            </div>
-            <span className="max-w-[140px] text-right text-[11px] leading-tight text-zinc-500">
-              Conteúdo enviado por quem testou
-            </span>
-          </div>
-          <div className="mt-3 -mx-4 flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">
-            {CREATOR_VIDEOS.map((v, i) => (
-              <CreatorVideoCard key={i} {...v} />
-            ))}
-          </div>
-        </section>
+        <CreatorVideosSection productName={product.titulo} productImg={cover} />
 
         {/* Reviews */}
         {product.comentarios.length > 0 && (
