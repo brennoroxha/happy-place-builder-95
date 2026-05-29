@@ -85,7 +85,7 @@ function PaniniProductPage() {
   };
   const goCheckout = () => {
     add({ slug: product.slug, name: product.titulo, price: product.preco, img: cover });
-    navigate({ to: "/checkout", search: { color: product.titulo, size: "Único" } });
+    setOpen(true);
   };
 
   return (

@@ -98,6 +98,12 @@ export function CartDrawer() {
           >
             Finalizar compra
           </button>
+          <button
+            onClick={() => setOpen(false)}
+            className="mt-2 w-full rounded-full border border-zinc-300 py-3 text-sm font-bold text-zinc-700"
+          >
+            Continuar comprando
+          </button>
         </footer>
       </aside>
     </>
