@@ -94,14 +94,6 @@ function PaniniCopaPage() {
     }
   })();
 
-  const categorias = [
-    { nome: "Álbuns", qtd: 5 },
-    { nome: "Envelopes", qtd: 4 },
-    { nome: "Combos e Atacado", qtd: 1 },
-    { nome: "Capa Dura", qtd: 3 },
-    { nome: "Capa Mole", qtd: 1 },
-  ];
-
   return (
     <div className="min-h-screen bg-zinc-100 text-sm text-zinc-800 sm:py-6">
       <div className="mx-auto max-w-[480px] bg-white pb-10 sm:rounded-2xl sm:shadow-xl sm:ring-1 sm:ring-zinc-200 sm:overflow-hidden">
@@ -211,20 +203,10 @@ function PaniniCopaPage() {
         </div>
 
         {tab === "categorias" ? (
-          <div className="divide-y divide-zinc-100 bg-white">
-            {categorias.map((c) => (
-              <button
-                key={c.nome}
-                onClick={() => setTab("produtos")}
-                className="flex w-full items-center justify-between px-4 py-3 text-left"
-              >
-                <div>
-                  <div className="text-sm font-semibold text-zinc-900">{c.nome}</div>
-                  <div className="text-[11px] text-zinc-500">{c.qtd} produtos</div>
-                </div>
-                <span className="text-zinc-400">›</span>
-              </button>
-            ))}
+          <div className="flex flex-col items-center justify-center bg-white py-20 px-4">
+            <div className="text-6xl mb-4">📦</div>
+            <div className="text-lg font-bold text-zinc-900">Em breve</div>
+            <div className="text-sm text-zinc-500 mt-1 text-center">As categorias estarão disponíveis em breve.</div>
           </div>
         ) : tab === "inicio" ? (
           <div className="bg-white px-3 py-3 space-y-5">
