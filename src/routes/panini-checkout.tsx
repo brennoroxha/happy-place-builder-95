@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ShieldCheck, Truck, X, Gift } from "lucide-react";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
+import { trackInitiateCheckout, trackPurchase } from "@/lib/track";
 import upsellNeymarLote from "@/assets/upsell-neymar-lote.png";
 import upsellFigurinhasLegend from "@/assets/upsell-figurinhas-legend.png";
 import upsellCaixinha from "@/assets/upsell-caixinha.png";
@@ -124,6 +125,12 @@ function PaniniCheckoutPage() {
   const [processing, setProcessing] = useState(false);
   const pixCode = "00020101021226820014br.gov.bcb.pix2560pix.example.com/qr/v2/cobv/9f8e7d6c5b4a3210abcdef1234567890";
   const [pixCopied, setPixCopied] = useState(false);
+
+  // Fire InitiateCheckout pixel once when the Panini checkout loads
+  useEffect(() => {
+    trackInitiateCheckout(subtotal || 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const upsells: { id: string; name: string; img: string; original: number; price: number; note?: string }[] = [
     {
       id: "neymar-lote",
@@ -841,10 +848,13 @@ function PaniniCheckoutPage() {
               disabled={processing}
               onClick={() => {
                 setProcessing(true);
+                const total = subtotal + selectedShipping.price + upsellTotal;
                 setTimeout(() => {
                   setProcessing(false);
                   setStep(4);
                   window.scrollTo({ top: 0, behavior: "smooth" });
+                  // Fire Purchase pixel (Facebook + GA4) — Pix gerado / confirmado
+                  trackPurchase(total, `panini-${Date.now()}`);
                 }, 1800);
               }}
               className="mb-4 w-full rounded-lg bg-rose-500 py-3.5 text-sm font-extrabold tracking-wide text-white hover:bg-rose-600 disabled:cursor-wait disabled:opacity-80"
