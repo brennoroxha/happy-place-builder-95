@@ -204,14 +204,6 @@ function PaymentPage() {
         }}
       />
 
-      {!confirmed && order?.proofDataUrl && (
-        <button
-          onClick={confirmPayment}
-          className="mt-3 w-full rounded-lg bg-emerald-600 py-2.5 text-sm font-bold text-white"
-        >
-          Marcar como pago
-        </button>
-      )}
     </div>
   );
 
