@@ -192,7 +192,7 @@ function PaniniCopaPage() {
           {products.map((p, i) => (
             <div key={i} className="flex w-full max-w-[500px] flex-row rounded-lg bg-white">
               <button
-                onClick={() => navigate({ to: "/checkout", search: { color: p.name, size: "Único" } })}
+                onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
                 className="mr-3 flex-shrink-0"
                 style={{ width: 110, height: 120 }}
               >
@@ -227,7 +227,7 @@ function PaniniCopaPage() {
                       <ShoppingBag className="h-3.5 w-3.5" />
                     </button>
                     <button
-                      onClick={() => navigate({ to: "/checkout", search: { color: p.name, size: "Único" } })}
+                      onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
                       className="flex h-8 items-center bg-rose-600 px-3 text-[12px] font-semibold text-white hover:bg-rose-700"
                       style={{ borderRadius: "0 8px 8px 0" }}
                     >
