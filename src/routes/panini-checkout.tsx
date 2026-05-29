@@ -481,9 +481,12 @@ function PaniniCheckoutPage() {
                   inputMode="numeric"
                   placeholder="00000-000"
                   value={cep}
-                  onChange={(e) => setCep(maskCep(e.target.value))}
+                  onChange={(e) => handleCepChange(e.target.value)}
                   className={inputCls(false)}
                 />
+                {cepLoading && (
+                  <div className="mt-1 text-xs text-zinc-500">Buscando endereço...</div>
+                )}
               </Field>
               <Field label="Endereço">
                 <input
