@@ -1,8 +1,13 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { ChevronLeft, ShieldCheck, Truck, X, Gift } from "lucide-react";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { trackInitiateCheckout, trackPurchase } from "@/lib/track";
+import { getTracking } from "@/lib/tracking";
+import { createKlivoTransaction } from "@/lib/klivopay.functions";
+import { createFreepayTransaction } from "@/lib/freepay.functions";
+import { getActiveProvider } from "@/lib/admin.functions";
 import upsellNeymarLote from "@/assets/upsell-neymar-lote.png";
 import upsellFigurinhasLegend from "@/assets/upsell-figurinhas-legend.png";
 import upsellCaixinha from "@/assets/upsell-caixinha.png";
@@ -123,8 +128,20 @@ function PaniniCheckoutPage() {
   const [shipping, setShipping] = useState("jadlog");
   const [pagamento, setPagamento] = useState("pix");
   const [processing, setProcessing] = useState(false);
-  const pixCode = "00020101021226820014br.gov.bcb.pix2560pix.example.com/qr/v2/cobv/9f8e7d6c5b4a3210abcdef1234567890";
+  const [pixCode, setPixCode] = useState("");
+  const [payError, setPayError] = useState<string | null>(null);
   const [pixCopied, setPixCopied] = useState(false);
+
+  // Provider selection (managed in /admin → Panini tab)
+  const klivo = useServerFn(createKlivoTransaction);
+  const freepay = useServerFn(createFreepayTransaction);
+  const fetchProvider = useServerFn(getActiveProvider);
+  const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
+  useEffect(() => {
+    fetchProvider({ data: { scope: "panini" } })
+      .then((r) => setProvider(r.provider))
+      .catch(() => {});
+  }, [fetchProvider]);
 
   // Fire InitiateCheckout pixel once when the Panini checkout loads
   useEffect(() => {
@@ -844,18 +861,60 @@ function PaniniCheckoutPage() {
               </label>
             </section>
 
+            {payError && (
+              <p className="mb-2 rounded-md bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-600">
+                {payError}
+              </p>
+            )}
             <button
               disabled={processing}
-              onClick={() => {
+              onClick={async () => {
+                setPayError(null);
                 setProcessing(true);
                 const total = subtotal + selectedShipping.price + upsellTotal;
-                setTimeout(() => {
-                  setProcessing(false);
+                const amountCents = Math.round(total * 100);
+                try {
+                  const phone = onlyDigits(telefone);
+                  const document = onlyDigits(doc);
+                  const cart = [
+                    ...items.map((i) => ({
+                      title: i.name,
+                      quantity: i.qty,
+                      price: Math.round(i.price * 100),
+                    })),
+                    ...upsells
+                      .filter((u) => (upsellAdded[u.id] ?? 0) > 0)
+                      .map((u) => ({
+                        title: u.name,
+                        quantity: upsellAdded[u.id]!,
+                        price: Math.round(u.price * 100),
+                      })),
+                    ...(selectedShipping.price > 0
+                      ? [{ title: `Frete ${selectedShipping.label}`, quantity: 1, price: Math.round(selectedShipping.price * 100) }]
+                      : []),
+                  ];
+                  const fn = provider === "freepay" ? freepay : klivo;
+                  const res = await fn({
+                    data: {
+                      amount: amountCents,
+                      customer: { name: nome.trim(), email, phone, document },
+                      cart,
+                      tracking: getTracking(),
+                    },
+                  });
+                  if (!res.ok) {
+                    setPayError(res.error);
+                    return;
+                  }
+                  setPixCode(res.pix_copy_paste);
                   setStep(4);
                   window.scrollTo({ top: 0, behavior: "smooth" });
-                  // Fire Purchase pixel (Facebook + GA4) — Pix gerado / confirmado
-                  trackPurchase(total, `panini-${Date.now()}`);
-                }, 1800);
+                  trackPurchase(total, res.hash);
+                } catch {
+                  setPayError("Erro de conexão. Tente novamente.");
+                } finally {
+                  setProcessing(false);
+                }
               }}
               className="mb-4 w-full rounded-lg bg-rose-500 py-3.5 text-sm font-extrabold tracking-wide text-white hover:bg-rose-600 disabled:cursor-wait disabled:opacity-80"
             >
