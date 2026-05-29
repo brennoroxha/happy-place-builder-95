@@ -297,49 +297,49 @@ function PaniniCheckoutPage() {
 
       <main className="px-4 pb-32 pt-4">
         {/* Stepper */}
-        {step !== 4 && (
-        <div className="mb-5 flex items-start justify-between">
-          {[
-            { k: 1, label: "Identificação" },
-            { k: 2, label: "Entrega" },
-            { k: 3, label: "Pagamento" },
-          ].map((s, idx, arr) => {
-            const active = step === s.k;
-            const done = step > s.k;
-            return (
-              <div key={s.k} className="flex flex-1 items-start">
-                <div className="flex flex-col items-center" style={{ width: 80 }}>
-                  <div
-                    className={`grid h-9 w-9 place-items-center rounded-full text-sm font-bold ${
-                      done
-                        ? "bg-emerald-600 text-white"
-                        : active
-                        ? "bg-zinc-900 text-white"
-                        : "bg-zinc-200 text-zinc-400"
-                    }`}
-                  >
-                    {s.k}
+        {step !== 4 ? (
+          <div className="mb-5 flex items-start justify-between">
+            {[
+              { k: 1, label: "Identificação" },
+              { k: 2, label: "Entrega" },
+              { k: 3, label: "Pagamento" },
+            ].map((s, idx, arr) => {
+              const active = step === s.k;
+              const done = step > s.k;
+              return (
+                <div key={s.k} className="flex flex-1 items-start">
+                  <div className="flex flex-col items-center" style={{ width: 80 }}>
+                    <div
+                      className={`grid h-9 w-9 place-items-center rounded-full text-sm font-bold ${
+                        done
+                          ? "bg-emerald-600 text-white"
+                          : active
+                          ? "bg-zinc-900 text-white"
+                          : "bg-zinc-200 text-zinc-400"
+                      }`}
+                    >
+                      {s.k}
+                    </div>
+                    <span
+                      className={`mt-1 text-[11px] font-semibold ${
+                        active || done ? "text-zinc-900" : "text-zinc-400"
+                      }`}
+                    >
+                      {s.label}
+                    </span>
                   </div>
-                  <span
-                    className={`mt-1 text-[11px] font-semibold ${
-                      active || done ? "text-zinc-900" : "text-zinc-400"
-                    }`}
-                  >
-                    {s.label}
-                  </span>
+                  {idx < arr.length - 1 && (
+                    <div
+                      className={`mx-1 mt-4 h-0.5 flex-1 ${
+                        step > s.k ? "bg-emerald-600" : "bg-zinc-200"
+                      }`}
+                    />
+                  )}
                 </div>
-                {idx < arr.length - 1 && (
-                  <div
-                    className={`mx-1 mt-4 h-0.5 flex-1 ${
-                      step > s.k ? "bg-emerald-600" : "bg-zinc-200"
-                    }`}
-                  />
-                )}
-              </div>
-            );
-          })}
-        </div>
-        )}
+              );
+            })}
+          </div>
+        ) : null}
 
         {step === 1 && (
           <>
