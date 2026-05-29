@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { sendUtmifyOrder, utmifyDate } from "@/lib/utmify.server";
 
 const OFFER_HASH = "kdgz7sbksb";
 const PRODUCT_HASH = "opez6nfwqo";
@@ -152,6 +153,43 @@ export const createKlivoTransaction = createServerFn({ method: "POST" })
         );
       } catch (err) {
         console.error("[klivopay] failed to persist sale", err);
+      }
+
+      // Notify Utmify immediately as "waiting_payment" (InitiateCheckout)
+      try {
+        await sendUtmifyOrder({
+          orderId: hash,
+          status: "waiting_payment",
+          paymentMethod: "pix",
+          createdAt: utmifyDate(),
+          customer: {
+            name: data.customer.name,
+            email: data.customer.email,
+            phone: data.customer.phone,
+            document: data.customer.document,
+            country: "BR",
+            ip,
+          },
+          products: (data.cart ?? [{ title: "Pedido", quantity: 1, price: amountCents }]).map((c, idx) => ({
+            id: `item-${idx + 1}`,
+            name: c.title,
+            quantity: c.quantity,
+            priceInCents: c.price,
+          })),
+          tracking: {
+            src: tracking.src ?? null,
+            sck: tracking.sck ?? null,
+            utm_source: tracking.utm_source ?? null,
+            utm_campaign: tracking.utm_campaign ?? null,
+            utm_medium: tracking.utm_medium ?? null,
+            utm_content: tracking.utm_content ?? null,
+            utm_term: tracking.utm_term ?? null,
+          },
+          totalPriceInCents: amountCents,
+          userCommissionInCents: amountCents,
+        });
+      } catch (err) {
+        console.error("[klivopay] utmify waiting_payment failed", err);
       }
 
       return {

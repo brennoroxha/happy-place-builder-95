@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { sendUtmifyOrder, utmifyDate } from "@/lib/utmify.server";
 
 const trackingSchema = z
   .object({
@@ -162,6 +163,43 @@ export const createFreepayTransaction = createServerFn({ method: "POST" })
         );
       } catch (err) {
         console.error("[freepay] failed to persist sale", err);
+      }
+
+      // Notify Utmify immediately as "waiting_payment" (InitiateCheckout)
+      try {
+        await sendUtmifyOrder({
+          orderId: hash,
+          status: "waiting_payment",
+          paymentMethod: "pix",
+          createdAt: utmifyDate(),
+          customer: {
+            name: data.customer.name,
+            email: data.customer.email,
+            phone: data.customer.phone,
+            document: data.customer.document,
+            country: "BR",
+            ip,
+          },
+          products: items.map((c, idx) => ({
+            id: `item-${idx + 1}`,
+            name: c.title ?? `Item ${idx + 1}`,
+            quantity: c.quantity ?? 1,
+            priceInCents: c.unit_price ?? amountCents,
+          })),
+          tracking: {
+            src: tracking.src ?? null,
+            sck: tracking.sck ?? null,
+            utm_source: tracking.utm_source ?? null,
+            utm_campaign: tracking.utm_campaign ?? null,
+            utm_medium: tracking.utm_medium ?? null,
+            utm_content: tracking.utm_content ?? null,
+            utm_term: tracking.utm_term ?? null,
+          },
+          totalPriceInCents: amountCents,
+          userCommissionInCents: amountCents,
+        });
+      } catch (err) {
+        console.error("[freepay] utmify waiting_payment failed", err);
       }
 
       return {
