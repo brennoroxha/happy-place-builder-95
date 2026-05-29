@@ -4,7 +4,7 @@ import {
   ChevronLeft, Share2, ShoppingCart, Bookmark, ChevronRight,
   Zap, Truck, Store, MessageCircle, Star, Ticket, ShieldCheck, LayoutGrid, Video,
 } from "lucide-react";
-import { paniniBySlug, type PaniniProduct } from "@/lib/panini-products";
+import { paniniBySlug, paniniProducts, type PaniniProduct } from "@/lib/panini-products";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { CartDrawer } from "@/components/panini/CartDrawer";
 
