@@ -319,6 +319,7 @@ function PaniniCheckoutPage() {
               )}
             </section>
 
+
             {/* Identificação form */}
             <section className="mb-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-zinc-100">
               <Field label="E-mail" error={fieldErr("email")}>
@@ -410,16 +411,117 @@ function PaniniCheckoutPage() {
         )}
 
         {step === 2 && (
-          <section className="rounded-xl bg-white p-6 text-center shadow-sm ring-1 ring-zinc-100">
-            <h2 className="mb-2 text-lg font-bold">Entrega</h2>
-            <p className="text-sm text-zinc-500">Próxima etapa em breve.</p>
-            <button
-              onClick={() => setStep(1)}
-              className="mt-4 text-sm font-semibold text-zinc-700 underline"
-            >
-              Voltar
-            </button>
-          </section>
+          <>
+            {/* Cart summary */}
+            <section className="mb-4 rounded-xl bg-white p-3 shadow-sm ring-1 ring-zinc-100">
+              <div className="mb-2 text-sm font-bold">
+                Resumo do carrinho ({count} {count === 1 ? "item" : "itens"})
+              </div>
+              {items.length === 0 ? (
+                <div className="rounded-md bg-zinc-50 p-4 text-center text-sm text-zinc-500">
+                  Seu carrinho está vazio.
+                </div>
+              ) : (
+                <ul className="space-y-3">
+                  {items.map((it) => (
+                    <li key={it.slug} className="flex gap-3 rounded-lg border border-zinc-100 p-2">
+                      <img
+                        src={it.img}
+                        alt={it.name}
+                        className="h-20 w-20 flex-shrink-0 rounded-md bg-zinc-50 object-contain"
+                      />
+                      <div className="flex min-w-0 flex-1 flex-col">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="line-clamp-2 text-sm font-semibold leading-snug text-zinc-900">
+                            {it.name}
+                          </div>
+                          <button
+                            onClick={() => remove(it.slug)}
+                            aria-label="Remover"
+                            className="text-zinc-400 hover:text-rose-500"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                        <div className="mt-1 flex items-center gap-2">
+                          <span className="rounded bg-rose-100 px-1.5 py-0.5 text-[10px] font-bold text-rose-600">
+                            - 77%
+                          </span>
+                          <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700">
+                            Frete grátis
+                          </span>
+                        </div>
+                        <div className="mt-1 flex items-end justify-between">
+                          <div>
+                            <div className="text-base font-bold text-zinc-900">{brl(it.price)}</div>
+                            <div className="text-[11px] text-zinc-400 line-through">
+                              {brl(it.price / 0.23)}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1 rounded-md border border-zinc-200">
+                            <button
+                              onClick={() => setQty(it.slug, it.qty - 1)}
+                              className="grid h-7 w-7 place-items-center text-zinc-600"
+                              aria-label="Diminuir"
+                            >
+                              -
+                            </button>
+                            <span className="w-6 text-center text-sm font-semibold tabular-nums">
+                              {it.qty}
+                            </span>
+                            <button
+                              onClick={() => setQty(it.slug, it.qty + 1)}
+                              className="grid h-7 w-7 place-items-center text-zinc-600"
+                              aria-label="Aumentar"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                        <div className="mt-1 text-right text-xs font-semibold text-zinc-700">
+                          Subtotal: {brl(it.price * it.qty)}
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+
+            {/* Resumo do pedido */}
+            <section className="mb-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-zinc-100">
+              <div className="mb-3 text-sm font-bold">Resumo do pedido</div>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-zinc-600">Subtotal</span>
+                  <span className="font-semibold text-zinc-900">{brl(subtotal)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-600">Desconto</span>
+                  <span className="font-semibold text-emerald-600">- {brl(discount)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-600">Frete</span>
+                  <span className="font-semibold text-emerald-600">Grátis</span>
+                </div>
+                <div className="mt-2 border-t border-zinc-100 pt-2 flex justify-between">
+                  <span className="font-bold text-zinc-900">Total</span>
+                  <span className="text-lg font-extrabold text-zinc-900">{brl(subtotal)}</span>
+                </div>
+              </div>
+            </section>
+
+            <section className="rounded-xl bg-white p-6 text-center shadow-sm ring-1 ring-zinc-100">
+              <h2 className="mb-2 text-lg font-bold">Entrega</h2>
+              <p className="text-sm text-zinc-500">Próxima etapa em breve.</p>
+              <button
+                onClick={() => setStep(1)}
+                className="mt-4 text-sm font-semibold text-zinc-700 underline"
+              >
+                Voltar
+              </button>
+            </section>
+          </>
         )}
       </main>
 
