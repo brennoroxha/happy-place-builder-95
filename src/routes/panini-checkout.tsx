@@ -93,7 +93,7 @@ const maskDoc = (raw: string) => {
   return `${d.slice(0,2)}.${d.slice(2,5)}.${d.slice(5,8)}/${d.slice(8,12)}-${d.slice(12)}`;
 };
 
-type Step = 1 | 2 | 3;
+type Step = 1 | 2 | 3 | 4;
 
 function PaniniCheckoutPage() {
   const navigate = useNavigate();
