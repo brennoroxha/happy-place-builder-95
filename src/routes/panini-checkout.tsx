@@ -836,11 +836,95 @@ function PaniniCheckoutPage() {
             </section>
 
             <button
-              onClick={() => alert("Compra finalizada!")}
-              className="mb-4 w-full rounded-lg bg-rose-500 py-3.5 text-sm font-extrabold tracking-wide text-white hover:bg-rose-600"
+              disabled={processing}
+              onClick={() => {
+                setProcessing(true);
+                setTimeout(() => {
+                  setProcessing(false);
+                  setStep(4);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }, 1800);
+              }}
+              className="mb-4 w-full rounded-lg bg-rose-500 py-3.5 text-sm font-extrabold tracking-wide text-white hover:bg-rose-600 disabled:cursor-wait disabled:opacity-80"
             >
-              FINALIZAR COMPRA
+              {processing ? (
+                <span className="inline-flex items-center justify-center gap-2">
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                  PROCESSANDO...
+                </span>
+              ) : (
+                "FINALIZAR COMPRA"
+              )}
             </button>
+          </>
+        )}
+
+        {step === 4 && (
+          <>
+            <section className="-mx-4 mb-4 bg-white px-4 py-5 shadow-sm ring-1 ring-zinc-100">
+              <div className="text-center text-lg font-extrabold text-zinc-900">Já é quase seu...</div>
+              <p className="mt-1 text-center text-sm text-zinc-600">
+                Pague seu Pix dentro de 30 minutos para garantir sua compra.
+              </p>
+              <div className="my-4 flex justify-center">
+                <img
+                  src="https://loja.ferrjhgf.shop/uploads/mao-celular.png"
+                  alt="Aguardando pagamento"
+                  className="h-40 w-auto object-contain"
+                />
+              </div>
+              <div className="text-center text-base font-bold text-zinc-900">Aguardando pagamento...</div>
+            </section>
+
+            <section className="-mx-4 mb-4 bg-white px-4 py-5 shadow-sm ring-1 ring-zinc-100">
+              <h2 className="text-base font-extrabold text-zinc-900">Pagamento via Pix</h2>
+              <p className="mt-1 text-xs text-zinc-500">Use o QR Code ou copie o código Pix abaixo:</p>
+              <div className="mt-3 truncate rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-3 text-xs text-zinc-700">
+                {pixCode}
+              </div>
+              <button
+                onClick={() => {
+                  navigator.clipboard?.writeText(pixCode).catch(() => {});
+                  setPixCopied(true);
+                  setTimeout(() => setPixCopied(false), 2000);
+                }}
+                className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-rose-500 py-3.5 text-sm font-extrabold text-white hover:bg-rose-600"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
+                  <rect x="9" y="9" width="13" height="13" rx="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+                {pixCopied ? "Código copiado!" : "Copiar código Pix"}
+              </button>
+              <p className="mt-2 text-center text-xs font-semibold text-emerald-600">
+                Copie o código Pix abaixo para pagar.
+              </p>
+            </section>
+
+            <section className="-mx-4 mb-4 px-4">
+              <h2 className="mb-3 text-base font-extrabold text-zinc-900">
+                Como pagar com Pix (copia e cola)
+              </h2>
+              <div className="space-y-3">
+                {[
+                  { t: "Copie o código", d: "Use o botão copiar para levar o código Pix." },
+                  { t: "Abra o app do banco", d: "Entre no aplicativo financeiro onde deseja pagar." },
+                  { t: "Pix > Copia e cola", d: "Cole o código na opção Pix copia e cola." },
+                  { t: "Confira os dados", d: "Verifique recebedor e valor antes de confirmar." },
+                  { t: "Conclua o pagamento", d: "Finalize e guarde o comprovante para acompanhamento." },
+                ].map((s, i) => (
+                  <div key={i} className="flex items-start gap-3 rounded-xl bg-white p-3 shadow-sm ring-1 ring-zinc-100">
+                    <div className="grid h-8 w-8 flex-shrink-0 place-items-center rounded-full bg-zinc-900 text-sm font-bold text-white">
+                      {i + 1}
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-zinc-900">{s.t}</div>
+                      <div className="text-xs text-zinc-500">{s.d}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
           </>
         )}
       </main>
