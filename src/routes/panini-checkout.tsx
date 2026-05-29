@@ -907,9 +907,10 @@ function PaniniCheckoutPage() {
                     return;
                   }
                   setPixCode(res.pix_copy_paste);
+                  setSaleHash(res.hash);
+                  setSaleAmount(total);
                   setStep(4);
                   window.scrollTo({ top: 0, behavior: "smooth" });
-                  trackPurchase(total, res.hash);
                 } catch {
                   setPayError("Erro de conexão. Tente novamente.");
                 } finally {
