@@ -539,13 +539,6 @@ function CheckoutPage() {
 
           {step === 3 && (
             <>
-              <PersonalSummary
-                email={v.email}
-                nome={v.nome}
-                telefone={v.telefone}
-                onEdit={() => setStep(1)}
-              />
-
               <div className="mb-3 flex items-center gap-2">
                 <QrCode className="h-5 w-5 text-slate-900" />
                 <h2 className="text-lg font-extrabold text-slate-900">Pagamento</h2>
