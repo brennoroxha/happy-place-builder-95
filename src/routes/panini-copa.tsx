@@ -61,6 +61,8 @@ function PaniniCopaPage() {
   const navigate = useNavigate();
   const time = useCountdown(19 * 60 + 49);
   const [tab, setTab] = useState<"inicio" | "produtos" | "categorias">("produtos");
+  const [following, setFollowing] = useState(false);
+  const [freteAtivo, setFreteAtivo] = useState(false);
 
   return (
     <div className="min-h-screen bg-zinc-100 text-sm text-zinc-800 sm:py-6">
@@ -97,7 +99,14 @@ function PaniniCopaPage() {
               </div>
             </div>
             <div className="flex flex-col items-end gap-2">
-              <button className="w-[92px] rounded-md bg-rose-600 px-4 py-1.5 text-xs font-semibold text-white shadow-sm">Seguir</button>
+              <button
+                onClick={() => setFollowing((f) => !f)}
+                className={`w-[92px] rounded-md px-4 py-1.5 text-xs font-semibold shadow-sm ${
+                  following ? "bg-zinc-300 text-zinc-700" : "bg-rose-600 text-white"
+                }`}
+              >
+                {following ? "Seguindo" : "Seguir"}
+              </button>
               <button className="w-[92px] rounded-md border border-zinc-200 px-4 py-1.5 text-xs font-semibold">Mensagem</button>
             </div>
           </div>
@@ -114,15 +123,20 @@ function PaniniCopaPage() {
                 <div className="h-full w-full bg-gradient-to-r from-rose-500 to-rose-400" />
               </div>
               <div className="mt-2 text-[12px] text-zinc-500">R$ 152,90 / R$ 120,00</div>
-              <button className="mt-3 w-full rounded-full bg-rose-500 py-2.5 text-sm font-bold text-white shadow">
-                Frete gratis ativado
+              <button
+                onClick={() => setFreteAtivo(true)}
+                className={`mt-3 w-full rounded-full py-2.5 text-sm font-bold shadow ${
+                  freteAtivo ? "bg-rose-500 text-white" : "bg-zinc-300 text-zinc-700"
+                }`}
+              >
+                {freteAtivo ? "Frete grátis ativado" : "Resgatar Frete Grátis"}
               </button>
             </div>
           </div>
 
           {/* Cupons */}
           <div className="px-4 pb-4">
-            <div className="flex gap-3 overflow-x-auto pb-1">
+            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
               <div className="flex min-w-[260px] flex-shrink-0 items-center justify-between gap-2 rounded-md border border-cyan-100 bg-cyan-50 px-4 py-2 text-cyan-700">
                 <div className="flex flex-col leading-tight">
                   <span className="whitespace-nowrap text-xs font-semibold">Cupom de frete grátis</span>
