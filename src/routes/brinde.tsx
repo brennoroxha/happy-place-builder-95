@@ -181,7 +181,7 @@ function BrindePage() {
             <img
               src={brindeImg}
               alt="Crioterápico Gel Redutor de Celulite"
-              className="h-56 w-auto object-contain drop-shadow-md"
+              className="h-24 w-auto object-contain drop-shadow-md"
             />
           </div>
 
