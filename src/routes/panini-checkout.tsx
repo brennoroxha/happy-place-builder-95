@@ -339,6 +339,7 @@ function PaniniCheckoutPage() {
             );
           })}
         </div>
+        )}
 
         {step === 1 && (
           <>
