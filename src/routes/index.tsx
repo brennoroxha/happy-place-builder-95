@@ -140,8 +140,9 @@ function ProductPage() {
   const deliveryRange = `${fmt(start)} até ${fmt(end)}`;
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900">
-      <div className="mx-auto max-w-[480px] pb-28">
+    <div className="min-h-screen bg-zinc-100 text-zinc-900 sm:py-6">
+      <div className="mx-auto max-w-[480px] bg-white pb-28 sm:rounded-2xl sm:shadow-xl sm:ring-1 sm:ring-zinc-200 sm:overflow-hidden">
+
         {/* Header */}
         <header className="sticky top-0 z-20 flex items-center justify-between bg-white/95 px-4 py-3 backdrop-blur border-b border-zinc-100">
           <div className="flex items-center gap-2">
