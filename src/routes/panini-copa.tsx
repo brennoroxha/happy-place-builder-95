@@ -197,70 +197,115 @@ function PaniniCopaPage() {
           </div>
         </div>
 
-        {/* Filter bar */}
-        <div className="flex items-center px-3 py-2 text-sm">
-          <div className="flex w-[95%] gap-3 overflow-x-auto scrollbar-hide">
-            <button className="whitespace-nowrap border-r border-zinc-200 px-2 font-semibold text-zinc-900">Recomendado</button>
-            <button className="whitespace-nowrap border-r border-zinc-200 px-2 text-zinc-500">Mais vendidos</button>
-            <button className="whitespace-nowrap border-r border-zinc-200 px-2 text-zinc-500">Lançamentos</button>
-            <button className="whitespace-nowrap px-2 text-zinc-500">Preço ↓</button>
-          </div>
-          <button className="ml-2 pr-2 text-lg text-zinc-900" aria-label="Alternar visualização">☰</button>
-        </div>
-
-        {/* Products list */}
-        <div className="flex flex-col items-center space-y-3 bg-white p-3">
-          {products.map((p, i) => (
-            <div key={i} className="flex w-full max-w-[500px] flex-row rounded-lg bg-white">
+        {tab === "categorias" ? (
+          <div className="divide-y divide-zinc-100 bg-white">
+            {categorias.map((c) => (
               <button
-                onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
-                className="mr-3 flex-shrink-0"
-                style={{ width: 110, height: 120 }}
+                key={c.nome}
+                onClick={() => setTab("produtos")}
+                className="flex w-full items-center justify-between px-4 py-3 text-left"
               >
-                <img src={p.img} alt={p.name} className="h-full w-full object-contain" />
+                <div>
+                  <div className="text-sm font-semibold text-zinc-900">{c.nome}</div>
+                  <div className="text-[11px] text-zinc-500">{c.qtd} produtos</div>
+                </div>
+                <span className="text-zinc-400">›</span>
               </button>
-              <div className="flex min-w-0 flex-1 flex-col justify-between pb-2" style={{ minHeight: 120 }}>
-                <div className="flex flex-1 flex-col justify-center gap-0.5">
-                  <div className="truncate text-xs font-semibold text-zinc-900">{p.name}</div>
-                  <div className="mt-0.5 flex items-center gap-1">
-                    <span className="flex items-center gap-1 rounded bg-rose-100 px-2 py-0.5 text-[11px] font-bold text-rose-600">
-                      <Ticket className="h-3 w-3" />
-                      60% OFF
-                    </span>
-                    <span className="rounded bg-cyan-100 px-2 py-0.5 text-[11px] font-bold text-cyan-600">Frete grátis</span>
-                  </div>
-                  <div className="mt-0.5 flex items-center gap-1 text-[11px] text-zinc-600">
-                    <span className="text-yellow-400">★</span>
-                    <span>5 | 4312 vendido(s)</span>
-                  </div>
-                </div>
-                <div className="mt-1 flex flex-row items-end justify-between">
-                  <div className="flex flex-col">
-                    <span className="text-base font-bold leading-tight text-rose-500">{brl(p.price)}</span>
-                    <span className="text-xs text-zinc-400 line-through">{brl(p.oldPrice)}</span>
-                  </div>
-                  <div className="ml-2 flex items-center">
-                    <button
-                      onClick={() => handleAdd(p)}
-                      aria-label="Adicionar ao carrinho"
-                      className="grid h-8 place-items-center bg-rose-100 px-3 text-rose-600"
-                      style={{ borderRadius: "8px 0 0 8px" }}
-                    >
-                      <ShoppingBag className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                      onClick={() => handleAdd(p)}
-                      className="flex h-8 items-center bg-rose-600 px-3 text-[12px] font-semibold text-white hover:bg-rose-700"
-                      style={{ borderRadius: "0 8px 8px 0" }}
-                    >
-                      Comprar
-                    </button>
-                  </div>
-                </div>
+            ))}
+          </div>
+        ) : (
+          <>
+            {/* Filter bar */}
+            <div className="flex items-center px-3 py-2 text-sm">
+              <div className="flex w-[95%] gap-3 overflow-x-auto scrollbar-hide">
+                {([
+                  ["recomendado", "Recomendado"],
+                  ["vendidos", "Mais vendidos"],
+                  ["lancamentos", "Lançamentos"],
+                ] as const).map(([key, label], i, arr) => (
+                  <button
+                    key={key}
+                    onClick={() => setSort(key)}
+                    className={`whitespace-nowrap px-2 ${i < arr.length ? "border-r border-zinc-200" : ""} ${
+                      sort === key ? "font-semibold text-zinc-900" : "text-zinc-500"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setSort(sort === "preco-asc" ? "preco-desc" : "preco-asc")}
+                  className={`whitespace-nowrap px-2 ${
+                    sort === "preco-asc" || sort === "preco-desc" ? "font-semibold text-zinc-900" : "text-zinc-500"
+                  }`}
+                >
+                  Preço {sort === "preco-asc" ? "↑" : "↓"}
+                </button>
               </div>
+              <button className="ml-2 pr-2 text-lg text-zinc-900" aria-label="Alternar visualização">☰</button>
             </div>
-          ))}
-        </div>
+
+            {/* Products list */}
+            <div className="flex flex-col items-center space-y-3 bg-white p-3">
+              {visibleProducts.map((p, i) => (
+                <div key={i} className="flex w-full max-w-[500px] flex-row rounded-lg bg-white">
+                  <button
+                    onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
+                    className="mr-3 flex-shrink-0"
+                    style={{ width: 110, height: 120 }}
+                  >
+                    <img src={p.img} alt={p.name} className="h-full w-full object-contain" />
+                  </button>
+                  <div className="flex min-w-0 flex-1 flex-col justify-between pb-2" style={{ minHeight: 120 }}>
+                    <button
+                      onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
+                      className="flex flex-1 flex-col justify-center gap-0.5 text-left"
+                    >
+                      <div className="truncate text-xs font-semibold text-zinc-900">{p.name}</div>
+                      <div className="mt-0.5 flex items-center gap-1">
+                        <span className="flex items-center gap-1 rounded bg-rose-100 px-2 py-0.5 text-[11px] font-bold text-rose-600">
+                          <Ticket className="h-3 w-3" />
+                          60% OFF
+                        </span>
+                        <span className="rounded bg-cyan-100 px-2 py-0.5 text-[11px] font-bold text-cyan-600">Frete grátis</span>
+                      </div>
+                      <div className="mt-0.5 flex items-center gap-1 text-[11px] text-zinc-600">
+                        <span className="text-yellow-400">★</span>
+                        <span>5 | 4312 vendido(s)</span>
+                      </div>
+                    </button>
+                    <div className="mt-1 flex flex-row items-end justify-between">
+                      <button
+                        onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
+                        className="flex flex-col text-left"
+                      >
+                        <span className="text-base font-bold leading-tight text-rose-500">{brl(p.price)}</span>
+                        <span className="text-xs text-zinc-400 line-through">{brl(p.oldPrice)}</span>
+                      </button>
+                      <div className="ml-2 flex items-center">
+                        <button
+                          onClick={() => handleAdd(p)}
+                          aria-label="Adicionar ao carrinho"
+                          className="grid h-8 place-items-center bg-rose-100 px-3 text-rose-600"
+                          style={{ borderRadius: "8px 0 0 8px" }}
+                        >
+                          <ShoppingBag className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleAdd(p)}
+                          className="flex h-8 items-center bg-rose-600 px-3 text-[12px] font-semibold text-white hover:bg-rose-700"
+                          style={{ borderRadius: "0 8px 8px 0" }}
+                        >
+                          Comprar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
