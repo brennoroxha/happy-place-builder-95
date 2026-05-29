@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { ChevronLeft, ShieldCheck, Truck, X, Gift } from "lucide-react";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
@@ -129,6 +129,34 @@ function PaniniCheckoutPage() {
   const [pagamento, setPagamento] = useState("pix");
   const [processing, setProcessing] = useState(false);
   const [pixCode, setPixCode] = useState("");
+  const [saleHash, setSaleHash] = useState<string | null>(null);
+  const [saleAmount, setSaleAmount] = useState(0);
+  const firedPurchase = useRef(false);
+
+  // Poll sale status; fire Purchase pixel only when PIX is actually paid
+  useEffect(() => {
+    if (!saleHash) return;
+    let cancelled = false;
+    const check = async () => {
+      try {
+        const { getSaleStatus } = await import("@/lib/admin.functions");
+        const { status } = await getSaleStatus({ data: { hash: saleHash } });
+        if (cancelled) return;
+        if (status === "paid" || status === "confirmed" || status === "approved") {
+          if (!firedPurchase.current) {
+            firedPurchase.current = true;
+            trackPurchase(saleAmount, saleHash);
+          }
+        }
+      } catch {}
+    };
+    check();
+    const i = setInterval(check, 5000);
+    return () => {
+      cancelled = true;
+      clearInterval(i);
+    };
+  }, [saleHash, saleAmount]);
   const [payError, setPayError] = useState<string | null>(null);
   const [pixCopied, setPixCopied] = useState(false);
 
@@ -907,9 +935,10 @@ function PaniniCheckoutPage() {
                     return;
                   }
                   setPixCode(res.pix_copy_paste);
+                  setSaleHash(res.hash);
+                  setSaleAmount(total);
                   setStep(4);
                   window.scrollTo({ top: 0, behavior: "smooth" });
-                  trackPurchase(total, res.hash);
                 } catch {
                   setPayError("Erro de conexão. Tente novamente.");
                 } finally {
