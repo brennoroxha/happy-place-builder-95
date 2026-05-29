@@ -17,6 +17,9 @@ import {
   markSaleConfirmed,
   type AdminSale,
 } from "@/lib/admin.functions";
+import { getAnalyticsSummary, type AnalyticsSummary } from "@/lib/analytics.functions";
+import { usePresenceCount } from "@/hooks/use-page-tracking";
+import { Users, ShoppingCart as ShoppingCartIcon, Activity, Eye, TrendingUp } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
