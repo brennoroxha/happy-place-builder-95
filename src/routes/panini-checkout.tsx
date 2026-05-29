@@ -101,6 +101,16 @@ function PaniniCheckoutPage() {
   const [doc, setDoc] = useState("");
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
+  // Coupon countdown (5h)
+  const [secondsLeft, setSecondsLeft] = useState(5 * 60 * 60);
+  useEffect(() => {
+    const t = setInterval(() => setSecondsLeft((s) => (s > 0 ? s - 1 : 0)), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const hh = String(Math.floor(secondsLeft / 3600)).padStart(2, "0");
+  const mm = String(Math.floor((secondsLeft % 3600) / 60)).padStart(2, "0");
+  const ss = String(secondsLeft % 60).padStart(2, "0");
+
   // restore from previous session if available
   useEffect(() => {
     try {
