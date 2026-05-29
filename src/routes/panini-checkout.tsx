@@ -243,6 +243,66 @@ function PaniniCheckoutPage() {
               Você ganhou frete grátis!
             </div>
 
+
+
+            {/* Identificação form */}
+            <section className="mb-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-zinc-100">
+              <Field label="E-mail" error={fieldErr("email")}>
+                <input
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onBlur={() => setTouched((s) => ({ ...s, email: true }))}
+                  className={inputCls(!!(touched.email && errors.email))}
+                />
+              </Field>
+
+              <Field label="Telefone" error={fieldErr("telefone")}>
+                <input
+                  inputMode="tel"
+                  autoComplete="tel"
+                  placeholder="(99) 99999-9999"
+                  value={telefone}
+                  onChange={(e) => setTelefone(maskPhone(e.target.value))}
+                  onBlur={() => setTouched((s) => ({ ...s, telefone: true }))}
+                  className={inputCls(!!(touched.telefone && errors.telefone))}
+                />
+              </Field>
+
+              <Field label="Nome completo" error={fieldErr("nome")}>
+                <input
+                  autoComplete="name"
+                  placeholder="Nome e Sobrenome"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  onBlur={() => setTouched((s) => ({ ...s, nome: true }))}
+                  className={inputCls(!!(touched.nome && errors.nome))}
+                />
+              </Field>
+
+              <Field label="CPF/CNPJ" error={fieldErr("doc")}>
+                <input
+                  inputMode="numeric"
+                  placeholder="000.000.000-00"
+                  value={doc}
+                  onChange={(e) => setDoc(maskDoc(e.target.value))}
+                  onBlur={() => setTouched((s) => ({ ...s, doc: true }))}
+                  className={inputCls(!!(touched.doc && errors.doc))}
+                />
+              </Field>
+
+              <div className="mt-3 rounded-lg border border-dashed border-zinc-300 p-3 text-xs text-zinc-600">
+                <div className="mb-1 font-bold text-zinc-800">Por que precisamos desses dados?</div>
+                <ul className="ml-4 list-disc space-y-0.5">
+                  <li>Enviar o comprovante de compra;</li>
+                  <li>Garantir a devolução caso necessário;</li>
+                  <li>Acompanhar o andamento do pedido.</li>
+                </ul>
+              </div>
+            </section>
+
             {/* Cart summary */}
             <section className="mb-4 rounded-xl bg-white p-3 shadow-sm ring-1 ring-zinc-100">
               <div className="mb-2 text-sm font-bold">
@@ -317,65 +377,6 @@ function PaniniCheckoutPage() {
                   ))}
                 </ul>
               )}
-            </section>
-
-
-            {/* Identificação form */}
-            <section className="mb-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-zinc-100">
-              <Field label="E-mail" error={fieldErr("email")}>
-                <input
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  onBlur={() => setTouched((s) => ({ ...s, email: true }))}
-                  className={inputCls(!!(touched.email && errors.email))}
-                />
-              </Field>
-
-              <Field label="Telefone" error={fieldErr("telefone")}>
-                <input
-                  inputMode="tel"
-                  autoComplete="tel"
-                  placeholder="(99) 99999-9999"
-                  value={telefone}
-                  onChange={(e) => setTelefone(maskPhone(e.target.value))}
-                  onBlur={() => setTouched((s) => ({ ...s, telefone: true }))}
-                  className={inputCls(!!(touched.telefone && errors.telefone))}
-                />
-              </Field>
-
-              <Field label="Nome completo" error={fieldErr("nome")}>
-                <input
-                  autoComplete="name"
-                  placeholder="Nome e Sobrenome"
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
-                  onBlur={() => setTouched((s) => ({ ...s, nome: true }))}
-                  className={inputCls(!!(touched.nome && errors.nome))}
-                />
-              </Field>
-
-              <Field label="CPF/CNPJ" error={fieldErr("doc")}>
-                <input
-                  inputMode="numeric"
-                  placeholder="000.000.000-00"
-                  value={doc}
-                  onChange={(e) => setDoc(maskDoc(e.target.value))}
-                  onBlur={() => setTouched((s) => ({ ...s, doc: true }))}
-                  className={inputCls(!!(touched.doc && errors.doc))}
-                />
-              </Field>
-
-              <div className="mt-3 rounded-lg border border-dashed border-zinc-300 p-3 text-xs text-zinc-600">
-                <div className="mb-1 font-bold text-zinc-800">Por que precisamos desses dados?</div>
-                <ul className="ml-4 list-disc space-y-0.5">
-                  <li>Enviar o comprovante de compra;</li>
-                  <li>Garantir a devolução caso necessário;</li>
-                  <li>Acompanhar o andamento do pedido.</li>
-                </ul>
-              </div>
             </section>
 
             {/* Resumo do pedido */}
@@ -527,7 +528,7 @@ function PaniniCheckoutPage() {
 
       {/* Bottom totals bar */}
       <div className="fixed bottom-0 left-0 right-0 z-20 border-t border-zinc-200 bg-white">
-        <div className="mx-auto max-w-[640px] px-4 py-2">
+        <div className="px-4 py-2">
           <div className="flex items-center gap-2 text-[12px] font-semibold text-rose-600">
             <Gift className="h-4 w-4" />
             <span>
