@@ -419,6 +419,13 @@ function CheckoutPage() {
 
           {step === 2 && (
             <>
+              <PersonalSummary
+                email={v.email}
+                nome={v.nome}
+                telefone={v.telefone}
+                onEdit={() => setStep(1)}
+              />
+
               <div className="mb-1 flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-slate-900" />
                 <h2 className="text-lg font-extrabold text-slate-900">Endereço de Entrega</h2>
@@ -426,6 +433,7 @@ function CheckoutPage() {
               <p className="mb-5 text-sm text-slate-500">
                 Preencha o endereço para envio do seu pedido.
               </p>
+
 
               <Field label="CEP" error={fieldErr("cep")} hint={cepLoading ? "Buscando endereço..." : undefined}>
                 <input
