@@ -293,25 +293,9 @@ function PaniniProductPage() {
             </span>
           </div>
           <div className="mt-3 -mx-4 flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">
-            {product.comentarios.slice(0, 6).map((r, i) => {
-              if (!r.fotos.length) return null;
-              const captions = [
-                "Você vai ter o melhor preço comprando!",
-                "Unboxing das minhas figurinhas que peguei",
-                "Olha que loucura recebi 40 e tantos combos",
-                "Chegou muito bem embalado, recomendo",
-                "Coleção quase completa em poucos dias",
-                "Surpreendi meu filho com esse álbum",
-              ];
-              return (
-                <CreatorVideoCard
-                  key={i}
-                  fotos={r.fotos}
-                  nome={r.nome}
-                  caption={captions[i % captions.length]}
-                />
-              );
-            })}
+            {CREATOR_VIDEOS.map((v, i) => (
+              <CreatorVideoCard key={i} {...v} />
+            ))}
           </div>
         </section>
 
