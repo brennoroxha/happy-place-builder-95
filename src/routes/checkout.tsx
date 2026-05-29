@@ -452,30 +452,28 @@ function CheckoutPage() {
                 />
               </Field>
 
-              <div className="grid grid-cols-3 gap-3">
-                <Field label="UF" error={fieldErr("estado")}>
-                  <select
-                    value={v.estado}
-                    onChange={(e) => set("estado", e.target.value)}
-                    onBlur={() => setTouched((s) => ({ ...s, estado: true }))}
-                    className={inputCls(!!(touched.estado && errors.estado))}
-                  >
-                    <option value="">UF</option>
-                    {UFS.map((u) => <option key={u} value={u}>{u}</option>)}
-                  </select>
-                </Field>
-                <div className="col-span-2">
-                  <Field label="Cidade" error={fieldErr("cidade")}>
-                    <input
-                      placeholder="Cidade"
-                      value={v.cidade}
-                      onChange={(e) => set("cidade", e.target.value)}
-                      onBlur={() => setTouched((s) => ({ ...s, cidade: true }))}
-                      className={inputCls(!!(touched.cidade && errors.cidade))}
-                    />
-                  </Field>
-                </div>
-              </div>
+              <Field label="Cidade" error={fieldErr("cidade")}>
+                <input
+                  placeholder="Cidade"
+                  value={v.cidade}
+                  onChange={(e) => set("cidade", e.target.value)}
+                  onBlur={() => setTouched((s) => ({ ...s, cidade: true }))}
+                  className={inputCls(!!(touched.cidade && errors.cidade))}
+                />
+              </Field>
+
+              <Field label="Estado" error={fieldErr("estado")}>
+                <select
+                  value={v.estado}
+                  onChange={(e) => set("estado", e.target.value)}
+                  onBlur={() => setTouched((s) => ({ ...s, estado: true }))}
+                  className={inputCls(!!(touched.estado && errors.estado))}
+                >
+                  <option value="">UF</option>
+                  {UFS.map((u) => <option key={u} value={u}>{u}</option>)}
+                </select>
+              </Field>
+
 
               <Field label="Bairro" error={fieldErr("bairro")}>
                 <input
@@ -518,22 +516,16 @@ function CheckoutPage() {
                 </Field>
               </div>
 
-              <div className="mt-2 flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => setStep(1)}
-                  className="flex-1 rounded-full border border-slate-300 bg-white py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
-                >
-                  Voltar
-                </button>
+              <div className="mt-2">
                 <button
                   type="button"
                   onClick={advance}
-                  className="flex-[2] rounded-full bg-emerald-500 py-3 text-sm font-bold text-white shadow-md transition hover:bg-emerald-600 active:scale-[.99]"
+                  className="w-full rounded-full bg-emerald-500 py-3 text-sm font-bold text-white shadow-md transition hover:bg-emerald-600 active:scale-[.99]"
                 >
-                  Avançar para o pagamento
+                  Avançar para o pagamento ›
                 </button>
               </div>
+
             </>
           )}
 
