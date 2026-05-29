@@ -542,10 +542,10 @@ function PaniniCheckoutPage() {
             </span>
           </div>
           <div className="mt-1 flex items-center justify-between">
-            <span className="text-sm text-zinc-600">
+            <span className="pl-1 text-sm text-zinc-600">
               Total ({count} {count === 1 ? "item" : "itens"})
             </span>
-            <span className="text-lg font-extrabold text-zinc-900">{brl(subtotal)}</span>
+            <span className="pr-1 text-lg font-extrabold text-zinc-900">{brl(subtotal)}</span>
           </div>
         </div>
         <div className="bg-rose-600 py-2.5 text-center text-sm font-bold text-white">
