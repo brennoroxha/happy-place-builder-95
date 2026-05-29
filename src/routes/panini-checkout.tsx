@@ -804,9 +804,9 @@ function PaniniCheckoutPage() {
                       onClick={() =>
                         setUpsellAdded((s) => ({ ...s, [u.id]: (s[u.id] ?? 0) + qty }))
                       }
-                      className="w-full bg-teal-400 py-3 text-sm font-bold text-white hover:bg-teal-500"
+                      className={`w-full py-3 text-sm font-bold text-white ${added > 0 ? "bg-emerald-600 hover:bg-emerald-700" : "bg-teal-400 hover:bg-teal-500"}`}
                     >
-                      Adicionar item
+                      {added > 0 ? "Adicionado" : "Adicionar item"}
                     </button>
                   </div>
                 );
