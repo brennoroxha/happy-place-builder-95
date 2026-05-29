@@ -226,6 +226,48 @@ function PaniniCopaPage() {
               </button>
             ))}
           </div>
+        ) : tab === "inicio" ? (
+          <div className="bg-white px-3 py-3 space-y-5">
+            {([
+              ["Principais produtos", "Ver mais"],
+              ["Recomendado para você", "Mais"],
+            ] as const).map(([titulo, link], idx) => (
+              <div key={titulo}>
+                <div className="mb-2 flex items-center justify-between px-1">
+                  <h3 className="text-sm font-bold text-zinc-900">{titulo}</h3>
+                  <button onClick={() => setTab("produtos")} className="text-xs text-zinc-500">
+                    {link} ›
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {visibleProducts.slice(idx * 2, idx * 2 + 4).map((p, i) => (
+                    <div key={i} className="flex flex-col rounded-lg border border-zinc-200 bg-white p-2">
+                      <button
+                        onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
+                        className="mb-2 aspect-square w-full"
+                      >
+                        <img src={p.img} alt={p.name} className="h-full w-full object-contain" />
+                      </button>
+                      <button
+                        onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
+                        className="flex flex-col gap-1 text-left"
+                      >
+                        <div className="line-clamp-2 text-xs font-semibold text-zinc-900">{p.name}</div>
+                        <div className="flex flex-wrap items-center gap-1">
+                          <span className="rounded bg-rose-100 px-1.5 py-0.5 text-[10px] font-bold text-rose-600">60% OFF</span>
+                          <span className="rounded bg-cyan-100 px-1.5 py-0.5 text-[10px] font-bold text-cyan-600">Frete grátis</span>
+                        </div>
+                        <div className="mt-1">
+                          <div className="text-sm font-bold leading-tight text-rose-500">{brl(p.price)}</div>
+                          <div className="text-[11px] text-zinc-400 line-through">{brl(p.oldPrice)}</div>
+                        </div>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
           <>
             {/* Filter bar */}
