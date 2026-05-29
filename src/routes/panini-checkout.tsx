@@ -115,6 +115,47 @@ function PaniniCheckoutPage() {
     { id: "correio", label: "Correio", price: 0, eta: "Receba em até 7 dias úteis" },
   ];
   const [shipping, setShipping] = useState("jadlog");
+  const [pagamento, setPagamento] = useState("pix");
+  const upsells: { id: string; name: string; img: string; original: number; price: number; note?: string }[] = [
+    {
+      id: "neymar-lote",
+      name: "[Lançamento] Novo Lote Neymar Edition chance de 12%. aumente sua chance ao adicionar mais!",
+      img: "https://images.unsplash.com/photo-1551958219-acbc608c6377?w=200",
+      original: 31.9,
+      price: 4.9,
+      note: "Após adicionar 1x: 12% de sorte",
+    },
+    {
+      id: "figurinhas-raras",
+      name: "Aumente suas chances para garantir Figurinhas Raras ✨",
+      img: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=200",
+      original: 39.58,
+      price: 12.7,
+    },
+    {
+      id: "caixinha",
+      name: "Caixinha Temática Copa do Mundo 2026 - Capacidade até 500 Figurinhas",
+      img: "https://images.unsplash.com/photo-1607344645866-009c320b63e0?w=200",
+      original: 37.58,
+      price: 8.98,
+    },
+    {
+      id: "adesivo-neymar",
+      name: "Adesivo Autocolante Neymar Jr. & Mercado Livre",
+      img: "https://images.unsplash.com/photo-1551958219-acbc608c6377?w=200",
+      original: 59.99,
+      price: 19.99,
+    },
+    {
+      id: "kit-coca",
+      name: "Kit 6 Garrafas Coca-cola 600ml Copa 2026 Panini Figurinhas",
+      img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=200",
+      original: 79.9,
+      price: 29.9,
+    },
+  ];
+  const [upsellQty, setUpsellQty] = useState<Record<string, number>>({});
+  const [upsellAdded, setUpsellAdded] = useState<Record<string, number>>({});
   const selectedShipping = shippingOptions.find((s) => s.id === shipping)!;
   const [cepLoading, setCepLoading] = useState(false);
   const maskCep = (v: string) => {
@@ -685,6 +726,112 @@ function PaniniCheckoutPage() {
                 </div>
               </div>
             </section>
+          </>
+        )}
+
+        {step === 3 && (
+          <>
+            <div className="mb-3 mt-2 text-center text-sm font-bold text-zinc-900">
+              Acho que você vai gostar destas ofertas ;)
+            </div>
+
+            <div className="-mx-4 mb-4 space-y-3 px-4">
+              {upsells.map((u) => {
+                const qty = upsellQty[u.id] ?? 1;
+                const added = upsellAdded[u.id] ?? 0;
+                return (
+                  <div
+                    key={u.id}
+                    className="overflow-hidden rounded-xl border border-dashed border-zinc-300 bg-white"
+                  >
+                    <div className="flex gap-3 p-3">
+                      <img
+                        src={u.img}
+                        alt={u.name}
+                        className="h-20 w-20 flex-shrink-0 rounded-md bg-zinc-50 object-contain"
+                      />
+                      <div className="flex min-w-0 flex-1 flex-col">
+                        <div className="text-sm font-semibold leading-snug text-zinc-900">
+                          {u.name}
+                        </div>
+                        <div className="mt-1 text-xs text-zinc-400 line-through">
+                          {brl(u.original)}
+                        </div>
+                        <div className="text-sm font-bold text-zinc-900">
+                          {brl(u.price)}{" "}
+                          <span className="text-emerald-600">
+                            ({brl(u.original - u.price)} OFF)
+                          </span>
+                        </div>
+                        {u.note && (
+                          <div className="mt-0.5 text-xs font-semibold text-emerald-600">
+                            {u.note}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between px-3 pb-3">
+                      <div className="flex items-center gap-1 rounded-md bg-zinc-100">
+                        <button
+                          onClick={() =>
+                            setUpsellQty((s) => ({ ...s, [u.id]: Math.max(1, qty - 1) }))
+                          }
+                          className="grid h-8 w-8 place-items-center text-zinc-600"
+                        >
+                          -
+                        </button>
+                        <span className="w-6 text-center text-sm font-semibold tabular-nums">
+                          {qty}
+                        </span>
+                        <button
+                          onClick={() => setUpsellQty((s) => ({ ...s, [u.id]: qty + 1 }))}
+                          className="grid h-8 w-8 place-items-center text-zinc-600"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <div className="text-xs text-zinc-500">
+                        {added > 0 ? `${added} no carrinho` : "Nenhum no carrinho"}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() =>
+                        setUpsellAdded((s) => ({ ...s, [u.id]: (s[u.id] ?? 0) + qty }))
+                      }
+                      className="w-full bg-teal-400 py-3 text-sm font-bold text-white hover:bg-teal-500"
+                    >
+                      Adicionar item
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            <section className="-mx-4 mb-4 bg-white px-4 py-4 shadow-sm ring-1 ring-zinc-100">
+              <div className="mb-3 text-sm font-bold">Forma de pagamento</div>
+              <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-zinc-900 p-3">
+                <div className="grid h-10 w-10 place-items-center rounded-md bg-teal-50 text-teal-600">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+                    <path d="M12 2L2 12l10 10 10-10L12 2zm0 3.3L18.7 12 12 18.7 5.3 12 12 5.3z" />
+                  </svg>
+                </div>
+                <div className="flex-1 text-sm font-semibold text-zinc-900">PIX à vista</div>
+                <input
+                  type="radio"
+                  name="pagamento"
+                  checked={pagamento === "pix"}
+                  onChange={() => setPagamento("pix")}
+                  className="h-4 w-4 accent-zinc-900"
+                />
+              </label>
+            </section>
+
+            <button
+              onClick={() => alert("Compra finalizada!")}
+              className="mb-4 w-full rounded-lg bg-rose-500 py-3.5 text-sm font-extrabold tracking-wide text-white hover:bg-rose-600"
+            >
+              FINALIZAR COMPRA
+            </button>
           </>
         )}
       </main>
