@@ -115,6 +115,47 @@ function PaniniCheckoutPage() {
     { id: "correio", label: "Correio", price: 0, eta: "Receba em até 7 dias úteis" },
   ];
   const [shipping, setShipping] = useState("jadlog");
+  const [pagamento, setPagamento] = useState("pix");
+  const upsells = [
+    {
+      id: "neymar-lote",
+      name: "[Lançamento] Novo Lote Neymar Edition chance de 12%. aumente sua chance ao adicionar mais!",
+      img: "https://images.unsplash.com/photo-1551958219-acbc608c6377?w=200",
+      original: 31.9,
+      price: 4.9,
+      note: "Após adicionar 1x: 12% de sorte",
+    },
+    {
+      id: "figurinhas-raras",
+      name: "Aumente suas chances para garantir Figurinhas Raras ✨",
+      img: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=200",
+      original: 39.58,
+      price: 12.7,
+    },
+    {
+      id: "caixinha",
+      name: "Caixinha Temática Copa do Mundo 2026 - Capacidade até 500 Figurinhas",
+      img: "https://images.unsplash.com/photo-1607344645866-009c320b63e0?w=200",
+      original: 37.58,
+      price: 8.98,
+    },
+    {
+      id: "adesivo-neymar",
+      name: "Adesivo Autocolante Neymar Jr. & Mercado Livre",
+      img: "https://images.unsplash.com/photo-1551958219-acbc608c6377?w=200",
+      original: 59.99,
+      price: 19.99,
+    },
+    {
+      id: "kit-coca",
+      name: "Kit 6 Garrafas Coca-cola 600ml Copa 2026 Panini Figurinhas",
+      img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=200",
+      original: 79.9,
+      price: 29.9,
+    },
+  ] as const;
+  const [upsellQty, setUpsellQty] = useState<Record<string, number>>({});
+  const [upsellAdded, setUpsellAdded] = useState<Record<string, number>>({});
   const selectedShipping = shippingOptions.find((s) => s.id === shipping)!;
   const [cepLoading, setCepLoading] = useState(false);
   const maskCep = (v: string) => {
