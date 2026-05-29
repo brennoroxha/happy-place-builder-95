@@ -96,3 +96,17 @@ export const markSaleConfirmed = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const getSaleStatus = createServerFn({ method: "GET" })
+  .inputValidator((d: { hash: string }) => {
+    if (!d.hash) throw new Error("hash obrigatório");
+    return d;
+  })
+  .handler(async ({ data }) => {
+    const { data: row } = await supabaseAdmin
+      .from("sales")
+      .select("status")
+      .eq("transaction_hash", data.hash)
+      .maybeSingle();
+    return { status: (row?.status as string) ?? "waiting_payment" };
+  });
