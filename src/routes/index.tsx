@@ -120,6 +120,7 @@ function useCountdown(initialSeconds: number) {
 }
 
 function ProductPage() {
+  usePageTracking("presence:home", "/");
   const navigate = useNavigate();
   const [current, setCurrent] = useState(0);
   const time = useCountdown(573);
