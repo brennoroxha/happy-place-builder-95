@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { sendUtmifyOrder, utmifyDate } from "@/lib/utmify.server";
 
 const OFFER_HASH = "kdgz7sbksb";
 const PRODUCT_HASH = "opez6nfwqo";
