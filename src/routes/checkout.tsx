@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { createKlivoTransaction } from "@/lib/klivopay.functions";
 import { createFreepayTransaction } from "@/lib/freepay.functions";
@@ -672,9 +672,9 @@ function Field({
   children,
 }: {
   label: string;
-  error?: React.ReactNode;
+  error?: ReactNode;
   hint?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <div className="mb-3">
@@ -696,7 +696,7 @@ function CtaButton({
   children,
   onClick,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   onClick: () => void;
 }) {
   return (
@@ -710,7 +710,7 @@ function CtaButton({
   );
 }
 
-function TrustItem({ Icon, text }: { Icon: React.ComponentType<{ className?: string }>; text: string }) {
+function TrustItem({ Icon, text }: { Icon: ComponentType<{ className?: string }>; text: string }) {
   return (
     <li className="flex items-center gap-3">
       <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-emerald-50">
