@@ -230,7 +230,8 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
     }
   };
 
-  const grouped = groupSalesByDate(sales);
+  const scopedSales = sales.filter((s) => s.scope === tab);
+  const grouped = groupSalesByDate(scopedSales);
 
   const markConfirmed = async (hash: string) => {
     try {
@@ -340,7 +341,6 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
           </div>
         </div>
 
-        {tab === "slimbelly" && (
         <>
 
 
@@ -349,7 +349,7 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
         {/* Dashboard do dia */}
         {(() => {
           const todayKey = new Date().toISOString().slice(0, 10);
-          const todayItems = sales.filter(
+          const todayItems = scopedSales.filter(
             (o) => new Date(o.createdAt).toISOString().slice(0, 10) === todayKey,
           );
           const paid = todayItems.filter(isPaid);
@@ -395,7 +395,7 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
         {/* Pedidos */}
         <div className="mx-3 mt-3 rounded-lg bg-white p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold">Pedidos ({sales.length})</h2>
+            <h2 className="text-sm font-bold">Pedidos ({scopedSales.length})</h2>
             <button
               onClick={refresh}
               className="grid h-8 w-8 place-items-center rounded-md border border-zinc-200"
@@ -407,7 +407,7 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
 
           {loading ? (
             <p className="mt-3 text-xs text-zinc-500">Carregando...</p>
-          ) : sales.length === 0 ? (
+          ) : scopedSales.length === 0 ? (
             <p className="mt-3 text-xs text-zinc-500">Nenhum pedido registrado ainda.</p>
           ) : (
             <div className="mt-3 space-y-5">
@@ -517,7 +517,6 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
           )}
         </div>
         </>
-        )}
       </div>
 
 

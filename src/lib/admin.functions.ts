@@ -15,6 +15,7 @@ export type AdminSale = {
   paidAt: string | null;
   createdAt: string;
   provider: Provider | null;
+  scope: "slimbelly" | "panini";
   proofDataUrl: string | null;
   proofUploadedAt: string | null;
 };
@@ -64,6 +65,8 @@ export const listSales = createServerFn({ method: "GET" }).handler(async () => {
     const providerRaw = raw.provider as string | undefined;
     const provider: Provider | null =
       providerRaw === "freepay" || providerRaw === "klivopay" ? providerRaw : null;
+    const scopeRaw = raw.scope as string | undefined;
+    const scope: "slimbelly" | "panini" = scopeRaw === "panini" ? "panini" : "slimbelly";
     return {
       hash: String(s.transaction_hash),
       status: String(s.status),
@@ -76,6 +79,7 @@ export const listSales = createServerFn({ method: "GET" }).handler(async () => {
       paidAt: (s.paid_at as string) ?? null,
       createdAt: String(s.created_at),
       provider,
+      scope,
       proofDataUrl: (raw.proof_data_url as string) ?? null,
       proofUploadedAt: (raw.proof_uploaded_at as string) ?? null,
     };

@@ -900,6 +900,7 @@ function PaniniCheckoutPage() {
                       customer: { name: nome.trim(), email, phone, document },
                       cart,
                       tracking: getTracking(),
+                      scope: "panini",
                     },
                   });
                   if (!res.ok) {

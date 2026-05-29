@@ -38,6 +38,7 @@ const inputSchema = z.object({
     )
     .optional(),
   tracking: trackingSchema,
+  scope: z.enum(["slimbelly", "panini"]).optional(),
 });
 
 type Item = { qr_code?: string; url?: string; expiration_date?: string };
@@ -139,6 +140,7 @@ export const createFreepayTransaction = createServerFn({ method: "POST" })
         const rawPayload = JSON.parse(
           JSON.stringify({
             provider: "freepay",
+            scope: data.scope ?? "slimbelly",
             checkout_tracking: tracking,
             tracking,
             metadata: { client_ip: ip },
