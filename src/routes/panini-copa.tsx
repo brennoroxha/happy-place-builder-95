@@ -123,8 +123,13 @@ function PaniniCopaPage() {
                 <div className="h-full w-full bg-gradient-to-r from-rose-500 to-rose-400" />
               </div>
               <div className="mt-2 text-[12px] text-zinc-500">R$ 152,90 / R$ 120,00</div>
-              <button className="mt-3 w-full rounded-full bg-rose-500 py-2.5 text-sm font-bold text-white shadow">
-                Frete gratis ativado
+              <button
+                onClick={() => setFreteAtivo(true)}
+                className={`mt-3 w-full rounded-full py-2.5 text-sm font-bold shadow ${
+                  freteAtivo ? "bg-rose-500 text-white" : "bg-zinc-300 text-zinc-700"
+                }`}
+              >
+                {freteAtivo ? "Frete grátis ativado" : "Resgatar Frete Grátis"}
               </button>
             </div>
           </div>
