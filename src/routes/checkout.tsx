@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { createKlivoTransaction } from "@/lib/klivopay.functions";
 import { createFreepayTransaction } from "@/lib/freepay.functions";
@@ -317,13 +317,13 @@ function CheckoutPage() {
 
       <main className="mx-auto max-w-[640px] px-4 py-5">
         {/* Stepper */}
-        <div className="mb-4 flex items-center">
+        <div className="mb-4 flex items-start justify-between">
           {STEPS.map((s, idx) => {
             const active = step === s.key;
             const done = step > s.key;
             return (
-              <div key={s.key} className="flex flex-1 items-center">
-                <div className="flex flex-col items-center">
+              <Fragment key={s.key}>
+                <div className="flex flex-col items-center" style={{ width: 72 }}>
                   <div
                     className={`grid h-10 w-10 place-items-center rounded-full transition-colors ${
                       done
@@ -336,7 +336,7 @@ function CheckoutPage() {
                     {done ? <Check className="h-5 w-5" /> : <s.Icon className="h-5 w-5" />}
                   </div>
                   <span
-                    className={`mt-1 text-[10px] font-bold uppercase tracking-wide ${
+                    className={`mt-1 text-center text-[10px] font-bold uppercase tracking-wide ${
                       active || done ? "text-slate-900" : "text-slate-400"
                     }`}
                   >
@@ -345,12 +345,12 @@ function CheckoutPage() {
                 </div>
                 {idx < STEPS.length - 1 && (
                   <div
-                    className={`mx-2 h-0.5 flex-1 ${
+                    className={`mx-2 mt-5 h-0.5 flex-1 ${
                       step > s.key ? "bg-emerald-600" : "bg-slate-200"
                     }`}
                   />
                 )}
-              </div>
+              </Fragment>
             );
           })}
         </div>
