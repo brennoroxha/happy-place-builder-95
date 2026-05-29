@@ -297,6 +297,7 @@ function PaniniCheckoutPage() {
 
       <main className="px-4 pb-32 pt-4">
         {/* Stepper */}
+        {step !== 4 && (
         <div className="mb-5 flex items-start justify-between">
           {[
             { k: 1, label: "Identificação" },
