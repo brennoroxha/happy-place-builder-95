@@ -20,6 +20,7 @@ import {
   type Order,
 } from "@/lib/orders";
 import { usePageTracking } from "@/hooks/use-page-tracking";
+import { trackPurchase } from "@/lib/track";
 
 type Search = { total?: number; code?: string; hash?: string };
 
@@ -79,6 +80,7 @@ function PaymentPage() {
   }, [hash]);
 
   // Poll backend for payment confirmation
+  const firedPurchase = useRef(false);
   useEffect(() => {
     if (!hash) return;
     let cancelled = false;
@@ -88,6 +90,10 @@ function PaymentPage() {
         const { status } = await getSaleStatus({ data: { hash } });
         if (cancelled) return;
         if (status === "paid" || status === "confirmed" || status === "approved") {
+          if (!firedPurchase.current) {
+            firedPurchase.current = true;
+            trackPurchase(amount, hash);
+          }
           navigate({ to: "/brinde", search: { total: amount, hash } });
         }
       } catch {}
@@ -103,6 +109,10 @@ function PaymentPage() {
   // Redirect when local order becomes confirmed (e.g. via manual admin action)
   useEffect(() => {
     if (order?.status === "confirmed" && hash) {
+      if (!firedPurchase.current) {
+        firedPurchase.current = true;
+        trackPurchase(amount, hash);
+      }
       navigate({ to: "/brinde", search: { total: amount, hash } });
     }
   }, [order?.status, hash, amount, navigate]);

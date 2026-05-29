@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { createKlivoTransaction } from "@/lib/klivopay.functions";
 import { createFreepayTransaction } from "@/lib/freepay.functions";
@@ -11,6 +11,7 @@ import slimBellyBege from "@/assets/slim-belly-bege.png";
 import slimBellyPreta from "@/assets/slim-belly-preta.png";
 import slimBellyVermelha from "@/assets/slim-belly-vermelha.png";
 import { usePageTracking } from "@/hooks/use-page-tracking";
+import { trackInitiateCheckout } from "@/lib/track";
 
 type CheckoutSearch = { color?: string; size?: string };
 
@@ -86,6 +87,14 @@ function CheckoutPage() {
       .then((r) => setProvider(r.provider))
       .catch(() => {});
   }, [fetchProvider]);
+
+  // Fire InitiateCheckout / begin_checkout exactly once per visit
+  const firedInitiate = useRef(false);
+  useEffect(() => {
+    if (firedInitiate.current) return;
+    firedInitiate.current = true;
+    trackInitiateCheckout(UNIT_PRICE);
+  }, []);
 
   const subtotal = ORIGINAL_PRICE * qty;
   const discounted = UNIT_PRICE * qty;
