@@ -136,7 +136,7 @@ function PaniniCopaPage() {
 
           {/* Cupons */}
           <div className="px-4 pb-4">
-            <div className="flex gap-3 overflow-x-auto pb-1">
+            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
               <div className="flex min-w-[260px] flex-shrink-0 items-center justify-between gap-2 rounded-md border border-cyan-100 bg-cyan-50 px-4 py-2 text-cyan-700">
                 <div className="flex flex-col leading-tight">
                   <span className="whitespace-nowrap text-xs font-semibold">Cupom de frete grátis</span>
