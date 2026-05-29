@@ -416,7 +416,7 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
                     })}
                   </div>
                 </div>
-              ))}
+              );})}
             </div>
           )}
         </div>
