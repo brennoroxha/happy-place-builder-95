@@ -516,7 +516,10 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
             </div>
           )}
         </div>
+        </>
+        )}
       </div>
+
 
       {/* Preview modal */}
       {preview && (
