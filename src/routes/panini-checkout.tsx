@@ -121,6 +121,9 @@ function PaniniCheckoutPage() {
   ];
   const [shipping, setShipping] = useState("jadlog");
   const [pagamento, setPagamento] = useState("pix");
+  const [processing, setProcessing] = useState(false);
+  const pixCode = "00020101021226820014br.gov.bcb.pix2560pix.example.com/qr/v2/cobv/9f8e7d6c5b4a3210abcdef1234567890";
+  const [pixCopied, setPixCopied] = useState(false);
   const upsells: { id: string; name: string; img: string; original: number; price: number; note?: string }[] = [
     {
       id: "neymar-lote",
