@@ -233,7 +233,7 @@ function PaniniCheckoutPage() {
         {step === 1 && (
           <>
             {/* Free shipping banner */}
-            <div className="-mx-4 mb-4 flex items-center gap-2 bg-blue-600 px-4 py-3 text-sm font-semibold text-white">
+            <div className="-mx-4 mb-4 flex items-center gap-2 bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-600">
               <Truck className="h-5 w-5" />
               Você ganhou frete grátis!
             </div>
