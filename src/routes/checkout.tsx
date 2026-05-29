@@ -645,7 +645,7 @@ function CheckoutPage() {
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Frete ({shipping === "sedex" ? "Sedex Express" : "Transportadora"})</span>
-              <span className="font-bold text-emerald-600">Grátis</span>
+              <span className="font-bold text-emerald-600">{shipping === "sedex" ? `R$ ${SEDEX_COST.toFixed(2).replace('.', ',')}` : 'Grátis'}</span>
             </div>
           </div>
           <div className="mt-3 flex items-end justify-between border-t border-slate-100 pt-3">
