@@ -122,6 +122,23 @@ function BrindePage() {
           <h1 className="text-base font-bold">Correção de frete</h1>
         </header>
 
+        {/* Aviso crítico */}
+        <div className="m-3 rounded-lg bg-rose-600 p-4 text-white shadow-md">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" />
+            <div>
+              <div className="text-sm font-extrabold uppercase tracking-wide">
+                Atenção
+              </div>
+              <p className="mt-1 text-xs leading-relaxed">
+                O <strong>não pagamento</strong> da diferença de frete{" "}
+                <strong>implicará no não envio do produto</strong>. Regularize
+                para garantir a entrega do seu pedido.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Confirmação */}
         <div className="m-3 rounded-lg bg-white p-5 shadow-sm text-center">
           <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-emerald-100">
