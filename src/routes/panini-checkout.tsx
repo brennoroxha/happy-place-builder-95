@@ -101,6 +101,26 @@ function PaniniCheckoutPage() {
   const [doc, setDoc] = useState("");
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
+  // Entrega
+  const [cep, setCep] = useState("");
+  const [endereco, setEndereco] = useState("");
+  const [numero, setNumero] = useState("");
+  const [bairro, setBairro] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [estado, setEstado] = useState("");
+  const [complemento, setComplemento] = useState("");
+  const shippingOptions = [
+    { id: "jadlog", label: "JadLog", price: 25.5, eta: "Receba em até 2 dias úteis" },
+    { id: "sedex", label: "Sedex-Express", price: 17.5, eta: "Receba em até 4 dias úteis" },
+    { id: "correio", label: "Correio", price: 0, eta: "Receba em até 7 dias úteis" },
+  ];
+  const [shipping, setShipping] = useState("jadlog");
+  const selectedShipping = shippingOptions.find((s) => s.id === shipping)!;
+  const maskCep = (v: string) => {
+    const d = onlyDigits(v).slice(0, 8);
+    return d.length > 5 ? `${d.slice(0, 5)}-${d.slice(5)}` : d;
+  };
+
   // Coupon countdown (5h)
   const [secondsLeft, setSecondsLeft] = useState(5 * 60 * 60);
   useEffect(() => {
@@ -419,8 +439,119 @@ function PaniniCheckoutPage() {
 
         {step === 2 && (
           <>
+            {/* Free shipping banner */}
+            <div className="-mx-4 mb-4 flex items-center gap-2 bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-600">
+              <Truck className="h-5 w-5" />
+              Você ganhou frete grátis!
+            </div>
+
+            {/* Entrega form */}
+            <section className="-mx-4 mb-4 bg-white px-4 py-4 shadow-sm ring-1 ring-zinc-100">
+              <Field label="CEP">
+                <input
+                  inputMode="numeric"
+                  placeholder="00000-000"
+                  value={cep}
+                  onChange={(e) => setCep(maskCep(e.target.value))}
+                  className={inputCls(false)}
+                />
+              </Field>
+              <Field label="Endereço">
+                <input
+                  placeholder="Rua / Avenida"
+                  value={endereco}
+                  onChange={(e) => setEndereco(e.target.value)}
+                  className={inputCls(false)}
+                />
+              </Field>
+              <Field label="Número">
+                <input
+                  inputMode="numeric"
+                  value={numero}
+                  onChange={(e) => setNumero(e.target.value)}
+                  className={inputCls(false)}
+                />
+              </Field>
+              <Field label="Bairro">
+                <input
+                  value={bairro}
+                  onChange={(e) => setBairro(e.target.value)}
+                  className={inputCls(false)}
+                />
+              </Field>
+              <Field label="Cidade">
+                <input
+                  value={cidade}
+                  onChange={(e) => setCidade(e.target.value)}
+                  className={inputCls(false)}
+                />
+              </Field>
+              <Field label="Estado">
+                <input
+                  value={estado}
+                  onChange={(e) => setEstado(e.target.value)}
+                  className={inputCls(false)}
+                />
+              </Field>
+              <Field label="Complemento">
+                <input
+                  placeholder="Apartamento, bloco, referência (opcional)"
+                  value={complemento}
+                  onChange={(e) => setComplemento(e.target.value)}
+                  className={inputCls(false)}
+                />
+              </Field>
+
+              <div className="mt-3 space-y-2">
+                {shippingOptions.map((opt) => {
+                  const active = shipping === opt.id;
+                  return (
+                    <label
+                      key={opt.id}
+                      className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3 ${
+                        active ? "border-zinc-900" : "border-zinc-200"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="shipping"
+                        checked={active}
+                        onChange={() => setShipping(opt.id)}
+                        className="h-4 w-4 accent-zinc-900"
+                      />
+                      <div className="flex flex-1 items-center justify-between">
+                        <div>
+                          <div className="text-sm font-semibold text-zinc-900">{opt.label}</div>
+                          <div className="text-xs text-zinc-500">{opt.eta}</div>
+                        </div>
+                        <div className="text-sm font-bold text-zinc-900">{brl(opt.price)}</div>
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+
+              <div className="mt-3 text-xs text-zinc-600">
+                Frete selecionado: {selectedShipping.label} ({brl(selectedShipping.price)})
+              </div>
+
+              <button
+                onClick={() => setStep(3)}
+                className="mt-4 w-full rounded-lg bg-zinc-900 py-3.5 text-sm font-bold text-white"
+              >
+                Ir para pagamento
+              </button>
+
+              <button
+                onClick={() => setStep(1)}
+                className="mt-3 w-full text-center text-xs font-semibold text-zinc-500 underline"
+              >
+                Voltar
+              </button>
+            </section>
+
             {/* Cart summary */}
-            <section className="mb-4 rounded-xl bg-white p-3 shadow-sm ring-1 ring-zinc-100">
+            <section className="-mx-4 mb-4 bg-white px-4 py-3 shadow-sm ring-1 ring-zinc-100">
               <div className="mb-2 text-sm font-bold">
                 Resumo do carrinho ({count} {count === 1 ? "item" : "itens"})
               </div>
@@ -496,7 +627,7 @@ function PaniniCheckoutPage() {
             </section>
 
             {/* Resumo do pedido */}
-            <section className="mb-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-zinc-100">
+            <section className="-mx-4 mb-4 bg-white px-4 py-4 shadow-sm ring-1 ring-zinc-100">
               <div className="mb-3 text-sm font-bold">Resumo do pedido</div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
@@ -509,24 +640,21 @@ function PaniniCheckoutPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-600">Frete</span>
-                  <span className="font-semibold text-emerald-600">Grátis</span>
+                  <span className="font-semibold text-zinc-900">
+                    {selectedShipping.price === 0 ? (
+                      <span className="text-emerald-600">Grátis</span>
+                    ) : (
+                      brl(selectedShipping.price)
+                    )}
+                  </span>
                 </div>
                 <div className="mt-2 border-t border-zinc-100 pt-2 flex justify-between">
                   <span className="font-bold text-zinc-900">Total</span>
-                  <span className="text-lg font-extrabold text-zinc-900">{brl(subtotal)}</span>
+                  <span className="text-lg font-extrabold text-zinc-900">
+                    {brl(subtotal + selectedShipping.price)}
+                  </span>
                 </div>
               </div>
-            </section>
-
-            <section className="rounded-xl bg-white p-6 text-center shadow-sm ring-1 ring-zinc-100">
-              <h2 className="mb-2 text-lg font-bold">Entrega</h2>
-              <p className="text-sm text-zinc-500">Próxima etapa em breve.</p>
-              <button
-                onClick={() => setStep(1)}
-                className="mt-4 text-sm font-semibold text-zinc-700 underline"
-              >
-                Voltar
-              </button>
             </section>
           </>
         )}
