@@ -18,6 +18,7 @@ import {
   ChevronRight,
   Check,
   ShoppingBag,
+  Pencil,
 } from "lucide-react";
 import slimBellyBege from "@/assets/slim-belly-bege.png";
 import slimBellyPreta from "@/assets/slim-belly-preta.png";
@@ -419,6 +420,13 @@ function CheckoutPage() {
 
           {step === 2 && (
             <>
+              <PersonalSummary
+                email={v.email}
+                nome={v.nome}
+                telefone={v.telefone}
+                onEdit={() => setStep(1)}
+              />
+
               <div className="mb-1 flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-slate-900" />
                 <h2 className="text-lg font-extrabold text-slate-900">Endereço de Entrega</h2>
@@ -426,6 +434,7 @@ function CheckoutPage() {
               <p className="mb-5 text-sm text-slate-500">
                 Preencha o endereço para envio do seu pedido.
               </p>
+
 
               <Field label="CEP" error={fieldErr("cep")} hint={cepLoading ? "Buscando endereço..." : undefined}>
                 <input
@@ -525,38 +534,42 @@ function CheckoutPage() {
 
           {step === 3 && (
             <>
-              <div className="mb-1 flex items-center gap-2">
-                <QrCode className="h-5 w-5 text-slate-900" />
-                <h2 className="text-lg font-extrabold text-slate-900">Pagamento via Pix</h2>
-              </div>
-              <p className="mb-5 text-sm text-slate-500">
-                Geramos seu código Pix instantaneamente. Pagamento aprovado em segundos.
-              </p>
+              <PersonalSummary
+                email={v.email}
+                nome={v.nome}
+                telefone={v.telefone}
+                onEdit={() => setStep(1)}
+              />
 
-              <div className="mb-4 rounded-xl border-2 border-emerald-500 bg-emerald-50/50 p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <svg viewBox="0 0 32 32" className="h-9 w-9" fill="none">
-                      <path d="M16 4l5 5-5 5-5-5 5-5z" fill="#10b981"/>
-                      <path d="M16 18l5 5-5 5-5-5 5-5z" fill="#10b981"/>
-                      <path d="M4 16l5-5 5 5-5 5-5-5z" fill="#10b981"/>
-                      <path d="M18 16l5-5 5 5-5 5-5-5z" fill="#10b981"/>
-                    </svg>
-                    <div>
-                      <div className="text-sm font-extrabold text-slate-900">Pix</div>
-                      <div className="text-xs text-slate-500">Aprovação imediata</div>
-                    </div>
-                  </div>
+              <div className="mb-3 flex items-center gap-2">
+                <QrCode className="h-5 w-5 text-slate-900" />
+                <h2 className="text-lg font-extrabold text-slate-900">Pagamento</h2>
+              </div>
+
+              <div className="mb-4 overflow-hidden rounded-xl border-2 border-emerald-500">
+                <div className="flex items-center gap-3 bg-emerald-50/60 px-4 py-3">
                   <span className="grid h-5 w-5 place-items-center rounded-full border-2 border-emerald-500">
                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                   </span>
+                  <span className="text-sm font-extrabold text-slate-900">Pix</span>
+                </div>
+                <div className="flex flex-col items-center bg-white px-4 py-6">
+                  <svg viewBox="0 0 48 48" className="h-14 w-14" fill="none">
+                    <path d="M24 6l6 6-6 6-6-6 6-6z" fill="#10b981"/>
+                    <path d="M24 30l6 6-6 6-6-6 6-6z" fill="#10b981"/>
+                    <path d="M6 24l6-6 6 6-6 6-6-6z" fill="#10b981"/>
+                    <path d="M30 24l6-6 6 6-6 6-6-6z" fill="#10b981"/>
+                  </svg>
+                  <p className="mt-4 text-center text-sm font-bold text-slate-900">
+                    Para pagar, finalize sua compra abaixo
+                  </p>
+                  <span className="mt-2 text-slate-400">↓</span>
                 </div>
               </div>
 
-              <div className="mb-4 rounded-xl bg-slate-50 p-4 text-sm">
-                <div className="font-semibold text-slate-900">{v.nome}</div>
-                <div className="text-slate-500">{v.email} · {v.telefone}</div>
-                <div className="mt-1 text-slate-500">
+              <div className="mb-4 rounded-xl bg-slate-50 p-3 text-xs text-slate-500">
+                <div className="font-semibold text-slate-700">Endereço de entrega</div>
+                <div className="mt-0.5">
                   {v.rua}, {v.numero}{v.complemento ? `, ${v.complemento}` : ""} — {v.bairro}, {v.cidade}/{v.estado}, {v.cep}
                 </div>
               </div>
@@ -718,5 +731,48 @@ function TrustItem({ Icon, text }: { Icon: ComponentType<{ className?: string }>
       </span>
       <span>{text}</span>
     </li>
+  );
+}
+
+function PersonalSummary({
+  email,
+  nome,
+  telefone,
+  onEdit,
+}: {
+  email: string;
+  nome: string;
+  telefone: string;
+  onEdit: () => void;
+}) {
+  return (
+    <div className="mb-5 rounded-xl border border-slate-200 bg-white p-4">
+      <div className="mb-2 flex items-start justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <User className="h-5 w-5 text-slate-900" />
+          <h3 className="text-base font-extrabold text-slate-900">Dados pessoais</h3>
+        </div>
+        <button
+          type="button"
+          onClick={onEdit}
+          className="text-xs font-bold text-slate-700 hover:text-slate-900"
+        >
+          Não é você? Sair
+        </button>
+      </div>
+      <div className="space-y-0.5 text-sm">
+        <div className="text-slate-500">{email}</div>
+        <div className="text-slate-700"><span className="font-bold text-slate-900">Nome:</span> {nome}</div>
+        <div className="text-slate-700"><span className="font-bold text-slate-900">Telefone:</span> {telefone}</div>
+      </div>
+      <button
+        type="button"
+        onClick={onEdit}
+        className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-slate-300 bg-white py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+      >
+        <Pencil className="h-4 w-4" />
+        Alterar meus dados
+      </button>
+    </div>
   );
 }
