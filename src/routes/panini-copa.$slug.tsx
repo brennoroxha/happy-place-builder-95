@@ -388,13 +388,13 @@ function PaniniProductPage() {
           </button>
           <button
             onClick={addToCart}
-            className="ml-auto flex-1 rounded-md bg-zinc-200 py-2.5 text-[12px] font-semibold leading-tight text-zinc-800"
+            className="ml-auto flex-1 rounded-md bg-zinc-200 text-[12px] font-semibold text-zinc-800 h-12 flex items-center justify-center"
           >
-            Adicionar ao<br />Carrinho
+            Adicionar ao Carrinho
           </button>
           <button
             onClick={goCheckout}
-            className="flex-1 rounded-md bg-rose-500 py-3 text-sm font-bold text-white shadow-sm"
+            className="flex-1 rounded-md bg-rose-500 text-sm font-bold text-white shadow-sm h-12 flex items-center justify-center"
           >
             Comprar Agora
           </button>
