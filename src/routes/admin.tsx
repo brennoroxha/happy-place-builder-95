@@ -276,6 +276,54 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
           </div>
         )}
 
+        {/* Dashboard do dia */}
+        {(() => {
+          const todayKey = new Date().toISOString().slice(0, 10);
+          const todayItems = orders.filter(
+            (o) => new Date(o.createdAt).toISOString().slice(0, 10) === todayKey,
+          );
+          const paid = todayItems.filter((o) => o.status === "confirmed");
+          const pending = todayItems.filter((o) => o.status !== "confirmed");
+          const totalPaid = paid.reduce((s, o) => s + o.total, 0);
+          const totalPending = pending.reduce((s, o) => s + o.total, 0);
+          return (
+            <div className="mx-3 mt-3 rounded-lg bg-white p-4 shadow-sm">
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-bold">Resumo de hoje</h2>
+                <span className="text-[11px] text-zinc-500">
+                  {new Date().toLocaleDateString("pt-BR")}
+                </span>
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+                  <div className="text-[10px] font-bold uppercase text-emerald-700">
+                    Pagos
+                  </div>
+                  <div className="mt-1 text-2xl font-extrabold text-emerald-700">
+                    {paid.length}
+                  </div>
+                  <div className="text-xs font-semibold text-emerald-700">
+                    {brl(totalPaid)}
+                  </div>
+                </div>
+                <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+                  <div className="text-[10px] font-bold uppercase text-zinc-600">
+                    Pendentes
+                  </div>
+                  <div className="mt-1 text-2xl font-extrabold text-zinc-700">
+                    {pending.length}
+                  </div>
+                  <div className="text-xs font-semibold text-zinc-700">
+                    {brl(totalPending)}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+
+
         {/* Pedidos */}
         <div className="mx-3 mt-3 rounded-lg bg-white p-4 shadow-sm">
           <div className="flex items-center justify-between">
