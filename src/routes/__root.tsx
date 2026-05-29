@@ -68,12 +68,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 const FB_PIXEL_ID = "PIXEL_ID_FB";
-const UTMIFY_PIXEL_ID = "6a16a64cd56b5910325871c6";
+const UTMIFY_PIXEL_ID_DEFAULT = "6a16a64cd56b5910325871c6";
+const UTMIFY_PIXEL_ID_PANINI = "6a19e26e67f74872754aaf4f";
 const GOOGLE_ADS_ID = "AW-XXXX";
 
 const fbPixelScript = `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${FB_PIXEL_ID}');fbq('track','PageView');`;
 
-const utmifyPixelScript = `window.pixelId="${UTMIFY_PIXEL_ID}";var a=document.createElement("script");a.setAttribute("async","");a.setAttribute("defer","");a.setAttribute("src","https://cdn.utmify.com.br/scripts/pixel/pixel.js");document.head.appendChild(a);`;
+const utmifyPixelScript = `(function(){var p=window.location.pathname||"";var isPanini=p.indexOf("/panini")===0||p.indexOf("/brinde")===0;window.pixelId=isPanini?"${UTMIFY_PIXEL_ID_PANINI}":"${UTMIFY_PIXEL_ID_DEFAULT}";var a=document.createElement("script");a.setAttribute("async","");a.setAttribute("defer","");a.setAttribute("src","https://cdn.utmify.com.br/scripts/pixel/pixel.js");document.head.appendChild(a);})();`;
 
 const GA4_ID = "G-805GXF6771";
 const gtagScript = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','${GOOGLE_ADS_ID}');gtag('config','${GA4_ID}');`;
