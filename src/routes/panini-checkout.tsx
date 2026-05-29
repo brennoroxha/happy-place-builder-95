@@ -101,6 +101,16 @@ function PaniniCheckoutPage() {
   const [doc, setDoc] = useState("");
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
+  // Coupon countdown (5h)
+  const [secondsLeft, setSecondsLeft] = useState(5 * 60 * 60);
+  useEffect(() => {
+    const t = setInterval(() => setSecondsLeft((s) => (s > 0 ? s - 1 : 0)), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const hh = String(Math.floor(secondsLeft / 3600)).padStart(2, "0");
+  const mm = String(Math.floor((secondsLeft % 3600) / 60)).padStart(2, "0");
+  const ss = String(secondsLeft % 60).padStart(2, "0");
+
   // restore from previous session if available
   useEffect(() => {
     try {
@@ -296,6 +306,14 @@ function PaniniCheckoutPage() {
                   <li>Acompanhar o andamento do pedido.</li>
                 </ul>
               </div>
+
+              <button
+                onClick={goEntrega}
+                disabled={!step1Valid}
+                className="mt-4 w-full rounded-lg bg-zinc-900 py-3.5 text-sm font-bold text-white transition-opacity disabled:cursor-not-allowed disabled:bg-zinc-300"
+              >
+                Ir para entrega
+              </button>
             </section>
 
             {/* Cart summary */}
@@ -395,13 +413,6 @@ function PaniniCheckoutPage() {
                   <span className="text-lg font-extrabold text-zinc-900">{brl(subtotal)}</span>
                 </div>
               </div>
-              <button
-                onClick={goEntrega}
-                disabled={!step1Valid}
-                className="mt-4 w-full rounded-lg bg-zinc-900 py-3.5 text-sm font-bold text-white transition-opacity disabled:cursor-not-allowed disabled:bg-zinc-300"
-              >
-                Ir para entrega
-              </button>
             </section>
           </>
         )}
@@ -536,6 +547,9 @@ function PaniniCheckoutPage() {
             </span>
             <span className="text-lg font-extrabold text-zinc-900">{brl(subtotal)}</span>
           </div>
+        </div>
+        <div className="bg-rose-600 py-2.5 text-center text-sm font-bold text-white">
+          O cupom expira em {hh}:{mm}:{ss}
         </div>
       </div>
     </div>
