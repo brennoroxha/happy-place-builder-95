@@ -147,36 +147,24 @@ function PaniniCopaPage() {
 
           {/* Frete promo card */}
           <div className="px-4 pb-2">
-            <div className="rounded-2xl border border-rose-100 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200 bg-white p-3 shadow-[0_4px_14px_rgba(0,0,0,0.18)]">
               <div className="flex items-center justify-between text-sm">
                 <span className="font-semibold tracking-wide text-zinc-800">OFERTA TERMINA EM</span>
                 <span className="rounded-full bg-zinc-900 px-3 py-1 text-xs font-bold text-white tabular-nums">{time}</span>
               </div>
               <div className="mt-2 text-sm text-zinc-700">Frete gratis liberado no checkout!</div>
-              <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-rose-100">
-                <div className="h-full w-full bg-gradient-to-r from-rose-500 to-rose-400" />
+              <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-zinc-200">
+                <div className="h-full w-full bg-gradient-to-r from-zinc-700 to-zinc-500" />
               </div>
               <div className="mt-2 text-[12px] text-zinc-500">R$ 152,90 / R$ 120,00</div>
               <button
                 onClick={() => setFreteAtivo(true)}
                 className={`mt-3 w-full rounded-full py-2.5 text-sm font-bold shadow ${
-                  freteAtivo ? "bg-rose-500 text-white" : "bg-zinc-300 text-zinc-700"
+                  freteAtivo ? "bg-zinc-900 text-white" : "bg-zinc-300 text-zinc-700"
                 }`}
               >
                 {freteAtivo ? "Frete grátis ativado" : "Resgatar Frete Grátis"}
               </button>
-            </div>
-          </div>
-
-          {/* Cupons */}
-          <div className="px-4 pb-4">
-            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
-              <div className="flex min-w-[220px] flex-shrink-0 items-center justify-between gap-2 rounded-md border border-rose-100 bg-rose-50 px-4 py-2 text-rose-600">
-                <div className="flex flex-col leading-tight">
-                  <span className="whitespace-nowrap text-xs font-semibold">Até 85% OFF</span>
-                  <span className="whitespace-nowrap text-[11px] text-rose-500">Em produtos s...</span>
-                </div>
-              </div>
             </div>
           </div>
 
