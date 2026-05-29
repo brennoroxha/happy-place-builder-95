@@ -142,10 +142,9 @@ function PaniniCheckoutPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const originalTotal = items.reduce((s, it) => s + it.qty * (it as any).original ?? 0, 0);
   // fallback: assume discount of ~77% to mirror screenshot if no original price
   const totalOriginal = items.reduce(
-    (s, it) => s + it.qty * Math.max(it.price, it.price / 0.23),
+    (s, it) => s + it.qty * (it.price / 0.23),
     0
   );
   const discount = Math.max(0, totalOriginal - subtotal);
