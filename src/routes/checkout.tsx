@@ -88,6 +88,14 @@ function CheckoutPage() {
       .catch(() => {});
   }, [fetchProvider]);
 
+  // Fire InitiateCheckout / begin_checkout exactly once per visit
+  const firedInitiate = useRef(false);
+  useEffect(() => {
+    if (firedInitiate.current) return;
+    firedInitiate.current = true;
+    trackInitiateCheckout(UNIT_PRICE);
+  }, []);
+
   const subtotal = ORIGINAL_PRICE * qty;
   const discounted = UNIT_PRICE * qty;
   const discount = subtotal - discounted;
