@@ -20,6 +20,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import slimBellyBege from "@/assets/slim-belly-bege.png";
+import pixLogo from "@/assets/pix-logo.png";
 import slimBellyPreta from "@/assets/slim-belly-preta.png";
 import slimBellyVermelha from "@/assets/slim-belly-vermelha.png";
 import { usePageTracking } from "@/hooks/use-page-tracking";
