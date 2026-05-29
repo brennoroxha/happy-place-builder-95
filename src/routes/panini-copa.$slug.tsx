@@ -4,7 +4,7 @@ import {
   ChevronLeft, Share2, ShoppingCart, Bookmark, ChevronRight,
   Zap, Truck, Store, MessageCircle, Star, Ticket, ShieldCheck, LayoutGrid, Video,
 } from "lucide-react";
-import { paniniBySlug, paniniProducts, type PaniniProduct } from "@/lib/panini-products";
+import { paniniBySlug, type PaniniProduct } from "@/lib/panini-products";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { CartDrawer } from "@/components/panini/CartDrawer";
 
@@ -218,12 +218,10 @@ function PaniniProductPage() {
           <button onClick={goCheckout} className="flex w-full items-center gap-3 px-4 py-3 text-left">
             <LayoutGrid className="h-4 w-4 flex-shrink-0 text-zinc-500" />
             <div className="flex gap-1">
-              {paniniProducts.slice(0, 4).map((p, i) => (
-                <img key={i} src={p.fotos[0]} alt="" className="h-7 w-7 rounded-md border border-zinc-200 object-cover" />
-              ))}
+              <img src={cover} alt="" className="h-7 w-7 rounded-md border border-zinc-200 object-cover" />
             </div>
-            <span className="ml-1 max-w-[90px] text-[13px] leading-tight text-zinc-700">
-              <span className="font-semibold">{paniniProducts.length}</span> opções disponíveis
+            <span className="ml-1 text-[13px] leading-tight text-zinc-700">
+              <span className="font-semibold">1</span> opções disponíveis
             </span>
             <ChevronRight className="ml-auto h-5 w-5 text-zinc-400" />
           </button>
