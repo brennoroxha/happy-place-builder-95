@@ -251,7 +251,7 @@ function PaniniCheckoutPage() {
 
 
             {/* Identificação form */}
-            <section className="mb-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-zinc-100">
+            <section className="-mx-4 mb-4 bg-white px-4 py-4 shadow-sm ring-1 ring-zinc-100">
               <Field label="E-mail" error={fieldErr("email")}>
                 <input
                   type="email"
@@ -317,7 +317,7 @@ function PaniniCheckoutPage() {
             </section>
 
             {/* Cart summary */}
-            <section className="mb-4 rounded-xl bg-white p-3 shadow-sm ring-1 ring-zinc-100">
+            <section className="-mx-4 mb-4 bg-white px-4 py-3 shadow-sm ring-1 ring-zinc-100">
               <div className="mb-2 text-sm font-bold">
                 Resumo do carrinho ({count} {count === 1 ? "item" : "itens"})
               </div>
@@ -393,7 +393,7 @@ function PaniniCheckoutPage() {
             </section>
 
             {/* Resumo do pedido */}
-            <section className="mb-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-zinc-100">
+            <section className="-mx-4 mb-4 bg-white px-4 py-4 shadow-sm ring-1 ring-zinc-100">
               <div className="mb-3 text-sm font-bold">Resumo do pedido</div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
