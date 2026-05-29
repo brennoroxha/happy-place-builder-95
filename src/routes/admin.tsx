@@ -180,19 +180,11 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
   const [sales, setSales] = useState<AdminSale[]>([]);
   const [loading, setLoading] = useState(true);
   const [preview, setPreview] = useState<string | null>(null);
-  const [analytics, setAnalytics] = useState<AnalyticsSummary | null>(null);
-
-  const onlineHome = usePresenceCount("presence:home");
-  const onlineCheckout = usePresenceCount("presence:checkout");
-  const onlinePagamento = usePresenceCount("presence:pagamento");
-  const onlineBrinde = usePresenceCount("presence:brinde");
-  const totalOnline = onlineHome + onlineCheckout + onlinePagamento + onlineBrinde;
 
   const fetchProvider = useServerFn(getActiveProvider);
   const saveProviderFn = useServerFn(setActiveProvider);
   const fetchSales = useServerFn(listSales);
   const confirmSale = useServerFn(markSaleConfirmed);
-  const fetchAnalytics = useServerFn(getAnalyticsSummary);
 
   const refresh = async () => {
     setLoading(true);
@@ -211,12 +203,6 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
       .then((r) => setProvider(r.provider))
       .catch(() => {});
     refresh();
-    const loadAnalytics = () => {
-      fetchAnalytics().then(setAnalytics).catch(() => {});
-    };
-    loadAnalytics();
-    const i = setInterval(loadAnalytics, 15000);
-    return () => clearInterval(i);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
