@@ -403,13 +403,6 @@ function PaniniCheckoutPage() {
                   <span className="text-lg font-extrabold text-zinc-900">{brl(subtotal)}</span>
                 </div>
               </div>
-              <button
-                onClick={goEntrega}
-                disabled={!step1Valid}
-                className="mt-4 w-full rounded-lg bg-zinc-900 py-3.5 text-sm font-bold text-white transition-opacity disabled:cursor-not-allowed disabled:bg-zinc-300"
-              >
-                Ir para entrega
-              </button>
             </section>
           </>
         )}
