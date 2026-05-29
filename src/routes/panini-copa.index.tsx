@@ -179,13 +179,6 @@ function PaniniCopaPage() {
           {/* Cupons */}
           <div className="px-4 pb-4">
             <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
-              <div className="flex min-w-[260px] flex-shrink-0 items-center justify-between gap-2 rounded-md border border-cyan-100 bg-cyan-50 px-4 py-2 text-cyan-700">
-                <div className="flex flex-col leading-tight">
-                  <span className="whitespace-nowrap text-xs font-semibold">Cupom de frete grátis</span>
-                  <span className="whitespace-nowrap text-[11px] text-cyan-600">Sem gasto mínimo</span>
-                </div>
-                <button className="rounded-md bg-cyan-500 px-3 py-1 text-[11px] font-bold text-white">Resgatar</button>
-              </div>
               <div className="flex min-w-[220px] flex-shrink-0 items-center justify-between gap-2 rounded-md border border-rose-100 bg-rose-50 px-4 py-2 text-rose-600">
                 <div className="flex flex-col leading-tight">
                   <span className="whitespace-nowrap text-xs font-semibold">Até 85% OFF</span>
