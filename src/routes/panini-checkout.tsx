@@ -375,7 +375,29 @@ function PaniniCheckoutPage() {
                   <li>Acompanhar o andamento do pedido.</li>
                 </ul>
               </div>
+            </section>
 
+            {/* Resumo do pedido */}
+            <section className="mb-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-zinc-100">
+              <div className="mb-3 text-sm font-bold">Resumo do pedido</div>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-zinc-600">Subtotal</span>
+                  <span className="font-semibold text-zinc-900">{brl(subtotal)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-600">Desconto</span>
+                  <span className="font-semibold text-emerald-600">- {brl(discount)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-600">Frete</span>
+                  <span className="font-semibold text-emerald-600">Grátis</span>
+                </div>
+                <div className="mt-2 border-t border-zinc-100 pt-2 flex justify-between">
+                  <span className="font-bold text-zinc-900">Total</span>
+                  <span className="text-lg font-extrabold text-zinc-900">{brl(subtotal)}</span>
+                </div>
+              </div>
               <button
                 onClick={goEntrega}
                 disabled={!step1Valid}
