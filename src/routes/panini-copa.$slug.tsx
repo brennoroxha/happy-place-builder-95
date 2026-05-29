@@ -101,10 +101,12 @@ function PaniniProductPage() {
           </div>
           <div className="flex items-center gap-4">
             <Share2 className="h-5 w-5" />
-            <div className="relative">
+            <button onClick={() => setOpen(true)} className="relative" aria-label="Abrir carrinho">
               <ShoppingCart className="h-5 w-5" />
-              <span className="absolute -top-2 -right-2 grid h-4 w-4 place-items-center rounded-full bg-rose-500 text-[10px] font-bold text-white">0</span>
-            </div>
+              {count > 0 && (
+                <span className="absolute -top-2 -right-2 grid h-4 min-w-4 place-items-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white">{count}</span>
+              )}
+            </button>
           </div>
         </header>
 
