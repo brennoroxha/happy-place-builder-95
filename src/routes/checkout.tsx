@@ -356,6 +356,18 @@ function CheckoutPage() {
           })}
         </div>
 
+        {/* Dados pessoais resumo (passos 2 e 3) */}
+        {(step === 2 || step === 3) && (
+          <section className="mb-4 rounded-2xl bg-white p-5 shadow-sm">
+            <PersonalSummary
+              email={v.email}
+              nome={v.nome}
+              telefone={v.telefone}
+              onEdit={() => setStep(1)}
+            />
+          </section>
+        )}
+
         {/* Step card */}
         <section className="rounded-2xl bg-white p-5 shadow-sm">
           {step === 1 && (
@@ -420,13 +432,6 @@ function CheckoutPage() {
 
           {step === 2 && (
             <>
-              <PersonalSummary
-                email={v.email}
-                nome={v.nome}
-                telefone={v.telefone}
-                onEdit={() => setStep(1)}
-              />
-
               <div className="mb-1 flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-slate-900" />
                 <h2 className="text-lg font-extrabold text-slate-900">Endereço de Entrega</h2>
