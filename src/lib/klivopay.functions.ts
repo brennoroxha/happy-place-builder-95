@@ -41,6 +41,7 @@ const inputSchema = z.object({
     )
     .optional(),
   tracking: trackingSchema,
+  scope: z.enum(["slimbelly", "panini"]).optional(),
 });
 
 function getClientIp(): string | null {
@@ -129,6 +130,7 @@ export const createKlivoTransaction = createServerFn({ method: "POST" })
         const rawPayload = JSON.parse(
           JSON.stringify({
             provider: "klivopay",
+            scope: data.scope ?? "slimbelly",
             checkout_tracking: tracking,
             tracking,
             metadata: { client_ip: ip },
