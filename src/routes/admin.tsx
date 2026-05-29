@@ -1,23 +1,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   ChevronLeft,
   Check,
   AlertTriangle,
   Image as ImageIcon,
   RefreshCw,
-  Trash2,
   Lock,
   LogOut,
 } from "lucide-react";
 import {
-  groupByDate,
-  isPaymentDeviation,
-  loadOrders,
-  saveOrders,
-  updateOrder,
-  type Order,
-} from "@/lib/orders";
+  getActiveProvider,
+  setActiveProvider,
+  listSales,
+  markSaleConfirmed,
+  type AdminSale,
+} from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
