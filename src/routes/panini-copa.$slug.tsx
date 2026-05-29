@@ -250,7 +250,6 @@ function PaniniProductPage() {
             <button className="p-1" onClick={() => navigate({ to: "/panini-copa" })}>
               <ChevronLeft className="h-6 w-6" />
             </button>
-            <span className="text-base font-bold tracking-tight text-rose-600">Panini</span>
           </div>
           <div className="flex items-center gap-4">
             <Share2 className="h-5 w-5" />
