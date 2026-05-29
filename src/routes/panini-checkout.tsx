@@ -125,6 +125,12 @@ function PaniniCheckoutPage() {
   const [processing, setProcessing] = useState(false);
   const pixCode = "00020101021226820014br.gov.bcb.pix2560pix.example.com/qr/v2/cobv/9f8e7d6c5b4a3210abcdef1234567890";
   const [pixCopied, setPixCopied] = useState(false);
+
+  // Fire InitiateCheckout pixel once when the Panini checkout loads
+  useEffect(() => {
+    trackInitiateCheckout(subtotal || 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const upsells: { id: string; name: string; img: string; original: number; price: number; note?: string }[] = [
     {
       id: "neymar-lote",
