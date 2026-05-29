@@ -292,6 +292,52 @@ function PaniniProductPage() {
           </div>
         </section>
 
+        {/* Reviews */}
+        {product.comentarios.length > 0 && (
+          <section className="mt-6 px-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-bold">Avaliações dos clientes</h2>
+              <button className="text-xs text-sky-600">Ver mais</button>
+            </div>
+            <div className="mt-3 flex items-center gap-3">
+              <div className="text-3xl font-bold">{product.notas.toFixed(1)}</div>
+              <div>
+                <div className="flex text-amber-500">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-amber-500" />
+                  ))}
+                </div>
+                <div className="text-xs text-zinc-500">de 5</div>
+              </div>
+            </div>
+
+            <div className="mt-4 divide-y divide-zinc-100">
+              {product.comentarios.map((r, idx) => (
+                <div key={idx} className="py-4">
+                  <div className="flex items-center gap-3">
+                    <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(r.nome)}&background=eee&color=111&size=64`} alt={r.nome} className="h-9 w-9 rounded-full" />
+                    <div>
+                      <div className="text-sm font-semibold">{r.nome}</div>
+                      <div className="flex text-amber-500">
+                        {Array.from({ length: r.nota }).map((_, i) => (
+                          <Star key={i} className="h-3 w-3 fill-amber-500" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <p className="mt-2 text-sm text-zinc-700">{r.texto}</p>
+                  {r.fotos.length > 0 && (
+                    <div className="mt-2 flex gap-2">
+                      {r.fotos.map((p, i) => (
+                        <img key={i} src={p} alt="" className="h-16 w-16 rounded-md object-cover" />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Store */}
         <section className="mt-6 px-4">
