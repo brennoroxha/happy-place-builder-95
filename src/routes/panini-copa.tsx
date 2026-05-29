@@ -75,12 +75,32 @@ function PaniniCopaPage() {
   const [tab, setTab] = useState<"inicio" | "produtos" | "categorias">("produtos");
   const [following, setFollowing] = useState(false);
   const [freteAtivo, setFreteAtivo] = useState(false);
+  const [sort, setSort] = useState<"recomendado" | "vendidos" | "lancamentos" | "preco-asc" | "preco-desc">("recomendado");
   const { add, count, setOpen } = usePaniniCart();
 
   const handleAdd = (p: Product) => {
     add({ slug: p.slug, name: p.name, price: p.price, img: p.img });
     setOpen(true);
   };
+
+  const visibleProducts: Product[] = (() => {
+    const list = [...products];
+    switch (sort) {
+      case "vendidos": return list.sort((a, b) => b.oldPrice - a.oldPrice);
+      case "lancamentos": return list.reverse();
+      case "preco-asc": return list.sort((a, b) => a.price - b.price);
+      case "preco-desc": return list.sort((a, b) => b.price - a.price);
+      default: return list;
+    }
+  })();
+
+  const categorias = [
+    { nome: "Álbuns", qtd: 5 },
+    { nome: "Envelopes", qtd: 4 },
+    { nome: "Combos e Atacado", qtd: 1 },
+    { nome: "Capa Dura", qtd: 3 },
+    { nome: "Capa Mole", qtd: 1 },
+  ];
 
   return (
     <div className="min-h-screen bg-zinc-100 text-sm text-zinc-800 sm:py-6">
