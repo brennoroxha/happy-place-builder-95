@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import {
   ChevronLeft,
@@ -65,6 +65,7 @@ function PaymentPage() {
   const [uploadErr, setUploadErr] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 1800);
@@ -74,6 +75,35 @@ function PaymentPage() {
   useEffect(() => {
     if (hash) setOrder(getOrder(hash));
   }, [hash]);
+
+  // Poll backend for payment confirmation
+  useEffect(() => {
+    if (!hash) return;
+    let cancelled = false;
+    const check = async () => {
+      try {
+        const { getSaleStatus } = await import("@/lib/admin.functions");
+        const { status } = await getSaleStatus({ data: { hash } });
+        if (cancelled) return;
+        if (status === "paid" || status === "confirmed" || status === "approved") {
+          navigate({ to: "/brinde", search: { total: amount, hash } });
+        }
+      } catch {}
+    };
+    check();
+    const i = setInterval(check, 5000);
+    return () => {
+      cancelled = true;
+      clearInterval(i);
+    };
+  }, [hash, amount, navigate]);
+
+  // Redirect when local order becomes confirmed (e.g. via manual admin action)
+  useEffect(() => {
+    if (order?.status === "confirmed" && hash) {
+      navigate({ to: "/brinde", search: { total: amount, hash } });
+    }
+  }, [order?.status, hash, amount, navigate]);
 
   const deadline = (() => {
     const d = new Date(Date.now() + 30 * 60 * 1000);
