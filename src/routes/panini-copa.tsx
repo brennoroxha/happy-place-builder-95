@@ -99,7 +99,14 @@ function PaniniCopaPage() {
               </div>
             </div>
             <div className="flex flex-col items-end gap-2">
-              <button className="w-[92px] rounded-md bg-rose-600 px-4 py-1.5 text-xs font-semibold text-white shadow-sm">Seguir</button>
+              <button
+                onClick={() => setFollowing((f) => !f)}
+                className={`w-[92px] rounded-md px-4 py-1.5 text-xs font-semibold shadow-sm ${
+                  following ? "bg-zinc-300 text-zinc-700" : "bg-rose-600 text-white"
+                }`}
+              >
+                {following ? "Seguindo" : "Seguir"}
+              </button>
               <button className="w-[92px] rounded-md border border-zinc-200 px-4 py-1.5 text-xs font-semibold">Mensagem</button>
             </div>
           </div>
