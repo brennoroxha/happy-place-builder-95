@@ -162,6 +162,7 @@ function PaniniCheckoutPage() {
   const [upsellQty, setUpsellQty] = useState<Record<string, number>>({});
   const [upsellAdded, setUpsellAdded] = useState<Record<string, number>>({});
   const selectedShipping = shippingOptions.find((s) => s.id === shipping)!;
+  const upsellTotal = upsells.reduce((sum, u) => sum + (upsellAdded[u.id] ?? 0) * u.price, 0);
   const [cepLoading, setCepLoading] = useState(false);
   const maskCep = (v: string) => {
     const d = onlyDigits(v).slice(0, 8);
@@ -726,7 +727,7 @@ function PaniniCheckoutPage() {
                 <div className="mt-2 border-t border-zinc-100 pt-2 flex justify-between">
                   <span className="font-bold text-zinc-900">Total</span>
                   <span className="text-lg font-extrabold text-zinc-900">
-                    {brl(subtotal + selectedShipping.price)}
+                    {brl(subtotal + selectedShipping.price + upsellTotal)}
                   </span>
                 </div>
               </div>
@@ -803,9 +804,9 @@ function PaniniCheckoutPage() {
                       onClick={() =>
                         setUpsellAdded((s) => ({ ...s, [u.id]: (s[u.id] ?? 0) + qty }))
                       }
-                      className="w-full bg-teal-400 py-3 text-sm font-bold text-white hover:bg-teal-500"
+                      className={`w-full py-3 text-sm font-bold text-white ${added > 0 ? "bg-emerald-600 hover:bg-emerald-700" : "bg-teal-400 hover:bg-teal-500"}`}
                     >
-                      Adicionar item
+                      {added > 0 ? "Adicionado" : "Adicionar item"}
                     </button>
                   </div>
                 );
@@ -815,11 +816,11 @@ function PaniniCheckoutPage() {
             <section className="-mx-4 mb-4 bg-white px-4 py-4 shadow-sm ring-1 ring-zinc-100">
               <div className="mb-3 text-sm font-bold">Forma de pagamento</div>
               <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-zinc-900 p-3">
-                <div className="grid h-10 w-10 place-items-center rounded-md bg-teal-50 text-teal-600">
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
-                    <path d="M12 2L2 12l10 10 10-10L12 2zm0 3.3L18.7 12 12 18.7 5.3 12 12 5.3z" />
-                  </svg>
-                </div>
+                <img
+                  src="https://img.icons8.com/color/512/pix.png"
+                  alt="PIX"
+                  className="h-10 w-10 object-contain"
+                />
                 <div className="flex-1 text-sm font-semibold text-zinc-900">PIX à vista</div>
                 <input
                   type="radio"
@@ -856,7 +857,7 @@ function PaniniCheckoutPage() {
             Total ({count} {count === 1 ? "item" : "itens"})
           </span>
           <span className="pr-1 text-lg font-extrabold text-zinc-900">
-            {brl(subtotal + (step >= 2 ? selectedShipping.price : 0))}
+            {brl(subtotal + (step >= 2 ? selectedShipping.price : 0) + upsellTotal)}
           </span>
         </div>
         <div className="bg-rose-600 py-2.5 text-center text-sm font-bold text-white">
