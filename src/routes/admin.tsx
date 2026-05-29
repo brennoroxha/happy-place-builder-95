@@ -1,23 +1,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   ChevronLeft,
   Check,
   AlertTriangle,
   Image as ImageIcon,
   RefreshCw,
-  Trash2,
   Lock,
   LogOut,
 } from "lucide-react";
 import {
-  groupByDate,
-  isPaymentDeviation,
-  loadOrders,
-  saveOrders,
-  updateOrder,
-  type Order,
-} from "@/lib/orders";
+  getActiveProvider,
+  setActiveProvider,
+  listSales,
+  markSaleConfirmed,
+  type AdminSale,
+} from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -155,42 +154,80 @@ const fmtDate = (iso: string) => {
 const fmtTime = (iso: string) =>
   new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
+
+function groupSalesByDate(sales: AdminSale[]) {
+  const map = new Map<string, AdminSale[]>();
+  for (const s of sales) {
+    const key = new Date(s.createdAt).toISOString().slice(0, 10);
+    if (!map.has(key)) map.set(key, []);
+    map.get(key)!.push(s);
+  }
+  return Array.from(map.entries())
+    .sort(([a], [b]) => (a < b ? 1 : -1))
+    .map(([date, items]) => ({
+      date,
+      items: items.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)),
+    }));
+}
+
+const isPaid = (s: AdminSale) => s.status === "paid";
+const saleTotal = (s: AdminSale) => (s.amountCents ?? 0) / 100;
+
 function AdminPage({ onLogout }: { onLogout: () => void }) {
   const [provider, setProvider] = useState<Provider>("klivopay");
   const [saved, setSaved] = useState(false);
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [savingProvider, setSavingProvider] = useState(false);
+  const [sales, setSales] = useState<AdminSale[]>([]);
+  const [loading, setLoading] = useState(true);
   const [preview, setPreview] = useState<string | null>(null);
 
-  const refresh = () => setOrders(loadOrders());
+  const fetchProvider = useServerFn(getActiveProvider);
+  const saveProviderFn = useServerFn(setActiveProvider);
+  const fetchSales = useServerFn(listSales);
+  const confirmSale = useServerFn(markSaleConfirmed);
+
+  const refresh = async () => {
+    setLoading(true);
+    try {
+      const r = await fetchSales();
+      setSales(r.sales);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    try {
-      const v = localStorage.getItem(KEY) as Provider | null;
-      if (v === "klivopay" || v === "freepay") setProvider(v);
-    } catch {}
+    fetchProvider()
+      .then((r) => setProvider(r.provider))
+      .catch(() => {});
     refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const save = () => {
+  const save = async () => {
+    setSavingProvider(true);
     try {
-      localStorage.setItem(KEY, provider);
+      await saveProviderFn({ data: { provider } });
       setSaved(true);
       setTimeout(() => setSaved(false), 1800);
-    } catch {}
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setSavingProvider(false);
+    }
   };
 
-  const grouped = groupByDate(orders);
-  const deviations = orders.filter(isPaymentDeviation);
+  const grouped = groupSalesByDate(sales);
 
-  const markConfirmed = (hash: string) => {
-    updateOrder(hash, { status: "confirmed" });
-    refresh();
-  };
-
-  const clearAll = () => {
-    if (!confirm("Apagar todos os pedidos locais?")) return;
-    saveOrders([]);
-    refresh();
+  const markConfirmed = async (hash: string) => {
+    try {
+      await confirmSale({ data: { hash } });
+      await refresh();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -251,10 +288,11 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
 
           <button
             onClick={save}
-            className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-rose-500 py-3 text-sm font-bold text-white shadow"
+            disabled={savingProvider}
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-rose-500 py-3 text-sm font-bold text-white shadow disabled:opacity-70"
           >
             {saved ? <Check className="h-4 w-4" /> : null}
-            {saved ? "Salvo!" : "Salvar"}
+            {saved ? "Salvo!" : savingProvider ? "Salvando..." : "Salvar"}
           </button>
 
           <div className="mt-3 text-xs text-zinc-500">
@@ -262,30 +300,16 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
           </div>
         </div>
 
-        {/* Alerta de desvio */}
-        {deviations.length > 0 && (
-          <div className="mx-3 mt-3 rounded-lg border-2 border-amber-400 bg-amber-50 p-3">
-            <div className="flex items-center gap-2 text-sm font-bold text-amber-700">
-              <AlertTriangle className="h-4 w-4" />
-              {deviations.length} desvio(s) de pagamento do gateway
-            </div>
-            <p className="mt-1 text-xs text-amber-700">
-              Pedidos com comprovante enviado, mas ainda pendentes no gateway.
-              Verifique manualmente.
-            </p>
-          </div>
-        )}
-
         {/* Dashboard do dia */}
         {(() => {
           const todayKey = new Date().toISOString().slice(0, 10);
-          const todayItems = orders.filter(
+          const todayItems = sales.filter(
             (o) => new Date(o.createdAt).toISOString().slice(0, 10) === todayKey,
           );
-          const paid = todayItems.filter((o) => o.status === "confirmed");
-          const pending = todayItems.filter((o) => o.status !== "confirmed");
-          const totalPaid = paid.reduce((s, o) => s + o.total, 0);
-          const totalPending = pending.reduce((s, o) => s + o.total, 0);
+          const paid = todayItems.filter(isPaid);
+          const pending = todayItems.filter((o) => !isPaid(o));
+          const totalPaid = paid.reduce((s, o) => s + saleTotal(o), 0);
+          const totalPending = pending.reduce((s, o) => s + saleTotal(o), 0);
           return (
             <div className="mx-3 mt-3 rounded-lg bg-white p-4 shadow-sm">
               <div className="flex items-center justify-between">
@@ -322,155 +346,129 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
           );
         })()}
 
-
-
         {/* Pedidos */}
         <div className="mx-3 mt-3 rounded-lg bg-white p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold">Pedidos ({orders.length})</h2>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={refresh}
-                className="grid h-8 w-8 place-items-center rounded-md border border-zinc-200"
-                title="Atualizar"
-              >
-                <RefreshCw className="h-4 w-4" />
-              </button>
-              {orders.length > 0 && (
-                <button
-                  onClick={clearAll}
-                  className="grid h-8 w-8 place-items-center rounded-md border border-zinc-200 text-rose-600"
-                  title="Limpar pedidos"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              )}
-            </div>
+            <h2 className="text-sm font-bold">Pedidos ({sales.length})</h2>
+            <button
+              onClick={refresh}
+              className="grid h-8 w-8 place-items-center rounded-md border border-zinc-200"
+              title="Atualizar"
+            >
+              <RefreshCw className="h-4 w-4" />
+            </button>
           </div>
 
-          {orders.length === 0 ? (
+          {loading ? (
+            <p className="mt-3 text-xs text-zinc-500">Carregando...</p>
+          ) : sales.length === 0 ? (
             <p className="mt-3 text-xs text-zinc-500">Nenhum pedido registrado ainda.</p>
           ) : (
             <div className="mt-3 space-y-5">
               {grouped.map(({ date, items }) => {
-                const paidItems = items.filter((o) => o.status === "confirmed");
-                const pendingItems = items.filter((o) => o.status !== "confirmed");
-                const totalPaid = paidItems.reduce((s, o) => s + o.total, 0);
-                const totalPending = pendingItems.reduce((s, o) => s + o.total, 0);
+                const paidItems = items.filter(isPaid);
+                const pendingItems = items.filter((o) => !isPaid(o));
+                const totalPaid = paidItems.reduce((s, o) => s + saleTotal(o), 0);
+                const totalPending = pendingItems.reduce((s, o) => s + saleTotal(o), 0);
                 return (
-                <div key={date}>
-                  <div className="mb-2 text-xs font-bold uppercase tracking-wide text-zinc-500">
-                    {fmtDate(date)}
-                  </div>
-                  <div className="mb-3 grid grid-cols-2 gap-2">
-                    <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-2">
-                      <div className="text-[10px] font-bold uppercase text-emerald-700">Pagos</div>
-                      <div className="mt-0.5 text-base font-extrabold text-emerald-700">{paidItems.length}</div>
-                      <div className="text-[11px] font-semibold text-emerald-700">{brl(totalPaid)}</div>
+                  <div key={date}>
+                    <div className="mb-2 text-xs font-bold uppercase tracking-wide text-zinc-500">
+                      {fmtDate(date)}
                     </div>
-                    <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-2">
-                      <div className="text-[10px] font-bold uppercase text-zinc-600">Pendentes</div>
-                      <div className="mt-0.5 text-base font-extrabold text-zinc-700">{pendingItems.length}</div>
-                      <div className="text-[11px] font-semibold text-zinc-700">{brl(totalPending)}</div>
+                    <div className="mb-3 grid grid-cols-2 gap-2">
+                      <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-2">
+                        <div className="text-[10px] font-bold uppercase text-emerald-700">Pagos</div>
+                        <div className="mt-0.5 text-base font-extrabold text-emerald-700">{paidItems.length}</div>
+                        <div className="text-[11px] font-semibold text-emerald-700">{brl(totalPaid)}</div>
+                      </div>
+                      <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-2">
+                        <div className="text-[10px] font-bold uppercase text-zinc-600">Pendentes</div>
+                        <div className="mt-0.5 text-base font-extrabold text-zinc-700">{pendingItems.length}</div>
+                        <div className="text-[11px] font-semibold text-zinc-700">{brl(totalPending)}</div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="space-y-2">
-                    {items.map((o) => {
-                      const deviation = isPaymentDeviation(o);
-                      return (
-                        <div
-                          key={o.hash}
-                          className={`rounded-lg border p-3 ${
-                            deviation
-                              ? "border-amber-400 bg-amber-50"
-                              : "border-zinc-200 bg-white"
-                          }`}
-                        >
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="min-w-0 flex-1">
-                              <div className="flex flex-wrap items-center gap-2">
-                                <span className="text-sm font-bold">
-                                  {brl(o.total)}
-                                </span>
-                                <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold uppercase text-zinc-600">
-                                  {o.provider}
-                                </span>
-                                {o.status === "confirmed" ? (
-                                  <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700">
-                                    Confirmado
+                    <div className="space-y-2">
+                      {items.map((o) => {
+                        const paidStatus = isPaid(o);
+                        return (
+                          <div
+                            key={o.hash}
+                            className="rounded-lg border border-zinc-200 bg-white p-3"
+                          >
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="min-w-0 flex-1">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <span className="text-sm font-bold">
+                                    {brl(saleTotal(o))}
                                   </span>
-                                ) : (
-                                  <span className="rounded bg-zinc-200 px-1.5 py-0.5 text-[10px] font-bold text-zinc-700">
-                                    Pendente
-                                  </span>
-                                )}
-                                {deviation && (
-                                  <span className="flex items-center gap-1 rounded bg-amber-200 px-1.5 py-0.5 text-[10px] font-bold text-amber-800">
-                                    <AlertTriangle className="h-3 w-3" />
-                                    Desvio do gateway
-                                  </span>
-                                )}
+                                  {o.provider && (
+                                    <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold uppercase text-zinc-600">
+                                      {o.provider}
+                                    </span>
+                                  )}
+                                  {paidStatus ? (
+                                    <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700">
+                                      Confirmado
+                                    </span>
+                                  ) : (
+                                    <span className="rounded bg-zinc-200 px-1.5 py-0.5 text-[10px] font-bold text-zinc-700">
+                                      {o.status === "waiting_payment" ? "Pendente" : o.status}
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="mt-1 text-xs text-zinc-700">
+                                  {o.customerName || "—"}
+                                </div>
+                                <div className="text-[11px] text-zinc-500">
+                                  {o.customerEmail}
+                                  {o.customerPhone ? ` · ${o.customerPhone}` : ""}
+                                </div>
+                                <div className="mt-1 text-[11px] text-zinc-400">
+                                  {fmtTime(o.createdAt)} · hash {o.hash.slice(0, 10)}…
+                                </div>
                               </div>
-                              <div className="mt-1 text-xs text-zinc-700">
-                                {o.customer?.name || "—"}
-                              </div>
-                              <div className="text-[11px] text-zinc-500">
-                                {o.customer?.email}
-                                {o.customer?.phone ? ` · ${o.customer.phone}` : ""}
-                              </div>
-                              <div className="mt-1 text-[11px] text-zinc-400">
-                                {fmtTime(o.createdAt)} · hash {o.hash.slice(0, 10)}…
-                              </div>
+                              {o.proofDataUrl && (
+                                <button
+                                  onClick={() => setPreview(o.proofDataUrl!)}
+                                  className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-md border border-zinc-200 bg-zinc-50"
+                                  title="Ver comprovante"
+                                >
+                                  <img
+                                    src={o.proofDataUrl}
+                                    alt="comprovante"
+                                    className="h-full w-full object-cover"
+                                  />
+                                </button>
+                              )}
                             </div>
-                            {o.proofDataUrl && (
+
+                            {o.proofDataUrl ? (
+                              <div className="mt-2 flex items-center gap-2 text-[11px] text-zinc-600">
+                                <ImageIcon className="h-3 w-3" />
+                                Comprovante enviado
+                                {o.proofUploadedAt
+                                  ? ` ${fmtTime(o.proofUploadedAt)}`
+                                  : ""}
+                              </div>
+                            ) : null}
+
+                            {!paidStatus && (
                               <button
-                                onClick={() => setPreview(o.proofDataUrl!)}
-                                className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-md border border-zinc-200 bg-zinc-50"
-                                title="Ver comprovante"
+                                onClick={() => markConfirmed(o.hash)}
+                                className="mt-2 w-full rounded-md bg-emerald-600 py-1.5 text-xs font-bold text-white"
                               >
-                                <img
-                                  src={o.proofDataUrl}
-                                  alt="comprovante"
-                                  className="h-full w-full object-cover"
-                                />
+                                Marcar como confirmado
                               </button>
                             )}
                           </div>
-
-                          {o.proofDataUrl ? (
-                            <div className="mt-2 flex items-center gap-2 text-[11px] text-zinc-600">
-                              <ImageIcon className="h-3 w-3" />
-                              Comprovante enviado
-                              {o.proofUploadedAt
-                                ? ` ${fmtTime(o.proofUploadedAt)}`
-                                : ""}
-                            </div>
-                          ) : (
-                            <div className="mt-2 text-[11px] text-zinc-400">
-                              Sem comprovante
-                            </div>
-                          )}
-
-                          {o.status === "pending" && (
-                            <button
-                              onClick={() => markConfirmed(o.hash)}
-                              className="mt-2 w-full rounded-md bg-emerald-600 py-1.5 text-xs font-bold text-white"
-                            >
-                              Marcar como confirmado
-                            </button>
-                          )}
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              );})}
+                );
+              })}
             </div>
           )}
-        </div>
-
-        <div className="mx-3 mt-3 rounded-lg bg-white p-4 shadow-sm text-xs text-zinc-500">
-          Pedidos e comprovantes ficam salvos localmente neste navegador.
         </div>
       </div>
 
@@ -490,3 +488,4 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
     </div>
   );
 }
+

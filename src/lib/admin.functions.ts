@@ -1,0 +1,98 @@
+import { createServerFn } from "@tanstack/react-start";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
+
+export type Provider = "klivopay" | "freepay";
+
+export type AdminSale = {
+  hash: string;
+  status: string;
+  amountCents: number | null;
+  paymentMethod: string | null;
+  customerName: string | null;
+  customerEmail: string | null;
+  customerPhone: string | null;
+  customerDocument: string | null;
+  paidAt: string | null;
+  createdAt: string;
+  provider: Provider | null;
+  proofDataUrl: string | null;
+  proofUploadedAt: string | null;
+};
+
+export const getActiveProvider = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const { data } = await supabaseAdmin
+      .from("app_settings")
+      .select("value")
+      .eq("key", "active_provider")
+      .maybeSingle();
+    const v = data?.value;
+    return { provider: (v === "freepay" ? "freepay" : "klivopay") as Provider };
+  },
+);
+
+export const setActiveProvider = createServerFn({ method: "POST" })
+  .inputValidator((d: { provider: Provider }) => {
+    if (d.provider !== "klivopay" && d.provider !== "freepay") {
+      throw new Error("provider inválido");
+    }
+    return d;
+  })
+  .handler(async ({ data }) => {
+    const { error } = await supabaseAdmin
+      .from("app_settings")
+      .upsert(
+        { key: "active_provider", value: data.provider, updated_at: new Date().toISOString() },
+        { onConflict: "key" },
+      );
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const listSales = createServerFn({ method: "GET" }).handler(async () => {
+  const { data, error } = await supabaseAdmin
+    .from("sales")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(500);
+  if (error) throw new Error(error.message);
+  const sales: AdminSale[] = (data ?? []).map((s: Record<string, unknown>) => {
+    const raw = (s.raw_payload as Record<string, unknown>) ?? {};
+    const providerRaw = raw.provider as string | undefined;
+    const provider: Provider | null =
+      providerRaw === "freepay" || providerRaw === "klivopay" ? providerRaw : null;
+    return {
+      hash: String(s.transaction_hash),
+      status: String(s.status),
+      amountCents: (s.amount_cents as number) ?? null,
+      paymentMethod: (s.payment_method as string) ?? null,
+      customerName: (s.customer_name as string) ?? null,
+      customerEmail: (s.customer_email as string) ?? null,
+      customerPhone: (s.customer_phone as string) ?? null,
+      customerDocument: (s.customer_document as string) ?? null,
+      paidAt: (s.paid_at as string) ?? null,
+      createdAt: String(s.created_at),
+      provider,
+      proofDataUrl: (raw.proof_data_url as string) ?? null,
+      proofUploadedAt: (raw.proof_uploaded_at as string) ?? null,
+    };
+  });
+  return { sales };
+});
+
+export const markSaleConfirmed = createServerFn({ method: "POST" })
+  .inputValidator((d: { hash: string }) => {
+    if (!d.hash) throw new Error("hash obrigatório");
+    return d;
+  })
+  .handler(async ({ data }) => {
+    const { error } = await supabaseAdmin
+      .from("sales")
+      .update({
+        status: "paid",
+        paid_at: new Date().toISOString(),
+      })
+      .eq("transaction_hash", data.hash);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
