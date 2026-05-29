@@ -650,7 +650,7 @@ function CheckoutPage() {
           </div>
           <div className="mt-3 flex items-end justify-between border-t border-slate-100 pt-3">
             <span className="text-base font-extrabold text-slate-900">Total</span>
-            <span className="text-xl font-extrabold text-slate-900">{brl(UNIT_PRICE)}</span>
+            <span className="text-xl font-extrabold text-slate-900">{brl(UNIT_PRICE + (shipping === "sedex" ? SEDEX_COST : 0))}</span>
           </div>
         </section>
 
