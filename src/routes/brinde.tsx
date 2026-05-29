@@ -38,6 +38,7 @@ type Address = {
 };
 
 function BrindePage() {
+  usePageTracking("presence:brinde", "/brinde");
   const { hash } = Route.useSearch();
   const navigate = useNavigate();
   const klivo = useServerFn(createKlivoTransaction);
