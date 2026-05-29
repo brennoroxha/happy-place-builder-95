@@ -73,15 +73,17 @@ function CheckoutPage() {
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
   const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
+  const fetchProvider = useServerFn(getActiveProvider);
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem("slimbelly:address");
       if (raw) setAddress(JSON.parse(raw));
-      const p = localStorage.getItem("slimbelly:provider");
-      if (p === "klivopay" || p === "freepay") setProvider(p);
     } catch {}
-  }, []);
+    fetchProvider()
+      .then((r) => setProvider(r.provider))
+      .catch(() => {});
+  }, [fetchProvider]);
 
   const subtotal = ORIGINAL_PRICE * qty;
   const discounted = UNIT_PRICE * qty;
