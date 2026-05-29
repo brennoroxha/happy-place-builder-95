@@ -12,6 +12,8 @@ import p7 from "@/assets/panini/p7.png";
 import p8 from "@/assets/panini/p8.png";
 import p9 from "@/assets/panini/p9.png";
 import p10 from "@/assets/panini/p10.png";
+import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
+import { CartDrawer } from "@/components/panini/CartDrawer";
 
 export const Route = createFileRoute("/panini-copa")({
   head: () => ({
@@ -20,7 +22,7 @@ export const Route = createFileRoute("/panini-copa")({
       { name: "description", content: "Álbum 2026, figurinhas e envelopes Panini com frete grátis." },
     ],
   }),
-  component: PaniniCopaPage,
+  component: PaniniCopaRoot,
 });
 
 type Product = {
@@ -58,12 +60,27 @@ function useCountdown(initial: number) {
   return `${m}:${sec}`;
 }
 
+function PaniniCopaRoot() {
+  return (
+    <PaniniCartProvider>
+      <PaniniCopaPage />
+      <CartDrawer />
+    </PaniniCartProvider>
+  );
+}
+
 function PaniniCopaPage() {
   const navigate = useNavigate();
   const time = useCountdown(19 * 60 + 49);
   const [tab, setTab] = useState<"inicio" | "produtos" | "categorias">("produtos");
   const [following, setFollowing] = useState(false);
   const [freteAtivo, setFreteAtivo] = useState(false);
+  const { add, count, setOpen } = usePaniniCart();
+
+  const handleAdd = (p: Product) => {
+    add({ slug: p.slug, name: p.name, price: p.price, img: p.img });
+    setOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-zinc-100 text-sm text-zinc-800 sm:py-6">
@@ -82,10 +99,14 @@ function PaniniCopaPage() {
           </div>
           <div className="flex items-center gap-4 pr-2">
             <Share2 className="h-5 w-5 text-zinc-700" />
-            <div className="relative">
+            <button onClick={() => setOpen(true)} className="relative" aria-label="Abrir carrinho">
               <ShoppingCart className="h-5 w-5 text-zinc-700" />
-              <span className="absolute -top-2 -right-2 grid h-4 w-4 place-items-center rounded-full bg-rose-600 text-[10px] font-bold text-white">1</span>
-            </div>
+              {count > 0 && (
+                <span className="absolute -top-2 -right-2 grid h-4 min-w-4 place-items-center rounded-full bg-rose-600 px-1 text-[10px] font-bold text-white">
+                  {count}
+                </span>
+              )}
+            </button>
           </div>
         </header>
 
@@ -220,14 +241,15 @@ function PaniniCopaPage() {
                   </div>
                   <div className="ml-2 flex items-center">
                     <button
-                      aria-label="Ver opções"
+                      onClick={() => handleAdd(p)}
+                      aria-label="Adicionar ao carrinho"
                       className="grid h-8 place-items-center bg-rose-100 px-3 text-rose-600"
                       style={{ borderRadius: "8px 0 0 8px" }}
                     >
                       <ShoppingBag className="h-3.5 w-3.5" />
                     </button>
                     <button
-                      onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
+                      onClick={() => handleAdd(p)}
                       className="flex h-8 items-center bg-rose-600 px-3 text-[12px] font-semibold text-white hover:bg-rose-700"
                       style={{ borderRadius: "0 8px 8px 0" }}
                     >
