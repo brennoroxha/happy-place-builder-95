@@ -581,34 +581,18 @@ function CheckoutPage() {
                 </div>
               </div>
 
-              <div className="mb-4 rounded-xl bg-slate-50 p-3 text-xs text-slate-500">
-                <div className="font-semibold text-slate-700">Endereço de entrega</div>
-                <div className="mt-0.5">
-                  {v.rua}, {v.numero}{v.complemento ? `, ${v.complemento}` : ""} — {v.bairro}, {v.cidade}/{v.estado}, {v.cep}
-                </div>
-              </div>
-
               {payError && (
                 <div className="mb-3 rounded-md bg-rose-50 px-3 py-2 text-sm text-rose-600">{payError}</div>
               )}
 
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => setStep(2)}
-                  className="flex-1 rounded-full border border-slate-300 bg-white py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
-                >
-                  Voltar
-                </button>
-                <button
-                  type="button"
-                  disabled={paying}
-                  onClick={finalize}
-                  className="flex-[2] rounded-full bg-emerald-500 py-3 text-sm font-bold text-white shadow-md transition hover:bg-emerald-600 active:scale-[.99] disabled:opacity-70"
-                >
-                  {paying ? "Gerando Pix..." : `Finalizar pedido · ${brl(UNIT_PRICE)}`}
-                </button>
-              </div>
+              <button
+                type="button"
+                disabled={paying}
+                onClick={finalize}
+                className="w-full rounded-full bg-emerald-500 py-3 text-sm font-bold text-white shadow-md transition hover:bg-emerald-600 active:scale-[.99] disabled:opacity-70"
+              >
+                {paying ? "Gerando Pix..." : `Finalizar pedido · ${brl(UNIT_PRICE + (shipping === "sedex" ? SEDEX_COST : 0))}`}
+              </button>
             </>
           )}
         </section>
