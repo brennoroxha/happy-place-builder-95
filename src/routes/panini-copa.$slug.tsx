@@ -227,6 +227,25 @@ function PaniniProductPage() {
           </button>
         </div>
 
+        {/* Proteção do cliente */}
+        <div className="mt-3 px-3">
+          <div className="rounded-xl border border-amber-200 bg-amber-50/60 px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-amber-600" />
+                <span className="text-sm font-semibold text-zinc-900">Proteção do cliente</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-zinc-400" />
+            </div>
+            <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-[12px] text-zinc-800">
+              <div>✓ Devolução gratuita</div>
+              <div>✓ Cupom por atraso na coleta</div>
+              <div>✓ Reembolso automático por danos</div>
+              <div>✓ Pagamento seguro</div>
+            </div>
+          </div>
+        </div>
+
         {/* Reviews */}
         {product.comentarios.length > 0 && (
           <section className="mt-6 px-4">
@@ -276,15 +295,45 @@ function PaniniProductPage() {
 
         {/* Vídeos dos criadores */}
         <section className="mt-6 px-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-2">
               <Video className="h-5 w-5 text-zinc-900" />
-              <h2 className="text-base font-bold">Vídeos dos criadores</h2>
+              <h2 className="text-base font-bold leading-tight">Vídeos dos<br />criadores</h2>
             </div>
-            <span className="text-[11px] text-zinc-500">Conteúdo enviado por quem testou</span>
+            <span className="max-w-[140px] text-right text-[11px] leading-tight text-zinc-500">
+              Conteúdo enviado por quem testou
+            </span>
           </div>
-          <div className="mt-3 rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-8 text-center text-sm text-zinc-500">
-            Nenhum vídeo de criador disponível no momento.
+          <div className="mt-3 -mx-4 flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">
+            {product.comentarios.slice(0, 6).map((r, i) => {
+              const cover = r.fotos[0];
+              if (!cover) return null;
+              const captions = [
+                "Você vai ter o melhor preço comprando!",
+                "Unboxing das minhas figurinhas que peguei",
+                "Olha que loucura recebi 40 e tantos combos",
+                "Chegou muito bem embalado, recomendo",
+                "Coleção quase completa em poucos dias",
+                "Surpreendi meu filho com esse álbum",
+              ];
+              return (
+                <div key={i} className="relative h-52 w-36 flex-shrink-0 overflow-hidden rounded-xl bg-zinc-900">
+                  <img src={cover} alt="" className="absolute inset-0 h-full w-full object-cover opacity-90" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                  <div className="absolute left-2 right-2 top-2 text-[10px] font-semibold leading-tight text-white drop-shadow">
+                    {captions[i % captions.length]}
+                  </div>
+                  <div className="absolute bottom-2 left-2 flex items-center gap-1.5">
+                    <img
+                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(r.nome)}&background=eee&color=111&size=64`}
+                      alt={r.nome}
+                      className="h-5 w-5 rounded-full border border-white/80"
+                    />
+                    <span className="text-[11px] font-semibold text-white drop-shadow">{r.nome.split(" ")[0]}</span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
 
@@ -330,7 +379,7 @@ function PaniniProductPage() {
           </button>
           <button
             onClick={addToCart}
-            className="ml-auto flex-1 rounded-md bg-zinc-100 py-2.5 text-[13px] font-semibold leading-tight text-zinc-900"
+            className="ml-auto flex-1 rounded-md bg-zinc-200 py-2.5 text-[12px] font-semibold leading-tight text-zinc-800"
           >
             Adicionar ao<br />Carrinho
           </button>
