@@ -513,8 +513,8 @@ function CheckoutPage() {
                 </div>
                 <div className="space-y-2">
                   {([
-                    { id: "transportadora", label: "Transportadora", eta: "Entrega em 5 a 9 dias úteis" },
-                    { id: "sedex", label: "Sedex Express", eta: "Entrega em 2 a 4 dias úteis" },
+                    { id: "transportadora", label: "Transportadora", eta: "4 a 5 dias", price: 0 },
+                    { id: "sedex", label: "Sedex Express", eta: "2 a 3 Dias", price: SEDEX_COST },
                   ] as const).map((opt) => {
                     const active = shipping === opt.id;
                     return (
