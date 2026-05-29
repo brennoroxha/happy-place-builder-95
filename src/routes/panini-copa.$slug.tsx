@@ -227,6 +227,25 @@ function PaniniProductPage() {
           </button>
         </div>
 
+        {/* Proteção do cliente */}
+        <div className="mt-3 px-3">
+          <div className="rounded-xl border border-amber-200 bg-amber-50/60 px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-amber-600" />
+                <span className="text-sm font-semibold text-zinc-900">Proteção do cliente</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-zinc-400" />
+            </div>
+            <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-[12px] text-zinc-800">
+              <div>✓ Devolução gratuita</div>
+              <div>✓ Cupom por atraso na coleta</div>
+              <div>✓ Reembolso automático por danos</div>
+              <div>✓ Pagamento seguro</div>
+            </div>
+          </div>
+        </div>
+
         {/* Reviews */}
         {product.comentarios.length > 0 && (
           <section className="mt-6 px-4">
