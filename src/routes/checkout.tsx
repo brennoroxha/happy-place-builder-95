@@ -50,6 +50,7 @@ export const Route = createFileRoute("/checkout")({
 
 const UNIT_PRICE = 59.9;
 const ORIGINAL_PRICE = 179.9;
+const SEDEX_COST = 6.32;
 const UFS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
 
 const brl = (v: number) =>
@@ -249,7 +250,7 @@ function CheckoutPage() {
       const phone = v.telefone.replace(/\D/g, "");
       const document = v.cpf.replace(/\D/g, "");
       const fn = provider === "freepay" ? freepay : klivo;
-      const total = UNIT_PRICE;
+      const total = UNIT_PRICE + (shipping === "sedex" ? SEDEX_COST : 0);
       const res = await fn({
         data: {
           amount: Math.round(total * 100),
@@ -512,8 +513,8 @@ function CheckoutPage() {
                 </div>
                 <div className="space-y-2">
                   {([
-                    { id: "transportadora", label: "Transportadora", eta: "Entrega em 5 a 9 dias úteis" },
-                    { id: "sedex", label: "Sedex Express", eta: "Entrega em 2 a 4 dias úteis" },
+                    { id: "transportadora", label: "Transportadora", eta: "4 a 5 dias", price: 0 },
+                    { id: "sedex", label: "Sedex Express", eta: "2 a 3 Dias", price: SEDEX_COST },
                   ] as const).map((opt) => {
                     const active = shipping === opt.id;
                     return (
@@ -534,7 +535,9 @@ function CheckoutPage() {
                             <div className="text-xs text-slate-500">{opt.eta}</div>
                           </div>
                         </div>
-                        <span className="text-sm font-bold text-emerald-600">Grátis</span>
+                        <span className="text-sm font-bold text-emerald-600">
+                          {opt.price > 0 ? `R$ ${opt.price.toFixed(2).replace('.', ',')}` : 'Grátis'}
+                        </span>
                       </button>
                     );
                   })}
@@ -642,12 +645,12 @@ function CheckoutPage() {
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Frete ({shipping === "sedex" ? "Sedex Express" : "Transportadora"})</span>
-              <span className="font-bold text-emerald-600">Grátis</span>
+              <span className="font-bold text-emerald-600">{shipping === "sedex" ? `R$ ${SEDEX_COST.toFixed(2).replace('.', ',')}` : 'Grátis'}</span>
             </div>
           </div>
           <div className="mt-3 flex items-end justify-between border-t border-slate-100 pt-3">
             <span className="text-base font-extrabold text-slate-900">Total</span>
-            <span className="text-xl font-extrabold text-slate-900">{brl(UNIT_PRICE)}</span>
+            <span className="text-xl font-extrabold text-slate-900">{brl(UNIT_PRICE + (shipping === "sedex" ? SEDEX_COST : 0))}</span>
           </div>
         </section>
 

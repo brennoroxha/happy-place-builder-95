@@ -409,7 +409,7 @@ function PaymentPage() {
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Frete ({shippingLabel})</span>
-              <span className="font-bold text-emerald-600">Grátis</span>
+              <span className="font-bold text-emerald-600">{shipping === "sedex" ? "R$ 6,32" : "Grátis"}</span>
             </div>
           </div>
           <div className="mt-3 flex items-end justify-between border-t border-slate-100 pt-3">
