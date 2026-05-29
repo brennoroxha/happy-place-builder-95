@@ -128,8 +128,20 @@ function PaniniCheckoutPage() {
   const [shipping, setShipping] = useState("jadlog");
   const [pagamento, setPagamento] = useState("pix");
   const [processing, setProcessing] = useState(false);
-  const pixCode = "00020101021226820014br.gov.bcb.pix2560pix.example.com/qr/v2/cobv/9f8e7d6c5b4a3210abcdef1234567890";
+  const [pixCode, setPixCode] = useState("");
+  const [payError, setPayError] = useState<string | null>(null);
   const [pixCopied, setPixCopied] = useState(false);
+
+  // Provider selection (managed in /admin → Panini tab)
+  const klivo = useServerFn(createKlivoTransaction);
+  const freepay = useServerFn(createFreepayTransaction);
+  const fetchProvider = useServerFn(getActiveProvider);
+  const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
+  useEffect(() => {
+    fetchProvider({ data: { scope: "panini" } })
+      .then((r) => setProvider(r.provider))
+      .catch(() => {});
+  }, [fetchProvider]);
 
   // Fire InitiateCheckout pixel once when the Panini checkout loads
   useEffect(() => {
