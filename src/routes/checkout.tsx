@@ -570,12 +570,7 @@ function CheckoutPage() {
                   <span className="text-sm font-extrabold text-slate-900">Pix</span>
                 </div>
                 <div className="flex flex-col items-center bg-white px-4 py-6">
-                  <svg viewBox="0 0 48 48" className="h-14 w-14" fill="none">
-                    <path d="M24 6l6 6-6 6-6-6 6-6z" fill="#10b981"/>
-                    <path d="M24 30l6 6-6 6-6-6 6-6z" fill="#10b981"/>
-                    <path d="M6 24l6-6 6 6-6 6-6-6z" fill="#10b981"/>
-                    <path d="M30 24l6-6 6 6-6 6-6-6z" fill="#10b981"/>
-                  </svg>
+                  <img src={pixLogo} alt="Pix" className="h-14 w-auto" />
                   <p className="mt-4 text-center text-sm font-bold text-slate-900">
                     Para pagar, finalize sua compra abaixo
                   </p>
