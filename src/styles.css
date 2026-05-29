@@ -163,3 +163,12 @@
     display: none;
   }
 }
+
+@keyframes video-slide {
+  0%, 18% { opacity: 1; }
+  22%, 100% { opacity: 0; }
+}
+
+@utility animate-video-slide {
+  animation: video-slide linear infinite;
+}

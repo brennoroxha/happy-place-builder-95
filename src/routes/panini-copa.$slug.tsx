@@ -261,8 +261,7 @@ function PaniniProductPage() {
           </div>
           <div className="mt-3 -mx-4 flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">
             {product.comentarios.slice(0, 6).map((r, i) => {
-              const cover = r.fotos[0];
-              if (!cover) return null;
+              if (!r.fotos.length) return null;
               const captions = [
                 "Você vai ter o melhor preço comprando!",
                 "Unboxing das minhas figurinhas que peguei",
@@ -271,18 +270,30 @@ function PaniniProductPage() {
                 "Coleção quase completa em poucos dias",
                 "Surpreendi meu filho com esse álbum",
               ];
+              const avatar = r.fotos[r.fotos.length - 1];
               return (
                 <div key={i} className="relative h-52 w-36 flex-shrink-0 overflow-hidden rounded-xl bg-zinc-900">
-                  <img src={cover} alt="" className="absolute inset-0 h-full w-full object-cover opacity-90" />
+                  {r.fotos.map((p, idx) => (
+                    <img
+                      key={idx}
+                      src={p}
+                      alt=""
+                      className="absolute inset-0 h-full w-full object-cover opacity-0 animate-video-slide"
+                      style={{
+                        animationDelay: `${idx * 1.6}s`,
+                        animationDuration: `${r.fotos.length * 1.6}s`,
+                      }}
+                    />
+                  ))}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                   <div className="absolute left-2 right-2 top-2 text-[10px] font-semibold leading-tight text-white drop-shadow">
                     {captions[i % captions.length]}
                   </div>
                   <div className="absolute bottom-2 left-2 flex items-center gap-1.5">
                     <img
-                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(r.nome)}&background=eee&color=111&size=64`}
+                      src={avatar}
                       alt={r.nome}
-                      className="h-5 w-5 rounded-full border border-white/80"
+                      className="h-5 w-5 rounded-full border border-white/80 object-cover"
                     />
                     <span className="text-[11px] font-semibold text-white drop-shadow">{r.nome.split(" ")[0]}</span>
                   </div>
