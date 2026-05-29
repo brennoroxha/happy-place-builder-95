@@ -645,7 +645,7 @@ function CheckoutPage() {
               <span className="font-semibold text-slate-900">{brl(UNIT_PRICE)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Frete (Transportadora)</span>
+              <span className="text-slate-500">Frete ({shipping === "sedex" ? "Sedex Express" : "Transportadora"})</span>
               <span className="font-bold text-emerald-600">Grátis</span>
             </div>
           </div>
