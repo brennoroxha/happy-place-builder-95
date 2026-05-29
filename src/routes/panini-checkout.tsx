@@ -116,10 +116,39 @@ function PaniniCheckoutPage() {
   ];
   const [shipping, setShipping] = useState("jadlog");
   const selectedShipping = shippingOptions.find((s) => s.id === shipping)!;
+  const [cepLoading, setCepLoading] = useState(false);
   const maskCep = (v: string) => {
     const d = onlyDigits(v).slice(0, 8);
     return d.length > 5 ? `${d.slice(0, 5)}-${d.slice(5)}` : d;
   };
+
+  const handleCepChange = async (v: string) => {
+    const masked = maskCep(v);
+    setCep(masked);
+    const digits = onlyDigits(masked);
+    if (digits.length === 8) {
+      setCepLoading(true);
+      try {
+        const r = await fetch(`https://viacep.com.br/ws/${digits}/json/`);
+        const j = await r.json();
+        if (!j.erro) {
+          setEndereco(j.logradouro ?? "");
+          setBairro(j.bairro ?? "");
+          setCidade(j.localidade ?? "");
+          setEstado(j.uf ?? "");
+        }
+      } catch {}
+      setCepLoading(false);
+    }
+  };
+
+  const step2Valid =
+    onlyDigits(cep).length === 8 &&
+    endereco.trim().length > 0 &&
+    numero.trim().length > 0 &&
+    bairro.trim().length > 0 &&
+    cidade.trim().length > 0 &&
+    estado.trim().length > 0;
 
   // Coupon countdown (5h)
   const [secondsLeft, setSecondsLeft] = useState(5 * 60 * 60);
@@ -452,9 +481,12 @@ function PaniniCheckoutPage() {
                   inputMode="numeric"
                   placeholder="00000-000"
                   value={cep}
-                  onChange={(e) => setCep(maskCep(e.target.value))}
+                  onChange={(e) => handleCepChange(e.target.value)}
                   className={inputCls(false)}
                 />
+                {cepLoading && (
+                  <div className="mt-1 text-xs text-zinc-500">Buscando endereço...</div>
+                )}
               </Field>
               <Field label="Endereço">
                 <input
@@ -537,16 +569,10 @@ function PaniniCheckoutPage() {
 
               <button
                 onClick={() => setStep(3)}
-                className="mt-4 w-full rounded-lg bg-zinc-900 py-3.5 text-sm font-bold text-white"
+                disabled={!step2Valid}
+                className="mt-4 w-full rounded-lg bg-zinc-900 py-3.5 text-sm font-bold text-white transition-opacity disabled:cursor-not-allowed disabled:bg-zinc-300"
               >
                 Ir para pagamento
-              </button>
-
-              <button
-                onClick={() => setStep(1)}
-                className="mt-3 w-full text-center text-xs font-semibold text-zinc-500 underline"
-              >
-                Voltar
               </button>
             </section>
 
