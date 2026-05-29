@@ -170,6 +170,22 @@ function BrindePage() {
           </div>
         </div>
 
+        {/* CTA acima do brinde */}
+        <div className="mx-3 mt-3">
+          <button
+            disabled={paying}
+            onClick={payFee}
+            className="block w-full rounded-lg bg-rose-500 py-3 text-center text-white shadow disabled:opacity-70"
+          >
+            <div className="text-base font-bold leading-tight">
+              {paying ? "Gerando pagamento..." : `Pagar taxa de ${brl(FEE)}`}
+            </div>
+            <div className="text-[11px] leading-tight opacity-90">
+              Pix • liberação imediata
+            </div>
+          </button>
+        </div>
+
         {/* Brinde */}
         <div className="mx-3 mt-3 rounded-lg bg-white p-4 shadow-sm">
           <div className="flex items-center gap-2">
@@ -177,11 +193,11 @@ function BrindePage() {
             <div className="text-sm font-bold">Seu brinde exclusivo</div>
           </div>
 
-          <div className="mt-3 grid place-items-center rounded-md bg-gradient-to-b from-rose-50 to-white p-4">
+          <div className="mt-3 grid place-items-center rounded-md bg-gradient-to-b from-rose-50 to-white p-3">
             <img
               src={brindeImg}
               alt="Crioterápico Gel Redutor de Celulite"
-              className="h-24 w-auto object-contain drop-shadow-md"
+              className="h-14 w-auto object-contain drop-shadow-md"
             />
           </div>
 
