@@ -50,6 +50,7 @@ export const Route = createFileRoute("/checkout")({
 
 const UNIT_PRICE = 59.9;
 const ORIGINAL_PRICE = 179.9;
+const SEDEX_COST = 6.32;
 const UFS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
 
 const brl = (v: number) =>
