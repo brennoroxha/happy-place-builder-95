@@ -183,11 +183,19 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
   const [sales, setSales] = useState<AdminSale[]>([]);
   const [loading, setLoading] = useState(true);
   const [preview, setPreview] = useState<string | null>(null);
+  const [analytics, setAnalytics] = useState<AnalyticsSummary | null>(null);
+
+  const onlineHome = usePresenceCount("presence:home");
+  const onlineCheckout = usePresenceCount("presence:checkout");
+  const onlinePagamento = usePresenceCount("presence:pagamento");
+  const onlineBrinde = usePresenceCount("presence:brinde");
+  const totalOnline = onlineHome + onlineCheckout + onlinePagamento + onlineBrinde;
 
   const fetchProvider = useServerFn(getActiveProvider);
   const saveProviderFn = useServerFn(setActiveProvider);
   const fetchSales = useServerFn(listSales);
   const confirmSale = useServerFn(markSaleConfirmed);
+  const fetchAnalytics = useServerFn(getAnalyticsSummary);
 
   const refresh = async () => {
     setLoading(true);
