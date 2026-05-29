@@ -49,6 +49,37 @@ function PaniniProductRoot() {
 const brl = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
+function CreatorVideoCard({ fotos, nome, caption }: { fotos: string[]; nome: string; caption: string }) {
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    if (fotos.length <= 1) return;
+    const t = setInterval(() => setIdx((v) => (v + 1) % fotos.length), 1600);
+    return () => clearInterval(t);
+  }, [fotos.length]);
+  const avatar = fotos[fotos.length - 1];
+  return (
+    <div className="relative h-52 w-36 flex-shrink-0 overflow-hidden rounded-xl bg-zinc-900">
+      {fotos.map((p, i) => (
+        <img
+          key={i}
+          src={p}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
+          style={{ opacity: i === idx ? 1 : 0 }}
+        />
+      ))}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+      <div className="absolute left-2 right-2 top-2 text-[10px] font-semibold leading-tight text-white drop-shadow">
+        {caption}
+      </div>
+      <div className="absolute bottom-2 left-2 flex items-center gap-1.5">
+        <img src={avatar} alt={nome} className="h-5 w-5 rounded-full border border-white/80 object-cover" />
+        <span className="text-[11px] font-semibold text-white drop-shadow">{nome.split(" ")[0]}</span>
+      </div>
+    </div>
+  );
+}
+
 function useCountdown(initial: number) {
   const [s, setS] = useState(initial);
   useEffect(() => {
