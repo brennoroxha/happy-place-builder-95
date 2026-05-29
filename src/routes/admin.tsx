@@ -154,7 +154,6 @@ const fmtDate = (iso: string) => {
 const fmtTime = (iso: string) =>
   new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
-type Provider = "klivopay" | "freepay";
 
 function groupSalesByDate(sales: AdminSale[]) {
   const map = new Map<string, AdminSale[]>();
