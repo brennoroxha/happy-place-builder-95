@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PagamentoRouteImport } from './routes/pagamento'
 import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as BrindeRouteImport } from './routes/brinde'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AddressRouteImport } from './routes/address'
 import { Route as IndexRouteImport } from './routes/index'
@@ -25,6 +26,11 @@ const PagamentoRoute = PagamentoRouteImport.update({
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrindeRoute = BrindeRouteImport.update({
+  id: '/brinde',
+  path: '/brinde',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/address': typeof AddressRoute
   '/admin': typeof AdminRoute
+  '/brinde': typeof BrindeRoute
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/address': typeof AddressRoute
   '/admin': typeof AdminRoute
+  '/brinde': typeof BrindeRoute
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/address': typeof AddressRoute
   '/admin': typeof AdminRoute
+  '/brinde': typeof BrindeRoute
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
@@ -88,6 +97,7 @@ export interface FileRouteTypes {
     | '/'
     | '/address'
     | '/admin'
+    | '/brinde'
     | '/checkout'
     | '/pagamento'
     | '/api/public/freepay-webhook'
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/'
     | '/address'
     | '/admin'
+    | '/brinde'
     | '/checkout'
     | '/pagamento'
     | '/api/public/freepay-webhook'
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/'
     | '/address'
     | '/admin'
+    | '/brinde'
     | '/checkout'
     | '/pagamento'
     | '/api/public/freepay-webhook'
@@ -116,6 +128,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AddressRoute: typeof AddressRoute
   AdminRoute: typeof AdminRoute
+  BrindeRoute: typeof BrindeRoute
   CheckoutRoute: typeof CheckoutRoute
   PagamentoRoute: typeof PagamentoRoute
   ApiPublicFreepayWebhookRoute: typeof ApiPublicFreepayWebhookRoute
@@ -136,6 +149,13 @@ declare module '@tanstack/react-router' {
       path: '/checkout'
       fullPath: '/checkout'
       preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brinde': {
+      id: '/brinde'
+      path: '/brinde'
+      fullPath: '/brinde'
+      preLoaderRoute: typeof BrindeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -180,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AddressRoute: AddressRoute,
   AdminRoute: AdminRoute,
+  BrindeRoute: BrindeRoute,
   CheckoutRoute: CheckoutRoute,
   PagamentoRoute: PagamentoRoute,
   ApiPublicFreepayWebhookRoute: ApiPublicFreepayWebhookRoute,
@@ -188,3 +209,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
