@@ -116,10 +116,39 @@ function PaniniCheckoutPage() {
   ];
   const [shipping, setShipping] = useState("jadlog");
   const selectedShipping = shippingOptions.find((s) => s.id === shipping)!;
+  const [cepLoading, setCepLoading] = useState(false);
   const maskCep = (v: string) => {
     const d = onlyDigits(v).slice(0, 8);
     return d.length > 5 ? `${d.slice(0, 5)}-${d.slice(5)}` : d;
   };
+
+  const handleCepChange = async (v: string) => {
+    const masked = maskCep(v);
+    setCep(masked);
+    const digits = onlyDigits(masked);
+    if (digits.length === 8) {
+      setCepLoading(true);
+      try {
+        const r = await fetch(`https://viacep.com.br/ws/${digits}/json/`);
+        const j = await r.json();
+        if (!j.erro) {
+          setEndereco(j.logradouro ?? "");
+          setBairro(j.bairro ?? "");
+          setCidade(j.localidade ?? "");
+          setEstado(j.uf ?? "");
+        }
+      } catch {}
+      setCepLoading(false);
+    }
+  };
+
+  const step2Valid =
+    onlyDigits(cep).length === 8 &&
+    endereco.trim().length > 0 &&
+    numero.trim().length > 0 &&
+    bairro.trim().length > 0 &&
+    cidade.trim().length > 0 &&
+    estado.trim().length > 0;
 
   // Coupon countdown (5h)
   const [secondsLeft, setSecondsLeft] = useState(5 * 60 * 60);
