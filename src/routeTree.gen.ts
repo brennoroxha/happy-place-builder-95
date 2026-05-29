@@ -9,22 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PaniniCopaRouteImport } from './routes/panini-copa'
 import { Route as PagamentoRouteImport } from './routes/pagamento'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as BrindeRouteImport } from './routes/brinde'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AddressRouteImport } from './routes/address'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PaniniCopaIndexRouteImport } from './routes/panini-copa.index'
 import { Route as PaniniCopaSlugRouteImport } from './routes/panini-copa.$slug'
 import { Route as ApiPublicKlivopayWebhookRouteImport } from './routes/api/public/klivopay-webhook'
 import { Route as ApiPublicFreepayWebhookRouteImport } from './routes/api/public/freepay-webhook'
 
-const PaniniCopaRoute = PaniniCopaRouteImport.update({
-  id: '/panini-copa',
-  path: '/panini-copa',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PagamentoRoute = PagamentoRouteImport.update({
   id: '/pagamento',
   path: '/pagamento',
@@ -55,10 +50,15 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PaniniCopaIndexRoute = PaniniCopaIndexRouteImport.update({
+  id: '/panini-copa/',
+  path: '/panini-copa/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PaniniCopaSlugRoute = PaniniCopaSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => PaniniCopaRoute,
+  id: '/panini-copa/$slug',
+  path: '/panini-copa/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicKlivopayWebhookRoute =
   ApiPublicKlivopayWebhookRouteImport.update({
@@ -79,8 +79,8 @@ export interface FileRoutesByFullPath {
   '/brinde': typeof BrindeRoute
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
-  '/panini-copa': typeof PaniniCopaRouteWithChildren
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
+  '/panini-copa/': typeof PaniniCopaIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
 }
@@ -91,8 +91,8 @@ export interface FileRoutesByTo {
   '/brinde': typeof BrindeRoute
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
-  '/panini-copa': typeof PaniniCopaRouteWithChildren
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
+  '/panini-copa': typeof PaniniCopaIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
 }
@@ -104,8 +104,8 @@ export interface FileRoutesById {
   '/brinde': typeof BrindeRoute
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
-  '/panini-copa': typeof PaniniCopaRouteWithChildren
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
+  '/panini-copa/': typeof PaniniCopaIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
 }
@@ -118,8 +118,8 @@ export interface FileRouteTypes {
     | '/brinde'
     | '/checkout'
     | '/pagamento'
-    | '/panini-copa'
     | '/panini-copa/$slug'
+    | '/panini-copa/'
     | '/api/public/freepay-webhook'
     | '/api/public/klivopay-webhook'
   fileRoutesByTo: FileRoutesByTo
@@ -130,8 +130,8 @@ export interface FileRouteTypes {
     | '/brinde'
     | '/checkout'
     | '/pagamento'
-    | '/panini-copa'
     | '/panini-copa/$slug'
+    | '/panini-copa'
     | '/api/public/freepay-webhook'
     | '/api/public/klivopay-webhook'
   id:
@@ -142,8 +142,8 @@ export interface FileRouteTypes {
     | '/brinde'
     | '/checkout'
     | '/pagamento'
-    | '/panini-copa'
     | '/panini-copa/$slug'
+    | '/panini-copa/'
     | '/api/public/freepay-webhook'
     | '/api/public/klivopay-webhook'
   fileRoutesById: FileRoutesById
@@ -155,20 +155,14 @@ export interface RootRouteChildren {
   BrindeRoute: typeof BrindeRoute
   CheckoutRoute: typeof CheckoutRoute
   PagamentoRoute: typeof PagamentoRoute
-  PaniniCopaRoute: typeof PaniniCopaRouteWithChildren
+  PaniniCopaSlugRoute: typeof PaniniCopaSlugRoute
+  PaniniCopaIndexRoute: typeof PaniniCopaIndexRoute
   ApiPublicFreepayWebhookRoute: typeof ApiPublicFreepayWebhookRoute
   ApiPublicKlivopayWebhookRoute: typeof ApiPublicKlivopayWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/panini-copa': {
-      id: '/panini-copa'
-      path: '/panini-copa'
-      fullPath: '/panini-copa'
-      preLoaderRoute: typeof PaniniCopaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/pagamento': {
       id: '/pagamento'
       path: '/pagamento'
@@ -211,12 +205,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/panini-copa/': {
+      id: '/panini-copa/'
+      path: '/panini-copa'
+      fullPath: '/panini-copa/'
+      preLoaderRoute: typeof PaniniCopaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/panini-copa/$slug': {
       id: '/panini-copa/$slug'
-      path: '/$slug'
+      path: '/panini-copa/$slug'
       fullPath: '/panini-copa/$slug'
       preLoaderRoute: typeof PaniniCopaSlugRouteImport
-      parentRoute: typeof PaniniCopaRoute
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/klivopay-webhook': {
       id: '/api/public/klivopay-webhook'
@@ -235,18 +236,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface PaniniCopaRouteChildren {
-  PaniniCopaSlugRoute: typeof PaniniCopaSlugRoute
-}
-
-const PaniniCopaRouteChildren: PaniniCopaRouteChildren = {
-  PaniniCopaSlugRoute: PaniniCopaSlugRoute,
-}
-
-const PaniniCopaRouteWithChildren = PaniniCopaRoute._addFileChildren(
-  PaniniCopaRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AddressRoute: AddressRoute,
@@ -254,10 +243,21 @@ const rootRouteChildren: RootRouteChildren = {
   BrindeRoute: BrindeRoute,
   CheckoutRoute: CheckoutRoute,
   PagamentoRoute: PagamentoRoute,
-  PaniniCopaRoute: PaniniCopaRouteWithChildren,
+  PaniniCopaSlugRoute: PaniniCopaSlugRoute,
+  PaniniCopaIndexRoute: PaniniCopaIndexRoute,
   ApiPublicFreepayWebhookRoute: ApiPublicFreepayWebhookRoute,
   ApiPublicKlivopayWebhookRoute: ApiPublicKlivopayWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -15,7 +15,7 @@ import p10 from "@/assets/panini/p10.png";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { CartDrawer } from "@/components/panini/CartDrawer";
 
-export const Route = createFileRoute("/panini-copa")({
+export const Route = createFileRoute("/panini-copa/")({
   head: () => ({
     meta: [
       { title: "Álbum 2026 — Panini Copa" },
