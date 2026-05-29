@@ -118,6 +118,7 @@ function CheckoutPage() {
   const navigate = useNavigate();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [shipping, setShipping] = useState<"transportadora" | "sedex">("transportadora");
   const [v, setV] = useState<Values>(empty);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [cepLoading, setCepLoading] = useState(false);
