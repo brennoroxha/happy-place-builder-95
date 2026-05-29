@@ -535,7 +535,9 @@ function CheckoutPage() {
                             <div className="text-xs text-slate-500">{opt.eta}</div>
                           </div>
                         </div>
-                        <span className="text-sm font-bold text-emerald-600">Grátis</span>
+                        <span className="text-sm font-bold text-emerald-600">
+                          {opt.price > 0 ? `R$ ${opt.price.toFixed(2).replace('.', ',')}` : 'Grátis'}
+                        </span>
                       </button>
                     );
                   })}
