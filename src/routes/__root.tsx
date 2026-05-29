@@ -160,6 +160,14 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const isPanini = pathname.startsWith("/panini") || pathname.startsWith("/brinde");
+    const desired = isPanini ? UTMIFY_PIXEL_ID_PANINI : UTMIFY_PIXEL_ID_DEFAULT;
+    (window as any).pixelId = desired;
+  }, [pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>
