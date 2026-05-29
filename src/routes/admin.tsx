@@ -173,8 +173,12 @@ function groupSalesByDate(sales: AdminSale[]) {
 const isPaid = (s: AdminSale) => s.status === "paid";
 const saleTotal = (s: AdminSale) => (s.amountCents ?? 0) / 100;
 
+type Tab = "slimbelly" | "panini";
+
 function AdminPage({ onLogout }: { onLogout: () => void }) {
+  const [tab, setTab] = useState<Tab>("slimbelly");
   const [provider, setProvider] = useState<Provider>("klivopay");
+  const [paniniProvider, setPaniniProvider] = useState<Provider>("klivopay");
   const [saved, setSaved] = useState(false);
   const [savingProvider, setSavingProvider] = useState(false);
   const [sales, setSales] = useState<AdminSale[]>([]);
@@ -199,8 +203,11 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
   };
 
   useEffect(() => {
-    fetchProvider()
+    fetchProvider({ data: {} })
       .then((r) => setProvider(r.provider))
+      .catch(() => {});
+    fetchProvider({ data: { scope: "panini" } })
+      .then((r) => setPaniniProvider(r.provider))
       .catch(() => {});
     refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -209,7 +216,11 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
   const save = async () => {
     setSavingProvider(true);
     try {
-      await saveProviderFn({ data: { provider } });
+      if (tab === "panini") {
+        await saveProviderFn({ data: { provider: paniniProvider, scope: "panini" } });
+      } else {
+        await saveProviderFn({ data: { provider } });
+      }
       setSaved(true);
       setTimeout(() => setSaved(false), 1800);
     } catch (e) {
