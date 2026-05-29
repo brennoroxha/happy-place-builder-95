@@ -300,12 +300,11 @@ function CheckoutPage() {
       <header className="bg-white border-b border-slate-200">
         <div className="mx-auto flex max-w-[640px] items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-full bg-emerald-50">
-              <ShoppingBag className="h-4 w-4 text-emerald-600" />
-            </span>
-            <span className="text-base font-extrabold tracking-tight text-slate-900">
-              Slim<span className="text-emerald-600">Belly</span>
-            </span>
+            <img
+              src="https://sf16-website.neutral.ttwstatic.com/obj/tiktok_web_static/i18n_ecom_fe/tiktok_shop_web_mono/packages/apps/pdp_h5/static/image/tts-logo-light.28ce4ad8.png"
+              alt="TikTok Shop"
+              className="h-10 w-auto"
+            />
           </div>
           <div className="flex items-center gap-1.5 text-right">
             <Lock className="h-4 w-4 text-slate-700" />
