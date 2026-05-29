@@ -191,7 +191,7 @@ function PaniniProductPage() {
         </div>
 
         {/* Shipping + Devoluções + Opções */}
-        <div className="mx-3 mt-4 overflow-hidden rounded-xl border border-zinc-200 bg-white">
+        <div className="mt-4 overflow-hidden border-y border-zinc-200 bg-white">
           {/* Frete grátis */}
           <div className="flex items-start gap-2 px-4 py-3">
             <Truck className="mt-0.5 h-4 w-4 flex-shrink-0 text-zinc-700" />
