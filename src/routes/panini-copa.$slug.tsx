@@ -218,7 +218,7 @@ function PaniniProductPage() {
           <button onClick={goCheckout} className="flex w-full items-center gap-3 px-4 py-3 text-left">
             <LayoutGrid className="h-4 w-4 flex-shrink-0 text-zinc-500" />
             <div className="flex gap-1">
-              <img src={cover} alt="" className="h-7 w-7 rounded-md border border-zinc-200 object-cover" />
+              <img src={cover} alt="" className="h-12 w-12 rounded-md border border-zinc-200 object-cover" />
             </div>
             <span className="ml-1 text-[13px] leading-tight text-zinc-700">
               <span className="font-semibold">1</span> opções disponíveis
