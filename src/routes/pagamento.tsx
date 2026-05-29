@@ -76,6 +76,35 @@ function PaymentPage() {
     if (hash) setOrder(getOrder(hash));
   }, [hash]);
 
+  // Poll backend for payment confirmation
+  useEffect(() => {
+    if (!hash) return;
+    let cancelled = false;
+    const check = async () => {
+      try {
+        const { getSaleStatus } = await import("@/lib/admin.functions");
+        const { status } = await getSaleStatus({ data: { hash } });
+        if (cancelled) return;
+        if (status === "paid" || status === "confirmed" || status === "approved") {
+          navigate({ to: "/brinde", search: { total: amount, hash } });
+        }
+      } catch {}
+    };
+    check();
+    const i = setInterval(check, 5000);
+    return () => {
+      cancelled = true;
+      clearInterval(i);
+    };
+  }, [hash, amount, navigate]);
+
+  // Redirect when local order becomes confirmed (e.g. via manual admin action)
+  useEffect(() => {
+    if (order?.status === "confirmed" && hash) {
+      navigate({ to: "/brinde", search: { total: amount, hash } });
+    }
+  }, [order?.status, hash, amount, navigate]);
+
   const deadline = (() => {
     const d = new Date(Date.now() + 30 * 60 * 1000);
     const hh = String(d.getHours()).padStart(2, "0");
