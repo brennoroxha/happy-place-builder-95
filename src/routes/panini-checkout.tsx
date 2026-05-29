@@ -848,10 +848,13 @@ function PaniniCheckoutPage() {
               disabled={processing}
               onClick={() => {
                 setProcessing(true);
+                const total = subtotal + selectedShipping.price + upsellTotal;
                 setTimeout(() => {
                   setProcessing(false);
                   setStep(4);
                   window.scrollTo({ top: 0, behavior: "smooth" });
+                  // Fire Purchase pixel (Facebook + GA4) — Pix gerado / confirmado
+                  trackPurchase(total, `panini-${Date.now()}`);
                 }, 1800);
               }}
               className="mb-4 w-full rounded-lg bg-rose-500 py-3.5 text-sm font-extrabold tracking-wide text-white hover:bg-rose-600 disabled:cursor-wait disabled:opacity-80"
