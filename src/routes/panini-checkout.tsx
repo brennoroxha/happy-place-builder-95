@@ -158,7 +158,7 @@ function PaniniCheckoutPage() {
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
       {/* Header */}
       <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white">
-        <div className="mx-auto flex max-w-[640px] items-center justify-between px-4 py-3">
+        <div className="flex items-center justify-between px-4 py-3">
           <button
             onClick={() => history.back()}
             aria-label="Voltar"
@@ -186,7 +186,7 @@ function PaniniCheckoutPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-[640px] px-4 pb-32 pt-4">
+      <main className="px-4 pb-32 pt-4">
         {/* Stepper */}
         <div className="mb-5 flex items-start justify-between">
           {[
