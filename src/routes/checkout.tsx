@@ -250,7 +250,7 @@ function CheckoutPage() {
       const phone = v.telefone.replace(/\D/g, "");
       const document = v.cpf.replace(/\D/g, "");
       const fn = provider === "freepay" ? freepay : klivo;
-      const total = UNIT_PRICE;
+      const total = UNIT_PRICE + (shipping === "sedex" ? SEDEX_COST : 0);
       const res = await fn({
         data: {
           amount: Math.round(total * 100),
