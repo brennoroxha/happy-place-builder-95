@@ -237,11 +237,13 @@ function PaniniProductPage() {
               </div>
               <ChevronRight className="h-4 w-4 text-zinc-400" />
             </div>
-            <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-[12px] text-zinc-800">
+            <div className="mt-2 space-y-1 text-[12px] text-zinc-800">
               <div>✓ Devolução gratuita</div>
-              <div>✓ Cupom por atraso na coleta</div>
               <div>✓ Reembolso automático por danos</div>
-              <div>✓ Pagamento seguro</div>
+              <div className="grid grid-cols-2 gap-x-3">
+                <div>✓ Pagamento seguro</div>
+                <div>✓ Cupom por atraso na coleta</div>
+              </div>
             </div>
           </div>
         </div>
