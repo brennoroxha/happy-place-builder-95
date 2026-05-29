@@ -284,7 +284,7 @@ function CheckoutPage() {
       });
       navigate({
         to: "/pagamento",
-        search: { total, code: res.pix_copy_paste, hash: res.hash },
+        search: { total, code: res.pix_copy_paste, hash: res.hash, color, size, shipping },
       });
     } catch {
       setPayError("Erro de conexão. Tente novamente.");
