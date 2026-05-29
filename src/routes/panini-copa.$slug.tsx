@@ -297,8 +297,14 @@ function PaniniProductPage() {
             <span>Chat</span>
           </button>
           <button
+            onClick={addToCart}
+            className="ml-auto flex-1 rounded-full border-2 border-rose-600 py-2.5 text-sm font-bold text-rose-600"
+          >
+            Adicionar
+          </button>
+          <button
             onClick={goCheckout}
-            className="ml-auto flex-1 rounded-full bg-rose-600 py-3 text-sm font-bold text-white shadow-sm"
+            className="flex-1 rounded-full bg-rose-600 py-3 text-sm font-bold text-white shadow-sm"
           >
             Comprar agora
           </button>
