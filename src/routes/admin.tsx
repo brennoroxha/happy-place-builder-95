@@ -214,6 +214,12 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
       .then((r) => setProvider(r.provider))
       .catch(() => {});
     refresh();
+    const loadAnalytics = () => {
+      fetchAnalytics().then(setAnalytics).catch(() => {});
+    };
+    loadAnalytics();
+    const i = setInterval(loadAnalytics, 15000);
+    return () => clearInterval(i);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
