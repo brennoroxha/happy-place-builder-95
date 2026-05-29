@@ -732,3 +732,46 @@ function TrustItem({ Icon, text }: { Icon: ComponentType<{ className?: string }>
     </li>
   );
 }
+
+function PersonalSummary({
+  email,
+  nome,
+  telefone,
+  onEdit,
+}: {
+  email: string;
+  nome: string;
+  telefone: string;
+  onEdit: () => void;
+}) {
+  return (
+    <div className="mb-5 rounded-xl border border-slate-200 bg-white p-4">
+      <div className="mb-2 flex items-start justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <User className="h-5 w-5 text-slate-900" />
+          <h3 className="text-base font-extrabold text-slate-900">Dados pessoais</h3>
+        </div>
+        <button
+          type="button"
+          onClick={onEdit}
+          className="text-xs font-bold text-slate-700 hover:text-slate-900"
+        >
+          Não é você? Sair
+        </button>
+      </div>
+      <div className="space-y-0.5 text-sm">
+        <div className="text-slate-500">{email}</div>
+        <div className="text-slate-700"><span className="font-bold text-slate-900">Nome:</span> {nome}</div>
+        <div className="text-slate-700"><span className="font-bold text-slate-900">Telefone:</span> {telefone}</div>
+      </div>
+      <button
+        type="button"
+        onClick={onEdit}
+        className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-slate-300 bg-white py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+      >
+        <Pencil className="h-4 w-4" />
+        Alterar meus dados
+      </button>
+    </div>
+  );
+}
