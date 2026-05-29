@@ -61,6 +61,8 @@ function PaniniCopaPage() {
   const navigate = useNavigate();
   const time = useCountdown(19 * 60 + 49);
   const [tab, setTab] = useState<"inicio" | "produtos" | "categorias">("produtos");
+  const [following, setFollowing] = useState(false);
+  const [freteAtivo, setFreteAtivo] = useState(false);
 
   return (
     <div className="min-h-screen bg-zinc-100 text-sm text-zinc-800 sm:py-6">
