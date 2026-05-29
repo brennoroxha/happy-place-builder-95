@@ -55,7 +55,7 @@ function BrindePage() {
       const raw = localStorage.getItem("slimbelly:address");
       if (raw) setAddress(JSON.parse(raw));
     } catch {}
-    fetchProvider().then((r) => setProvider(r.provider)).catch(() => {});
+    fetchProvider({ data: {} }).then((r) => setProvider(r.provider)).catch(() => {});
   }, [fetchProvider]);
 
   const payFee = async () => {
