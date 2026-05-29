@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   ChevronLeft, Share2, ShoppingCart, Bookmark, ChevronRight,
-  Zap, Truck, Store, MessageCircle, Star, Ticket, ShieldCheck, LayoutGrid, Video,
+  Zap, Truck, Store, MessageCircle, Star, Ticket, ShieldCheck, LayoutGrid, Video, X, Heart,
 } from "lucide-react";
 import { paniniBySlug, type PaniniProduct } from "@/lib/panini-products";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
