@@ -276,9 +276,9 @@ function PaniniCheckoutPage() {
             <ChevronLeft className="h-5 w-5" />
           </button>
           <div className="flex flex-col items-center">
-            <h1 className="text-base font-bold">Resumo do Pedido</h1>
+            <h1 className="text-base font-bold">{step === 4 ? "Realizar pagamento" : "Resumo do Pedido"}</h1>
             <div className="mt-0.5 flex items-center gap-1 text-[11px] font-semibold text-emerald-600">
-              <ShieldCheck className="h-3.5 w-3.5" /> Pagamento 100% seguro
+              <ShieldCheck className="h-3.5 w-3.5" /> {step === 4 ? "Dados criptografados" : "Pagamento 100% seguro"}
             </div>
           </div>
           <div className="w-9" />
