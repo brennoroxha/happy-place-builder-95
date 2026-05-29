@@ -534,7 +534,10 @@ function PaniniCheckoutPage() {
                 />
               </Field>
 
-              <div className="mt-3 space-y-2">
+              <div className="mt-4 mb-2 text-sm font-bold text-zinc-900">
+                Opções de entrega disponíveis
+              </div>
+              <div className="space-y-2">
                 {shippingOptions.map((opt) => {
                   const active = shipping === opt.id;
                   return (
