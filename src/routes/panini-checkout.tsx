@@ -101,6 +101,26 @@ function PaniniCheckoutPage() {
   const [doc, setDoc] = useState("");
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
+  // Entrega
+  const [cep, setCep] = useState("");
+  const [endereco, setEndereco] = useState("");
+  const [numero, setNumero] = useState("");
+  const [bairro, setBairro] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [estado, setEstado] = useState("");
+  const [complemento, setComplemento] = useState("");
+  const shippingOptions = [
+    { id: "jadlog", label: "JadLog", price: 25.5, eta: "Receba em até 2 dias úteis" },
+    { id: "sedex", label: "Sedex-Express", price: 17.5, eta: "Receba em até 4 dias úteis" },
+    { id: "correio", label: "Correio", price: 0, eta: "Receba em até 7 dias úteis" },
+  ];
+  const [shipping, setShipping] = useState("jadlog");
+  const selectedShipping = shippingOptions.find((s) => s.id === shipping)!;
+  const maskCep = (v: string) => {
+    const d = onlyDigits(v).slice(0, 8);
+    return d.length > 5 ? `${d.slice(0, 5)}-${d.slice(5)}` : d;
+  };
+
   // Coupon countdown (5h)
   const [secondsLeft, setSecondsLeft] = useState(5 * 60 * 60);
   useEffect(() => {
