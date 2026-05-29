@@ -116,7 +116,7 @@ function PaniniCheckoutPage() {
   ];
   const [shipping, setShipping] = useState("jadlog");
   const [pagamento, setPagamento] = useState("pix");
-  const upsells = [
+  const upsells: { id: string; name: string; img: string; original: number; price: number; note?: string }[] = [
     {
       id: "neymar-lote",
       name: "[Lançamento] Novo Lote Neymar Edition chance de 12%. aumente sua chance ao adicionar mais!",
