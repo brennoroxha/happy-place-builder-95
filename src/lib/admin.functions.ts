@@ -19,20 +19,23 @@ export type AdminSale = {
   proofUploadedAt: string | null;
 };
 
-export const getActiveProvider = createServerFn({ method: "GET" }).handler(
-  async () => {
-    const { data } = await supabaseAdmin
+const scopeKey = (scope?: string) =>
+  scope && scope !== "default" ? `active_provider_${scope}` : "active_provider";
+
+export const getActiveProvider = createServerFn({ method: "GET" })
+  .inputValidator((d: { scope?: string } | undefined) => d ?? {})
+  .handler(async ({ data }) => {
+    const { data: row } = await supabaseAdmin
       .from("app_settings")
       .select("value")
-      .eq("key", "active_provider")
+      .eq("key", scopeKey(data.scope))
       .maybeSingle();
-    const v = data?.value;
+    const v = row?.value;
     return { provider: (v === "freepay" ? "freepay" : "klivopay") as Provider };
-  },
-);
+  });
 
 export const setActiveProvider = createServerFn({ method: "POST" })
-  .inputValidator((d: { provider: Provider }) => {
+  .inputValidator((d: { provider: Provider; scope?: string }) => {
     if (d.provider !== "klivopay" && d.provider !== "freepay") {
       throw new Error("provider inválido");
     }
@@ -42,7 +45,7 @@ export const setActiveProvider = createServerFn({ method: "POST" })
     const { error } = await supabaseAdmin
       .from("app_settings")
       .upsert(
-        { key: "active_provider", value: data.provider, updated_at: new Date().toISOString() },
+        { key: scopeKey(data.scope), value: data.provider, updated_at: new Date().toISOString() },
         { onConflict: "key" },
       );
     if (error) throw new Error(error.message);

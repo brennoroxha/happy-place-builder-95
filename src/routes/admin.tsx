@@ -173,8 +173,12 @@ function groupSalesByDate(sales: AdminSale[]) {
 const isPaid = (s: AdminSale) => s.status === "paid";
 const saleTotal = (s: AdminSale) => (s.amountCents ?? 0) / 100;
 
+type Tab = "slimbelly" | "panini";
+
 function AdminPage({ onLogout }: { onLogout: () => void }) {
+  const [tab, setTab] = useState<Tab>("slimbelly");
   const [provider, setProvider] = useState<Provider>("klivopay");
+  const [paniniProvider, setPaniniProvider] = useState<Provider>("klivopay");
   const [saved, setSaved] = useState(false);
   const [savingProvider, setSavingProvider] = useState(false);
   const [sales, setSales] = useState<AdminSale[]>([]);
@@ -199,8 +203,11 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
   };
 
   useEffect(() => {
-    fetchProvider()
+    fetchProvider({ data: {} })
       .then((r) => setProvider(r.provider))
+      .catch(() => {});
+    fetchProvider({ data: { scope: "panini" } })
+      .then((r) => setPaniniProvider(r.provider))
       .catch(() => {});
     refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -209,7 +216,11 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
   const save = async () => {
     setSavingProvider(true);
     try {
-      await saveProviderFn({ data: { provider } });
+      if (tab === "panini") {
+        await saveProviderFn({ data: { provider: paniniProvider, scope: "panini" } });
+      } else {
+        await saveProviderFn({ data: { provider } });
+      }
       setSaved(true);
       setTimeout(() => setSaved(false), 1800);
     } catch (e) {
@@ -252,20 +263,46 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
           </button>
         </header>
 
+        {/* Tabs */}
+        <div className="mx-3 mt-3 flex gap-2 rounded-lg bg-white p-1 shadow-sm">
+          {([
+            { id: "slimbelly", label: "Slim Belly" },
+            { id: "panini", label: "Panini" },
+          ] as { id: Tab; label: string }[]).map((t) => {
+            const active = tab === t.id;
+            return (
+              <button
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                className={`flex-1 rounded-md py-2 text-sm font-bold ${
+                  active ? "bg-rose-500 text-white" : "text-zinc-600"
+                }`}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
+
         {/* Provedor */}
         <div className="m-3 rounded-lg bg-white p-4 shadow-sm">
-          <h2 className="text-sm font-bold">Provedor de pagamento Pix</h2>
+          <h2 className="text-sm font-bold">
+            Provedor de pagamento Pix · {tab === "panini" ? "Panini" : "Slim Belly"}
+          </h2>
           <p className="mt-1 text-xs text-zinc-500">
-            Selecione qual gateway será usado para gerar o Pix no checkout.
+            Selecione qual gateway será usado para gerar o Pix no checkout
+            {tab === "panini" ? " da Panini" : " da Slim Belly"}.
           </p>
 
           <div className="mt-4 space-y-2">
             {OPTIONS.map((opt) => {
-              const active = provider === opt.id;
+              const current = tab === "panini" ? paniniProvider : provider;
+              const setCurrent = tab === "panini" ? setPaniniProvider : setProvider;
+              const active = current === opt.id;
               return (
                 <button
                   key={opt.id}
-                  onClick={() => setProvider(opt.id)}
+                  onClick={() => setCurrent(opt.id)}
                   className={`flex w-full items-start justify-between gap-3 rounded-xl border-2 p-3 text-left ${
                     active ? "border-rose-500 bg-rose-50/30" : "border-zinc-200"
                   }`}
@@ -296,9 +333,17 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
           </button>
 
           <div className="mt-3 text-xs text-zinc-500">
-            Ativo agora: <strong className="text-zinc-700">{provider}</strong>
+            Ativo agora:{" "}
+            <strong className="text-zinc-700">
+              {tab === "panini" ? paniniProvider : provider}
+            </strong>
           </div>
         </div>
+
+        {tab === "slimbelly" && (
+        <>
+
+
 
 
         {/* Dashboard do dia */}
@@ -471,7 +516,10 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
             </div>
           )}
         </div>
+        </>
+        )}
       </div>
+
 
       {/* Preview modal */}
       {preview && (

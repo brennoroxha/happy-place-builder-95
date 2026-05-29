@@ -154,7 +154,7 @@ function CheckoutPage() {
         }));
       }
     } catch {}
-    fetchProvider().then((r) => setProvider(r.provider)).catch(() => {});
+    fetchProvider({ data: {} }).then((r) => setProvider(r.provider)).catch(() => {});
   }, [fetchProvider]);
 
   // Fire begin_checkout / InitiateCheckout once
