@@ -505,7 +505,42 @@ function CheckoutPage() {
                 </Field>
               </div>
 
-              <div className="mt-2">
+              <div className="mt-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <h3 className="text-sm font-extrabold text-slate-900">Tipo de Frete</h3>
+                </div>
+                <div className="space-y-2">
+                  {([
+                    { id: "transportadora", label: "Transportadora", eta: "Entrega em 5 a 9 dias úteis" },
+                    { id: "sedex", label: "Sedex Express", eta: "Entrega em 2 a 4 dias úteis" },
+                  ] as const).map((opt) => {
+                    const active = shipping === opt.id;
+                    return (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => setShipping(opt.id)}
+                        className={`flex w-full items-center justify-between rounded-xl border-2 px-4 py-3 text-left transition ${
+                          active ? "border-emerald-500 bg-emerald-50/60" : "border-slate-200 bg-white"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className={`grid h-5 w-5 place-items-center rounded-full border-2 ${active ? "border-emerald-500" : "border-slate-300"}`}>
+                            {active && <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />}
+                          </span>
+                          <div>
+                            <div className="text-sm font-bold text-slate-900">{opt.label}</div>
+                            <div className="text-xs text-slate-500">{opt.eta}</div>
+                          </div>
+                        </div>
+                        <span className="text-sm font-bold text-emerald-600">Grátis</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="mt-4">
                 <button
                   type="button"
                   onClick={advance}
@@ -514,6 +549,7 @@ function CheckoutPage() {
                   Avançar para o pagamento ›
                 </button>
               </div>
+
 
             </>
           )}
