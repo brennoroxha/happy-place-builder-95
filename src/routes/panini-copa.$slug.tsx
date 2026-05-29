@@ -240,10 +240,7 @@ function PaniniProductPage() {
             <div className="mt-2 space-y-1 text-[12px] text-zinc-800">
               <div>✓ Devolução gratuita</div>
               <div>✓ Reembolso automático por danos</div>
-              <div className="grid grid-cols-2 gap-x-3">
-                <div>✓ Pagamento seguro</div>
-                <div>✓ Cupom por atraso na coleta</div>
-              </div>
+              <div>✓ Pagamento seguro</div>
             </div>
           </div>
         </div>
