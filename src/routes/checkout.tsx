@@ -18,7 +18,6 @@ import {
   ChevronRight,
   Check,
   ShoppingBag,
-  Pencil,
 } from "lucide-react";
 import slimBellyBege from "@/assets/slim-belly-bege.png";
 import slimBellyPreta from "@/assets/slim-belly-preta.png";
