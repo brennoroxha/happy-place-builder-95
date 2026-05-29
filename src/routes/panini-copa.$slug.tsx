@@ -379,7 +379,7 @@ function PaniniProductPage() {
           </button>
           <button
             onClick={addToCart}
-            className="ml-auto flex-1 rounded-md bg-zinc-100 py-2.5 text-[13px] font-semibold leading-tight text-zinc-900"
+            className="ml-auto flex-1 rounded-md bg-zinc-200 py-2.5 text-[12px] font-semibold leading-tight text-zinc-800"
           >
             Adicionar ao<br />Carrinho
           </button>
