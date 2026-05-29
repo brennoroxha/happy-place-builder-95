@@ -274,6 +274,21 @@ function PaniniProductPage() {
           </section>
         )}
 
+        {/* Vídeos dos criadores */}
+        <section className="mt-6 px-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Video className="h-5 w-5 text-zinc-900" />
+              <h2 className="text-base font-bold">Vídeos dos criadores</h2>
+            </div>
+            <span className="text-[11px] text-zinc-500">Conteúdo enviado por quem testou</span>
+          </div>
+          <div className="mt-3 rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-8 text-center text-sm text-zinc-500">
+            Nenhum vídeo de criador disponível no momento.
+          </div>
+        </section>
+
+
         {/* Store */}
         <section className="mt-6 px-4">
           <h2 className="text-base font-bold">Loja oficial</h2>
