@@ -304,10 +304,27 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
             <p className="mt-3 text-xs text-zinc-500">Nenhum pedido registrado ainda.</p>
           ) : (
             <div className="mt-3 space-y-5">
-              {grouped.map(({ date, items }) => (
+              {grouped.map(({ date, items }) => {
+                const paidItems = items.filter((o) => o.status === "confirmed");
+                const pendingItems = items.filter((o) => o.status !== "confirmed");
+                const totalPaid = paidItems.reduce((s, o) => s + o.total, 0);
+                const totalPending = pendingItems.reduce((s, o) => s + o.total, 0);
+                return (
                 <div key={date}>
                   <div className="mb-2 text-xs font-bold uppercase tracking-wide text-zinc-500">
                     {fmtDate(date)}
+                  </div>
+                  <div className="mb-3 grid grid-cols-2 gap-2">
+                    <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-2">
+                      <div className="text-[10px] font-bold uppercase text-emerald-700">Pagos</div>
+                      <div className="mt-0.5 text-base font-extrabold text-emerald-700">{paidItems.length}</div>
+                      <div className="text-[11px] font-semibold text-emerald-700">{brl(totalPaid)}</div>
+                    </div>
+                    <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-2">
+                      <div className="text-[10px] font-bold uppercase text-zinc-600">Pendentes</div>
+                      <div className="mt-0.5 text-base font-extrabold text-zinc-700">{pendingItems.length}</div>
+                      <div className="text-[11px] font-semibold text-zinc-700">{brl(totalPending)}</div>
+                    </div>
                   </div>
                   <div className="space-y-2">
                     {items.map((o) => {
@@ -399,7 +416,7 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
                     })}
                   </div>
                 </div>
-              ))}
+              );})}
             </div>
           )}
         </div>
