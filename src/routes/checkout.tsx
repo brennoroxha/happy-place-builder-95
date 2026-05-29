@@ -322,7 +322,7 @@ function CheckoutPage() {
             const active = step === s.key;
             const done = step > s.key;
             return (
-              <React.Fragment key={s.key}>
+              <Fragment key={s.key}>
                 <div className="flex flex-col items-center" style={{ width: 72 }}>
                   <div
                     className={`grid h-10 w-10 place-items-center rounded-full transition-colors ${
@@ -350,7 +350,7 @@ function CheckoutPage() {
                     }`}
                   />
                 )}
-              </React.Fragment>
+              </Fragment>
             );
           })}
         </div>
