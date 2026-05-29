@@ -5,6 +5,8 @@ import {
   Zap, Truck, Store, MessageCircle, Star, Ticket,
 } from "lucide-react";
 import { paniniBySlug, type PaniniProduct } from "@/lib/panini-products";
+import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
+import { CartDrawer } from "@/components/panini/CartDrawer";
 
 export const Route = createFileRoute("/panini-copa/$slug")({
   loader: ({ params }) => {
@@ -32,8 +34,17 @@ export const Route = createFileRoute("/panini-copa/$slug")({
       Erro ao carregar produto: {String(error)}
     </div>
   ),
-  component: PaniniProductPage,
+  component: PaniniProductRoot,
 });
+
+function PaniniProductRoot() {
+  return (
+    <PaniniCartProvider>
+      <PaniniProductPage />
+      <CartDrawer />
+    </PaniniCartProvider>
+  );
+}
 
 const brl = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -55,6 +66,7 @@ function PaniniProductPage() {
   const { product } = Route.useLoaderData() as { product: PaniniProduct };
   const [current, setCurrent] = useState(0);
   const time = useCountdown(573);
+  const { add, count, setOpen } = usePaniniCart();
 
   const monthsAbbr = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
   const fmt = (d: Date) => `${d.getDate()} de ${monthsAbbr[d.getMonth()]}`;
@@ -65,9 +77,16 @@ function PaniniProductPage() {
 
   const images = product.fotos.length ? product.fotos : [];
   const economiza = product.precoComparacao - product.preco;
+  const cover = images[0] ?? "";
 
-  const goCheckout = () =>
+  const addToCart = () => {
+    add({ slug: product.slug, name: product.titulo, price: product.preco, img: cover });
+    setOpen(true);
+  };
+  const goCheckout = () => {
+    add({ slug: product.slug, name: product.titulo, price: product.preco, img: cover });
     navigate({ to: "/checkout", search: { color: product.titulo, size: "Único" } });
+  };
 
   return (
     <div className="min-h-screen bg-zinc-100 text-zinc-900 sm:py-6">
