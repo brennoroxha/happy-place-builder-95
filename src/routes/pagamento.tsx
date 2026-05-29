@@ -55,6 +55,7 @@ function useCountdown(initialSec: number) {
 }
 
 function PaymentPage() {
+  usePageTracking("presence:pagamento", "/pagamento");
   const { total, code, hash } = Route.useSearch();
   const amount = total ?? 169.8;
   const pixCode = code || FALLBACK_PIX;
