@@ -340,7 +340,9 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
           </div>
         </div>
 
-        {tab === "slimbelly" && (<></>)}
+        {tab === "slimbelly" && (
+        <>
+
 
 
 
