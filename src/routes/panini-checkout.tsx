@@ -548,6 +548,9 @@ function PaniniCheckoutPage() {
             <span className="text-lg font-extrabold text-zinc-900">{brl(subtotal)}</span>
           </div>
         </div>
+        <div className="bg-rose-600 py-2.5 text-center text-sm font-bold text-white">
+          O cupom expira em {hh}:{mm}:{ss}
+        </div>
       </div>
     </div>
   );
