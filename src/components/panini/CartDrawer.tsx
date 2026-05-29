@@ -88,13 +88,13 @@ export function CartDrawer() {
 
         <footer className="border-t border-zinc-200 px-4 py-3">
           <div className="mb-3 flex items-center justify-between text-sm">
-            <span className="text-zinc-600">Subtotal</span>
+            <span className="text-zinc-600">Total (itens):</span>
             <span className="text-lg font-bold text-zinc-900">{brl(subtotal)}</span>
           </div>
           <button
             onClick={finalize}
             disabled={items.length === 0}
-            className="w-full rounded-full bg-rose-600 py-3 text-sm font-bold text-white shadow-sm disabled:cursor-not-allowed disabled:bg-zinc-300"
+            className="w-full rounded-lg bg-rose-600 py-3 text-sm font-bold text-white shadow-sm disabled:cursor-not-allowed disabled:bg-zinc-300"
           >
             Finalizar compra
           </button>
