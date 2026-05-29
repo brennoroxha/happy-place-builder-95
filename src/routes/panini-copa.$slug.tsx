@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate, notFound } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ChevronLeft, Share2, ShoppingCart, Bookmark, ChevronRight,
-  Zap, Truck, Store, MessageCircle, Star, Ticket, ShieldCheck, LayoutGrid, Video,
+  Zap, Truck, Store, MessageCircle, Star, Ticket, ShieldCheck, LayoutGrid, Video, X, Heart,
 } from "lucide-react";
 import { paniniBySlug, type PaniniProduct } from "@/lib/panini-products";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
@@ -61,9 +61,13 @@ const CREATOR_VIDEOS = [
   { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381088811.53234763.mp4", avatar: "https://loja.ferrjhgf.shop/uploads/juliaerafael.jpg", nome: "Julia e Rafael", caption: "Surpresa perfeita para nossa coleção" },
 ];
 
-function CreatorVideoCard({ src, avatar, nome, caption }: { src: string; avatar: string; nome: string; caption: string }) {
+function CreatorVideoCard({ src, avatar, nome, caption, onOpen }: { src: string; avatar: string; nome: string; caption: string; onOpen: () => void }) {
   return (
-    <div className="relative h-52 w-36 flex-shrink-0 overflow-hidden rounded-xl bg-zinc-900">
+    <button
+      type="button"
+      onClick={onOpen}
+      className="relative h-52 w-36 flex-shrink-0 overflow-hidden rounded-xl bg-zinc-900 text-left"
+    >
       <video
         src={src}
         autoPlay
@@ -81,7 +85,120 @@ function CreatorVideoCard({ src, avatar, nome, caption }: { src: string; avatar:
         <img src={avatar} alt={nome} className="h-5 w-5 rounded-full border border-white/80 object-cover" />
         <span className="text-[11px] font-semibold text-white drop-shadow">{nome.split(" ")[0]}</span>
       </div>
+    </button>
+  );
+}
+
+function CreatorVideoModal({
+  video,
+  productName,
+  productImg,
+  onClose,
+}: {
+  video: typeof CREATOR_VIDEOS[number];
+  productName: string;
+  productImg: string;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [onClose]);
+
+  const likes = useMemo(() => 800 + Math.floor(Math.random() * 1500), []);
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-2 sm:p-6" onClick={onClose}>
+      <div
+        className="relative aspect-[9/16] w-full max-w-[420px] overflow-hidden rounded-2xl bg-black shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <video
+          src={video.src}
+          autoPlay
+          loop
+          playsInline
+          controls={false}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+
+        {/* Top bar */}
+        <button
+          onClick={onClose}
+          className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-black/50 text-white backdrop-blur-sm"
+          aria-label="Fechar"
+        >
+          <X className="h-5 w-5" />
+        </button>
+
+        {/* Caption */}
+        <div className="pointer-events-none absolute inset-x-0 top-1/3 px-6 text-center text-[22px] font-bold leading-tight text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
+          {video.caption}
+        </div>
+
+        {/* Bottom gradient + content */}
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-4 pb-4 pt-16">
+          {/* Product pill */}
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-zinc-900/80 py-1.5 pl-1.5 pr-3 text-white backdrop-blur-sm">
+            <span className="grid h-7 w-7 place-items-center rounded-full bg-orange-500">
+              <ShoppingCart className="h-3.5 w-3.5 text-white" />
+            </span>
+            <span className="max-w-[220px] truncate text-[12px] font-semibold">{productName}</span>
+          </div>
+
+          {/* Creator row */}
+          <div className="flex items-end justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <img src={video.avatar} alt={video.nome} className="h-9 w-9 rounded-full border border-white/70 object-cover" />
+              <div className="leading-tight">
+                <div className="text-[14px] font-semibold text-white">{video.nome}</div>
+                <div className="text-[11px] text-white/70">Vídeo do criador</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-1 text-white">
+              <Heart className="h-4 w-4 fill-white" />
+              <span className="text-[12px] font-semibold">{likes.toLocaleString("pt-BR")} curtidas</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  );
+}
+
+function CreatorVideosSection({ productName, productImg }: { productName: string; productImg: string }) {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  return (
+    <section className="mt-6 px-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <Video className="h-5 w-5 text-zinc-900" />
+          <h2 className="text-base font-bold leading-tight">Vídeos dos<br />criadores</h2>
+        </div>
+        <span className="max-w-[140px] text-right text-[11px] leading-tight text-zinc-500">
+          Conteúdo enviado por quem testou
+        </span>
+      </div>
+      <div className="mt-3 -mx-4 flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">
+        {CREATOR_VIDEOS.map((v, i) => (
+          <CreatorVideoCard key={i} {...v} onOpen={() => setOpenIdx(i)} />
+        ))}
+      </div>
+      {openIdx !== null && (
+        <CreatorVideoModal
+          video={CREATOR_VIDEOS[openIdx]}
+          productName={productName}
+          productImg={productImg}
+          onClose={() => setOpenIdx(null)}
+        />
+      )}
+    </section>
   );
 }
 
@@ -282,22 +399,7 @@ function PaniniProductPage() {
         </div>
 
         {/* Vídeos dos criadores */}
-        <section className="mt-6 px-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <Video className="h-5 w-5 text-zinc-900" />
-              <h2 className="text-base font-bold leading-tight">Vídeos dos<br />criadores</h2>
-            </div>
-            <span className="max-w-[140px] text-right text-[11px] leading-tight text-zinc-500">
-              Conteúdo enviado por quem testou
-            </span>
-          </div>
-          <div className="mt-3 -mx-4 flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">
-            {CREATOR_VIDEOS.map((v, i) => (
-              <CreatorVideoCard key={i} {...v} />
-            ))}
-          </div>
-        </section>
+        <CreatorVideosSection productName={product.titulo} productImg={cover} />
 
         {/* Reviews */}
         {product.comentarios.length > 0 && (
