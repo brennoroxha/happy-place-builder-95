@@ -9,6 +9,7 @@ import { createKlivoTransaction } from "@/lib/klivopay.functions";
 import { createFreepayTransaction } from "@/lib/freepay.functions";
 import { getActiveProvider } from "@/lib/admin.functions";
 import { paniniUtmifyHeadScripts } from "@/lib/utmify-head";
+import { tiktokShopLogo, pixLogo, maoCelular } from "@/assets/external";
 
 export const Route = createFileRoute("/panini-checkout")({
   head: () => ({
