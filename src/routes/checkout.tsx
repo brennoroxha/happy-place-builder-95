@@ -25,6 +25,7 @@ import slimBellyPreta from "@/assets/slim-belly-preta.png";
 import slimBellyVermelha from "@/assets/slim-belly-vermelha.png";
 import { usePageTracking } from "@/hooks/use-page-tracking";
 import { trackInitiateCheckout } from "@/lib/track";
+import { tiktokShopLogo } from "@/assets/external";
 
 type CheckoutSearch = { color?: string; size?: string };
 
