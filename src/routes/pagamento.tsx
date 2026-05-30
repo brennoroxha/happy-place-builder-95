@@ -103,11 +103,6 @@ function PaymentPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 1200);
-    return () => clearTimeout(t);
-  }, []);
-
-  useEffect(() => {
     if (hash) setOrder(getOrder(hash));
   }, [hash]);
 
