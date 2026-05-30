@@ -26,6 +26,7 @@ import { trackPurchase } from "@/lib/track";
 import slimBellyBege from "@/assets/slim-belly-bege.png";
 import slimBellyPreta from "@/assets/slim-belly-preta.png";
 import slimBellyVermelha from "@/assets/slim-belly-vermelha.png";
+import { tiktokShopLogo, pixIcone } from "@/assets/external";
 
 type Search = {
   total?: number;
