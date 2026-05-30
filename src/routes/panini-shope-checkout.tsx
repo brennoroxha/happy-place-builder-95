@@ -900,7 +900,7 @@ function PaniniCheckoutPage() {
               </p>
               <div className="my-4 flex justify-center">
                 <img
-                  src="https://loja.ferrjhgf.shop/uploads/mao-celular.png"
+                  src={maoCelular}
                   alt="Aguardando pagamento"
                   className="h-40 w-auto object-contain"
                 />
