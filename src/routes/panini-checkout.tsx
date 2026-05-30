@@ -887,7 +887,7 @@ function PaniniCheckoutPage() {
             Total ({count} {count === 1 ? "item" : "itens"})
           </span>
           <span className="pr-1 text-lg font-extrabold text-zinc-900">
-            {brl(subtotal + (step >= 2 ? selectedShipping.price : 0) + upsellTotal)}
+            {brl(subtotal + (step >= 2 ? selectedShipping.price : 0))}
           </span>
         </div>
         <div className="bg-rose-600 py-2.5 text-center text-sm font-bold text-white">
