@@ -143,48 +143,7 @@ function PaniniCheckoutPage() {
     trackInitiateCheckout(subtotal || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const upsells: { id: string; name: string; img: string; original: number; price: number; note?: string }[] = [
-    {
-      id: "neymar-lote",
-      name: "[Lançamento] Novo Lote Neymar Edition chance de 12%. aumente sua chance ao adicionar mais!",
-      img: upsellNeymarLote,
-      original: 31.9,
-      price: 4.9,
-      note: "Após adicionar 1x: 12% de sorte",
-    },
-    {
-      id: "figurinhas-raras",
-      name: "Aumente suas chances para garantir Figurinhas Raras ✨",
-      img: upsellFigurinhasLegend,
-      original: 39.58,
-      price: 12.7,
-    },
-    {
-      id: "caixinha",
-      name: "Caixinha Temática Copa do Mundo 2026 - Capacidade até 500 Figurinhas",
-      img: upsellCaixinha,
-      original: 37.58,
-      price: 8.98,
-    },
-    {
-      id: "adesivo-neymar",
-      name: "Adesivo Autocolante Neymar Jr. & Mercado Livre",
-      img: upsellAdesivoNeymar,
-      original: 59.99,
-      price: 19.99,
-    },
-    {
-      id: "kit-coca",
-      name: "Kit 6 Garrafas Coca-cola 600ml Copa 2026 Panini Figurinhas",
-      img: upsellCoca,
-      original: 79.9,
-      price: 29.9,
-    },
-  ];
-  const [upsellQty, setUpsellQty] = useState<Record<string, number>>({});
-  const [upsellAdded, setUpsellAdded] = useState<Record<string, number>>({});
   const selectedShipping = shippingOptions.find((s) => s.id === shipping)!;
-  const upsellTotal = upsells.reduce((sum, u) => sum + (upsellAdded[u.id] ?? 0) * u.price, 0);
   const [cepLoading, setCepLoading] = useState(false);
   const maskCep = (v: string) => {
     const d = onlyDigits(v).slice(0, 8);
