@@ -19,6 +19,7 @@ import { Route as AddressRouteImport } from './routes/address'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PaniniShopeIndexRouteImport } from './routes/panini-shope.index'
 import { Route as PaniniCopaIndexRouteImport } from './routes/panini-copa.index'
+import { Route as UpsellTaxaEnvioRouteImport } from './routes/upsell.taxa-envio'
 import { Route as PaniniShopeSlugRouteImport } from './routes/panini-shope.$slug'
 import { Route as PaniniCopaSlugRouteImport } from './routes/panini-copa.$slug'
 import { Route as ApiPublicKlivopayWebhookRouteImport } from './routes/api/public/klivopay-webhook'
@@ -74,6 +75,11 @@ const PaniniCopaIndexRoute = PaniniCopaIndexRouteImport.update({
   path: '/panini-copa/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UpsellTaxaEnvioRoute = UpsellTaxaEnvioRouteImport.update({
+  id: '/upsell/taxa-envio',
+  path: '/upsell/taxa-envio',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PaniniShopeSlugRoute = PaniniShopeSlugRouteImport.update({
   id: '/panini-shope/$slug',
   path: '/panini-shope/$slug',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/panini-shope-checkout': typeof PaniniShopeCheckoutRoute
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
   '/panini-shope/$slug': typeof PaniniShopeSlugRoute
+  '/upsell/taxa-envio': typeof UpsellTaxaEnvioRoute
   '/panini-copa/': typeof PaniniCopaIndexRoute
   '/panini-shope/': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/panini-shope-checkout': typeof PaniniShopeCheckoutRoute
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
   '/panini-shope/$slug': typeof PaniniShopeSlugRoute
+  '/upsell/taxa-envio': typeof UpsellTaxaEnvioRoute
   '/panini-copa': typeof PaniniCopaIndexRoute
   '/panini-shope': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/panini-shope-checkout': typeof PaniniShopeCheckoutRoute
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
   '/panini-shope/$slug': typeof PaniniShopeSlugRoute
+  '/upsell/taxa-envio': typeof UpsellTaxaEnvioRoute
   '/panini-copa/': typeof PaniniCopaIndexRoute
   '/panini-shope/': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
@@ -158,6 +167,7 @@ export interface FileRouteTypes {
     | '/panini-shope-checkout'
     | '/panini-copa/$slug'
     | '/panini-shope/$slug'
+    | '/upsell/taxa-envio'
     | '/panini-copa/'
     | '/panini-shope/'
     | '/api/public/freepay-webhook'
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
     | '/panini-shope-checkout'
     | '/panini-copa/$slug'
     | '/panini-shope/$slug'
+    | '/upsell/taxa-envio'
     | '/panini-copa'
     | '/panini-shope'
     | '/api/public/freepay-webhook'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '/panini-shope-checkout'
     | '/panini-copa/$slug'
     | '/panini-shope/$slug'
+    | '/upsell/taxa-envio'
     | '/panini-copa/'
     | '/panini-shope/'
     | '/api/public/freepay-webhook'
@@ -207,6 +219,7 @@ export interface RootRouteChildren {
   PaniniShopeCheckoutRoute: typeof PaniniShopeCheckoutRoute
   PaniniCopaSlugRoute: typeof PaniniCopaSlugRoute
   PaniniShopeSlugRoute: typeof PaniniShopeSlugRoute
+  UpsellTaxaEnvioRoute: typeof UpsellTaxaEnvioRoute
   PaniniCopaIndexRoute: typeof PaniniCopaIndexRoute
   PaniniShopeIndexRoute: typeof PaniniShopeIndexRoute
   ApiPublicFreepayWebhookRoute: typeof ApiPublicFreepayWebhookRoute
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaniniCopaIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/upsell/taxa-envio': {
+      id: '/upsell/taxa-envio'
+      path: '/upsell/taxa-envio'
+      fullPath: '/upsell/taxa-envio'
+      preLoaderRoute: typeof UpsellTaxaEnvioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/panini-shope/$slug': {
       id: '/panini-shope/$slug'
       path: '/panini-shope/$slug'
@@ -327,6 +347,7 @@ const rootRouteChildren: RootRouteChildren = {
   PaniniShopeCheckoutRoute: PaniniShopeCheckoutRoute,
   PaniniCopaSlugRoute: PaniniCopaSlugRoute,
   PaniniShopeSlugRoute: PaniniShopeSlugRoute,
+  UpsellTaxaEnvioRoute: UpsellTaxaEnvioRoute,
   PaniniCopaIndexRoute: PaniniCopaIndexRoute,
   PaniniShopeIndexRoute: PaniniShopeIndexRoute,
   ApiPublicFreepayWebhookRoute: ApiPublicFreepayWebhookRoute,

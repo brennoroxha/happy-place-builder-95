@@ -806,6 +806,24 @@ function PaniniCheckoutPage() {
                         : []),
                     ];
                     const fn = provider === "freepay" ? freepay : klivo;
+                    try {
+                      localStorage.setItem(
+                        "panini:address",
+                        JSON.stringify({
+                          nome: nome.trim(),
+                          email,
+                          telefone,
+                          cpf: doc,
+                          cep,
+                          rua: endereco,
+                          numero,
+                          bairro,
+                          cidade,
+                          estado,
+                          complemento,
+                        }),
+                      );
+                    } catch {}
                     const res = await fn({
                       data: {
                         amount: amountCents,
@@ -820,6 +838,7 @@ function PaniniCheckoutPage() {
                       return;
                     }
                     setPixCode(res.pix_copy_paste);
+                    setPaymentHash(res.hash);
                     trackPurchase(total, res.hash);
                     setStep(4);
                     window.scrollTo({ top: 0, behavior: "smooth" });
