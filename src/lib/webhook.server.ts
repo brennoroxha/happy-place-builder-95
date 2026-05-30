@@ -148,6 +148,17 @@ export async function processWebhookEvent(evt: NormalizedEvent) {
       ? utmifyDate(new Date(existing.created_at))
       : utmifyDate();
 
+    const klivoAccount = String(
+      (existingPayload.klivo_account as string | undefined) ?? "",
+    );
+    const scope = String(
+      (existingPayload.scope as string | undefined) ?? "",
+    );
+    const tokenEnv =
+      klivoAccount === "conta2" || scope === "panini"
+        ? "UTMIFY_API_TOKEN_PANINI"
+        : "UTMIFY_API_TOKEN";
+
     utmifyResult = await sendUtmifyOrder({
       orderId: hash,
       status: evt.status === "paid" ? "paid" : "waiting_payment",
@@ -159,6 +170,7 @@ export async function processWebhookEvent(evt: NormalizedEvent) {
       tracking: pickTracking(existingPayload),
       totalPriceInCents: amountCents,
       userCommissionInCents: amountCents,
+      tokenEnv,
     });
 
     if (utmifyResult.ok) {
