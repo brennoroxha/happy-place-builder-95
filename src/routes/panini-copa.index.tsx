@@ -97,6 +97,14 @@ function PaniniCopaPage() {
   return (
     <div className="min-h-screen bg-zinc-100 text-sm text-zinc-800 sm:py-6">
       <div className="mx-auto max-w-[480px] bg-white pb-10 sm:rounded-2xl sm:shadow-xl sm:ring-1 sm:ring-zinc-200 sm:overflow-hidden">
+        {/* Store logo banner */}
+        <div className="flex items-center justify-center bg-white px-4 py-2">
+          <img
+            src="https://sf16-website.neutral.ttwstatic.com/obj/tiktok_web_static/i18n_ecom_fe/tiktok_shop_web_mono/packages/apps/pdp_h5/static/image/tts-logo-light.28ce4ad8.png"
+            alt="TikTok Shop"
+            className="h-7 object-contain"
+          />
+        </div>
         {/* Search header */}
         <header className="sticky top-0 z-20 flex items-center justify-between border-b border-zinc-200 bg-white px-3 py-3">
           <div className="flex items-center gap-2">
