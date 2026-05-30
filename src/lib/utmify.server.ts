@@ -59,9 +59,10 @@ export async function sendUtmifyOrder(args: SendUtmifyArgs): Promise<
   | { ok: true; response: unknown }
   | { ok: false; error: string }
 > {
-  const token = process.env.UTMIFY_API_TOKEN;
+  const tokenEnv = args.tokenEnv ?? "UTMIFY_API_TOKEN";
+  const token = process.env[tokenEnv];
   if (!token) {
-    console.warn("[utmify] UTMIFY_API_TOKEN not set, skipping");
+    console.warn(`[utmify] ${tokenEnv} not set, skipping`);
     return { ok: false, error: "missing_token" };
   }
 
