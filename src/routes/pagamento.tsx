@@ -283,7 +283,7 @@ function PaymentPage() {
                   (e.target as HTMLImageElement).style.display = "none";
                 }}
               />
-              <div className="-mt-2 text-[11px] font-semibold text-slate-400">powered by Banco Central</div>
+              
               <p className="mt-5 text-center text-sm font-bold text-slate-900">
                 Para pagar, finalize sua compra abaixo
               </p>
