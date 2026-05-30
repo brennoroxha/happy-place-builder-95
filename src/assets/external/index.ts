@@ -1,0 +1,14 @@
+export { default as shopeeLogo } from "./shopee-logo.png";
+export { default as tiktokShopLogo } from "./tiktok-shop-logo.png";
+export { default as pixLogo } from "./pix-logo.png";
+export { default as pixIcone } from "./pix-icone.png";
+export { default as maoCelular } from "./mao-celular.png";
+export { default as avatarCarla } from "./carla.jpg";
+export { default as avatarCalifornices } from "./californices.jpg";
+export { default as avatarJose } from "./jose.jpg";
+export { default as avatarAndre } from "./andre.jpg";
+export { default as avatarJoyce } from "./joyce.jpg";
+export { default as avatarMateus } from "./mateus.jpg";
+export { default as avatarJuan } from "./juan.jpg";
+export { default as avatarJuliaRafael } from "./juliaerafael.jpg";
+export { default as avatarNandy } from "./nandy-zorzan.jpg";
