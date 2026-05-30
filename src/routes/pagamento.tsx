@@ -257,9 +257,11 @@ function PaymentPage() {
           <div className="mt-1.5 flex items-start">
             {STEPS.map((s, idx) => (
               <Fragment key={s.key}>
-                <span className="w-10 shrink-0 text-center text-[11px] font-bold tracking-wide text-slate-700">
-                  {s.label}
-                </span>
+                <div className="relative w-10 shrink-0">
+                  <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-bold tracking-wide text-slate-700">
+                    {s.label}
+                  </span>
+                </div>
                 {idx < STEPS.length - 1 && <div className="mx-2 flex-1" />}
               </Fragment>
             ))}
