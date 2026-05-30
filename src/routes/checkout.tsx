@@ -305,7 +305,7 @@ function CheckoutPage() {
         <div className="mx-auto flex max-w-[640px] items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
             <img
-              src="https://sf16-website.neutral.ttwstatic.com/obj/tiktok_web_static/i18n_ecom_fe/tiktok_shop_web_mono/packages/apps/pdp_h5/static/image/tts-logo-light.28ce4ad8.png"
+              src={tiktokShopLogo}
               alt="TikTok Shop"
               className="h-10 w-auto"
             />
