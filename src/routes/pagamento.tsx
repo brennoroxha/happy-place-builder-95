@@ -26,6 +26,7 @@ import { trackPurchase } from "@/lib/track";
 import slimBellyBege from "@/assets/slim-belly-bege.png";
 import slimBellyPreta from "@/assets/slim-belly-preta.png";
 import slimBellyVermelha from "@/assets/slim-belly-vermelha.png";
+import { tiktokShopLogo, pixIcone } from "@/assets/external";
 
 type Search = {
   total?: number;
@@ -218,7 +219,7 @@ function PaymentPage() {
         <div className="mx-auto flex max-w-[640px] items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
             <img
-              src="https://sf16-website.neutral.ttwstatic.com/obj/tiktok_web_static/i18n_ecom_fe/tiktok_shop_web_mono/packages/apps/pdp_h5/static/image/tts-logo-light.28ce4ad8.png"
+              src={tiktokShopLogo}
               alt="TikTok Shop"
               className="h-10 w-auto"
             />
@@ -285,7 +286,7 @@ function PaymentPage() {
             </div>
             <div className="flex flex-col items-center px-4 py-8">
               <img
-                src="https://logospng.org/download/pix/logo-pix-icone-512.png"
+                src={pixIcone}
                 alt="Pix"
                 className="h-14 w-auto"
                 onError={(e) => {

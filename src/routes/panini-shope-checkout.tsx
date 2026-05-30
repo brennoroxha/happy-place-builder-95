@@ -8,6 +8,7 @@ import { getTracking } from "@/lib/tracking";
 import { createKlivoTransaction } from "@/lib/klivopay.functions";
 import { createFreepayTransaction } from "@/lib/freepay.functions";
 import { getActiveProvider } from "@/lib/admin.functions";
+import { tiktokShopLogo, pixLogo, maoCelular } from "@/assets/external";
 
 export const Route = createFileRoute("/panini-shope-checkout")({
   head: () => ({
@@ -246,7 +247,7 @@ function PaniniCheckoutPage() {
       {/* Store logo banner */}
       <div className="flex items-center justify-between bg-white px-4 py-2">
         <img
-          src="https://sf16-website.neutral.ttwstatic.com/obj/tiktok_web_static/i18n_ecom_fe/tiktok_shop_web_mono/packages/apps/pdp_h5/static/image/tts-logo-light.28ce4ad8.png"
+          src={tiktokShopLogo}
           alt="TikTok Shop"
           className="h-7 object-contain"
         />
@@ -760,7 +761,7 @@ function PaniniCheckoutPage() {
                 </div>
                 <div className="flex flex-col items-center px-4 py-8">
                   <img
-                    src="https://cintaslimbelly.tiikshop.online/assets/pix-logo-DoXiJg8g.png"
+                    src={pixLogo}
                     alt="Pix"
                     className="h-14 w-auto"
                     onError={(e) => {
@@ -899,7 +900,7 @@ function PaniniCheckoutPage() {
               </p>
               <div className="my-4 flex justify-center">
                 <img
-                  src="https://loja.ferrjhgf.shop/uploads/mao-celular.png"
+                  src={maoCelular}
                   alt="Aguardando pagamento"
                   className="h-40 w-auto object-contain"
                 />

@@ -74,6 +74,7 @@ import reviewNew1 from "@/assets/review-new-1.png";
 import reviewNew2 from "@/assets/review-new-2.png";
 import reviewNew3 from "@/assets/review-new-3.png";
 import reviewNew4 from "@/assets/review-new-4.png";
+import { tiktokShopLogo } from "@/assets/external";
 
 const customerPhotos = [
   reviewNew1, reviewNew2, reviewNew3, reviewNew4,
@@ -148,7 +149,7 @@ function ProductPage() {
           <div className="flex items-center gap-2">
             <button className="p-1"><ChevronLeft className="h-6 w-6" /></button>
             <img
-              src="https://sf16-website.neutral.ttwstatic.com/obj/tiktok_web_static/i18n_ecom_fe/tiktok_shop_web_mono/packages/apps/pdp_h5/static/image/tts-logo-light.28ce4ad8.png"
+              src={tiktokShopLogo}
               alt="TikTok Shop"
               className="h-10 w-auto"
             />
