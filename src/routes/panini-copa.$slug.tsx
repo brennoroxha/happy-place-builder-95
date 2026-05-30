@@ -53,15 +53,15 @@ const brl = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 const CREATOR_VIDEOS = [
-  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381087667.64163451.mp4", avatar: "https://loja.ferrjhgf.shop/uploads/carla.jpg", nome: "Carla Maria", caption: "Você vai ter o melhor preço comprando!" },
-  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381087ae6.19381993.mp4", avatar: "https://loja.ferrjhgf.shop/uploads/Nandy zorzan.jpg", nome: "Nandy zorzan", caption: "Unboxing das minhas figurinhas que peguei" },
-  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381087ef6.99803322.mp4", avatar: "https://loja.ferrjhgf.shop/uploads/Califórnices.jpg", nome: "Califórnices", caption: "Olha que loucura recebi 40 e tantos combos" },
-  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381088064.93282818.mp4", avatar: "https://loja.ferrjhgf.shop/uploads/jose.jpg", nome: "Jose Marcos", caption: "Chegou muito bem embalado, recomendo" },
-  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381088262.63124527.mp4", avatar: "https://loja.ferrjhgf.shop/uploads/andre.jpg", nome: "Andre Arthur", caption: "Coleção quase completa em poucos dias" },
-  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a73810883c2.57410419.mp4", avatar: "https://loja.ferrjhgf.shop/uploads/joyce.jpg", nome: "Joyce Lima", caption: "Surpreendi meu filho com esse álbum" },
-  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381088544.38282211.mp4", avatar: "https://loja.ferrjhgf.shop/uploads/mateus.jpg", nome: "Matheus Alberto", caption: "Recomendo demais, vale cada centavo" },
-  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a73810886b3.79854979.mp4", avatar: "https://loja.ferrjhgf.shop/uploads/juan.jpg", nome: "Juan Andrade", caption: "Chegou rapidinho e bem completo" },
-  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381088811.53234763.mp4", avatar: "https://loja.ferrjhgf.shop/uploads/juliaerafael.jpg", nome: "Julia e Rafael", caption: "Surpresa perfeita para nossa coleção" },
+  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381087667.64163451.mp4", avatar: avatarCarla, nome: "Carla Maria", caption: "Você vai ter o melhor preço comprando!" },
+  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381087ae6.19381993.mp4", avatar: avatarNandy, nome: "Nandy zorzan", caption: "Unboxing das minhas figurinhas que peguei" },
+  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381087ef6.99803322.mp4", avatar: avatarCalifornices, nome: "Califórnices", caption: "Olha que loucura recebi 40 e tantos combos" },
+  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381088064.93282818.mp4", avatar: avatarJose, nome: "Jose Marcos", caption: "Chegou muito bem embalado, recomendo" },
+  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381088262.63124527.mp4", avatar: avatarAndre, nome: "Andre Arthur", caption: "Coleção quase completa em poucos dias" },
+  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a73810883c2.57410419.mp4", avatar: avatarJoyce, nome: "Joyce Lima", caption: "Surpreendi meu filho com esse álbum" },
+  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381088544.38282211.mp4", avatar: avatarMateus, nome: "Matheus Alberto", caption: "Recomendo demais, vale cada centavo" },
+  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a73810886b3.79854979.mp4", avatar: avatarJuan, nome: "Juan Andrade", caption: "Chegou rapidinho e bem completo" },
+  { src: "https://loja.ferrjhgf.shop/uploads/video_6a0a7381088811.53234763.mp4", avatar: avatarJuliaRafael, nome: "Julia e Rafael", caption: "Surpresa perfeita para nossa coleção" },
 ];
 
 function CreatorVideoCard({ src, avatar, nome, caption, onOpen }: { src: string; avatar: string; nome: string; caption: string; onOpen: () => void }) {
