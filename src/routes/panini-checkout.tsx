@@ -8,11 +8,6 @@ import { getTracking } from "@/lib/tracking";
 import { createKlivoTransaction } from "@/lib/klivopay.functions";
 import { createFreepayTransaction } from "@/lib/freepay.functions";
 import { getActiveProvider } from "@/lib/admin.functions";
-import upsellNeymarLote from "@/assets/upsell-neymar-lote.png";
-import upsellFigurinhasLegend from "@/assets/upsell-figurinhas-legend.png";
-import upsellCaixinha from "@/assets/upsell-caixinha.png";
-import upsellAdesivoNeymar from "@/assets/upsell-adesivo-neymar.png";
-import upsellCoca from "@/assets/upsell-coca.png";
 
 export const Route = createFileRoute("/panini-checkout")({
   head: () => ({
