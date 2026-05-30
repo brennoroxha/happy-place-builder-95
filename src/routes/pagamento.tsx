@@ -234,29 +234,38 @@ function PaymentPage() {
 
       <main className="mx-auto max-w-[640px] px-4 py-5">
         {/* Stepper - all green checks except current PAGAMENTO step */}
-        <div className="mb-5 flex items-start justify-between px-2">
-          {STEPS.map((s, idx) => {
-            const isLast = idx === STEPS.length - 1;
-            return (
-              <Fragment key={s.key}>
-                <div className="flex flex-col items-center" style={{ width: 80 }}>
+        <div className="mb-5 px-2">
+          <div className="flex items-center">
+            {STEPS.map((s, idx) => {
+              const isLast = idx === STEPS.length - 1;
+              return (
+                <Fragment key={s.key}>
                   <div
-                    className={`grid h-10 w-10 place-items-center rounded-full ${
+                    className={`grid h-10 w-10 shrink-0 place-items-center rounded-full ${
                       isLast ? "bg-slate-900 text-white" : "bg-emerald-500 text-white"
                     }`}
                   >
                     {isLast ? <QrCode className="h-5 w-5" /> : <Check className="h-5 w-5" strokeWidth={3} />}
                   </div>
-                  <span className="mt-1.5 text-center text-[11px] font-bold tracking-wide text-slate-700">
+                  {idx < STEPS.length - 1 && (
+                    <div className="mx-2 h-0.5 flex-1 bg-emerald-500" />
+                  )}
+                </Fragment>
+              );
+            })}
+          </div>
+          <div className="mt-1.5 flex items-start">
+            {STEPS.map((s, idx) => (
+              <Fragment key={s.key}>
+                <div className="relative w-10 shrink-0">
+                  <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-bold tracking-wide text-slate-700">
                     {s.label}
                   </span>
                 </div>
-                {idx < STEPS.length - 1 && (
-                  <div className="mx-1 mt-5 h-0.5 flex-1 bg-emerald-500" />
-                )}
+                {idx < STEPS.length - 1 && <div className="mx-2 flex-1" />}
               </Fragment>
-            );
-          })}
+            ))}
+          </div>
         </div>
 
         {/* Pagamento card */}
