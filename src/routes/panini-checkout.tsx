@@ -131,7 +131,7 @@ function PaniniCheckoutPage() {
   const [pixCopied, setPixCopied] = useState(false);
 
   // Provider selection (managed in /admin → Panini tab)
-  const klivo = useServerFn(createKlivoTransaction);
+  const klivo = useServerFn(createKlivoTransactionConta2);
   const freepay = useServerFn(createFreepayTransaction);
   const fetchProvider = useServerFn(getActiveProvider);
   const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
