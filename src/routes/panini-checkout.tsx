@@ -127,6 +127,7 @@ function PaniniCheckoutPage() {
   const [pagamento, setPagamento] = useState("pix");
   const [processing, setProcessing] = useState(false);
   const [pixCode, setPixCode] = useState("");
+  const [paymentHash, setPaymentHash] = useState<string | null>(null);
   const [payError, setPayError] = useState<string | null>(null);
   const [pixCopied, setPixCopied] = useState(false);
 
@@ -146,6 +147,35 @@ function PaniniCheckoutPage() {
     trackInitiateCheckout(subtotal || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Poll for payment confirmation while on step 4 — redirect to upsell on approval
+  useEffect(() => {
+    if (step !== 4 || !paymentHash) return;
+    let cancelled = false;
+    const check = async () => {
+      try {
+        const { getSaleStatus } = await import("@/lib/admin.functions");
+        const { status } = await getSaleStatus({ data: { hash: paymentHash } });
+        if (cancelled) return;
+        if (
+          status === "paid" ||
+          status === "confirmed" ||
+          status === "approved"
+        ) {
+          navigate({
+            to: "/upsell/taxa-envio",
+            search: { hash: paymentHash },
+          });
+        }
+      } catch {}
+    };
+    check();
+    const i = setInterval(check, 5000);
+    return () => {
+      cancelled = true;
+      clearInterval(i);
+    };
+  }, [step, paymentHash, navigate]);
   const selectedShipping = shippingOptions.find((s) => s.id === shipping)!;
   const [cepLoading, setCepLoading] = useState(false);
   const maskCep = (v: string) => {
@@ -806,6 +836,24 @@ function PaniniCheckoutPage() {
                         : []),
                     ];
                     const fn = provider === "freepay" ? freepay : klivo;
+                    try {
+                      localStorage.setItem(
+                        "panini:address",
+                        JSON.stringify({
+                          nome: nome.trim(),
+                          email,
+                          telefone,
+                          cpf: doc,
+                          cep,
+                          rua: endereco,
+                          numero,
+                          bairro,
+                          cidade,
+                          estado,
+                          complemento,
+                        }),
+                      );
+                    } catch {}
                     const res = await fn({
                       data: {
                         amount: amountCents,
@@ -820,6 +868,7 @@ function PaniniCheckoutPage() {
                       return;
                     }
                     setPixCode(res.pix_copy_paste);
+                    setPaymentHash(res.hash);
                     trackPurchase(total, res.hash);
                     setStep(4);
                     window.scrollTo({ top: 0, behavior: "smooth" });

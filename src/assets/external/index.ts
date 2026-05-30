@@ -3,6 +3,7 @@ export { default as tiktokShopLogo } from "./tiktok-shop-logo.png";
 export { default as pixLogo } from "./pix-logo.png";
 export { default as pixIcone } from "./pix-icone.png";
 export { default as maoCelular } from "./mao-celular.png";
+export { default as portaFigurinhasCopa } from "./porta-figurinhas-copa.webp";
 export { default as avatarCarla } from "./carla.jpg";
 export { default as avatarCalifornices } from "./californices.jpg";
 export { default as avatarJose } from "./jose.jpg";
