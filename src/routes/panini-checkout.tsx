@@ -749,7 +749,7 @@ function PaniniCheckoutPage() {
               onClick={async () => {
                 setPayError(null);
                 setProcessing(true);
-                const total = subtotal + selectedShipping.price + upsellTotal;
+                const total = subtotal + selectedShipping.price;
                 const amountCents = Math.round(total * 100);
                 try {
                   const phone = onlyDigits(telefone);
@@ -760,13 +760,6 @@ function PaniniCheckoutPage() {
                       quantity: i.qty,
                       price: Math.round(i.price * 100),
                     })),
-                    ...upsells
-                      .filter((u) => (upsellAdded[u.id] ?? 0) > 0)
-                      .map((u) => ({
-                        title: u.name,
-                        quantity: upsellAdded[u.id]!,
-                        price: Math.round(u.price * 100),
-                      })),
                     ...(selectedShipping.price > 0
                       ? [{ title: `Frete ${selectedShipping.label}`, quantity: 1, price: Math.round(selectedShipping.price * 100) }]
                       : []),
