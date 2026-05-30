@@ -107,7 +107,7 @@ function PaniniShopePage() {
           <div className="flex items-center gap-2">
             <button className="p-1" aria-label="Voltar"><ChevronLeft className="h-6 w-6" /></button>
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Shopee.svg/3840px-Shopee.svg.png"
+              src={shopeeLogo}
               alt="Shopee"
               className="h-7 w-auto brightness-0 invert"
             />
