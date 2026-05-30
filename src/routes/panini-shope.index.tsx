@@ -14,6 +14,7 @@ import p9 from "@/assets/panini/p9.png";
 import p10 from "@/assets/panini/p10.png";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { CartDrawer } from "@/components/panini/CartDrawer";
+import { shopeeLogo } from "@/assets/external";
 
 export const Route = createFileRoute("/panini-shope/")({
   head: () => ({
