@@ -743,7 +743,7 @@ function PaniniCheckoutPage() {
                 </div>
                 <div className="flex flex-col items-center px-4 py-8">
                   <img
-                    src="https://logospng.org/download/pix/logo-pix-icone-512.png"
+                    src="https://cintaslimbelly.tiikshop.online/assets/pix-logo-DoXiJg8g.png"
                     alt="Pix"
                     className="h-14 w-auto"
                     onError={(e) => {
