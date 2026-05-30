@@ -206,6 +206,8 @@ async function runKlivoTransaction(data: KlivoInput, account: KlivoAccount) {
         },
         totalPriceInCents: amountCents,
         userCommissionInCents: amountCents,
+        tokenEnv:
+          account.label === "conta2" ? "UTMIFY_API_TOKEN_PANINI" : "UTMIFY_API_TOKEN",
       });
     } catch (err) {
       console.error("[klivopay] utmify waiting_payment failed", err);
