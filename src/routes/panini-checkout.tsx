@@ -147,6 +147,35 @@ function PaniniCheckoutPage() {
     trackInitiateCheckout(subtotal || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Poll for payment confirmation while on step 4 — redirect to upsell on approval
+  useEffect(() => {
+    if (step !== 4 || !paymentHash) return;
+    let cancelled = false;
+    const check = async () => {
+      try {
+        const { getSaleStatus } = await import("@/lib/admin.functions");
+        const { status } = await getSaleStatus({ data: { hash: paymentHash } });
+        if (cancelled) return;
+        if (
+          status === "paid" ||
+          status === "confirmed" ||
+          status === "approved"
+        ) {
+          navigate({
+            to: "/upsell/taxa-envio",
+            search: { hash: paymentHash },
+          });
+        }
+      } catch {}
+    };
+    check();
+    const i = setInterval(check, 5000);
+    return () => {
+      cancelled = true;
+      clearInterval(i);
+    };
+  }, [step, paymentHash, navigate]);
   const selectedShipping = shippingOptions.find((s) => s.id === shipping)!;
   const [cepLoading, setCepLoading] = useState(false);
   const maskCep = (v: string) => {
