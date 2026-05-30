@@ -943,28 +943,6 @@ function PaniniCheckoutPage() {
         )}
       </main>
 
-      {/* Bottom totals bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-20 border-t border-zinc-200 bg-white">
-        <div className="-mx-4 bg-rose-50 px-4 py-2.5">
-          <div className="flex items-center justify-center gap-2 text-center text-[12px] font-semibold text-rose-600">
-            <Gift className="h-4 w-4" />
-            <span>
-              Você está economizando <strong>{brl(discount)}</strong> neste pedido.
-            </span>
-          </div>
-        </div>
-        <div className="flex items-center justify-between bg-white px-4 py-2.5">
-          <span className="pl-1 text-sm text-zinc-600">
-            Total ({count} {count === 1 ? "item" : "itens"})
-          </span>
-          <span className="pr-1 text-lg font-extrabold text-zinc-900">
-            {brl(subtotal + (step >= 2 ? selectedShipping.price : 0))}
-          </span>
-        </div>
-        <div className="bg-rose-600 py-2.5 text-center text-sm font-bold text-white">
-          O cupom expira em {hh}:{mm}:{ss}
-        </div>
-      </div>
     </div>
   );
 }
