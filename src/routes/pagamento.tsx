@@ -6,8 +6,6 @@ import {
   Upload,
   ShieldCheck,
   Lock,
-  User,
-  MapPin,
   QrCode,
   RotateCcw,
   Headphones,
@@ -15,6 +13,7 @@ import {
   Clock,
   HelpCircle,
   ShoppingBag,
+  ArrowDown,
 } from "lucide-react";
 import {
   fileToDataUrl,
@@ -56,6 +55,7 @@ export const Route = createFileRoute("/pagamento")({
 });
 
 const UNIT_PRICE = 59.9;
+const ORIGINAL_PRICE = 179.9;
 const colorImages: Record<string, string> = {
   Bege: slimBellyBege,
   Preta: slimBellyPreta,
@@ -66,9 +66,9 @@ const brl = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 const STEPS = [
-  { key: 1, label: "Dados Pessoais", short: "Dados Pessoais", Icon: User },
-  { key: 2, label: "Entrega", short: "Entrega", Icon: MapPin },
-  { key: 3, label: "Pagamento", short: "Pagamento", Icon: QrCode },
+  { key: 1, label: "DADOS" },
+  { key: 2, label: "ENDEREÇO" },
+  { key: 3, label: "PAGAMENTO" },
 ] as const;
 
 function useCountdown(initialSec: number) {
@@ -87,16 +87,18 @@ function PaymentPage() {
   const { total, code, hash, color, size, shipping } = Route.useSearch();
   const amount = total ?? UNIT_PRICE;
   const pixCode = code || "";
-  const productImage = (color && colorImages[color]) || slimBellyBege;
+  const productImage = (color && colorImages[color]) || slimBellyPreta;
   const shippingLabel = shipping === "sedex" ? "Sedex Express" : "Transportadora";
 
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [revealed, setRevealed] = useState(false);
   const time = useCountdown(15 * 60);
   const [order, setOrder] = useState<Order | null>(null);
   const [uploadErr, setUploadErr] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const qrSectionRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -150,6 +152,13 @@ function PaymentPage() {
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {}
+  };
+
+  const onFinalize = () => {
+    setRevealed(true);
+    setTimeout(() => {
+      qrSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 80);
   };
 
   const onPickProof = async (file: File) => {
@@ -224,230 +233,278 @@ function PaymentPage() {
       </header>
 
       <main className="mx-auto max-w-[640px] px-4 py-5">
-        {/* Stepper — all 3 completed */}
-        <div className="mb-4 flex items-start justify-between">
-          {STEPS.map((s, idx) => (
-            <Fragment key={s.key}>
-              <div className="flex flex-col items-center" style={{ width: 100 }}>
-                <div className="grid h-10 w-10 place-items-center rounded-full bg-slate-900 text-white">
-                  <s.Icon className="h-5 w-5" />
+        {/* Stepper - all green checks except current PAGAMENTO step */}
+        <div className="mb-5 flex items-start justify-between px-2">
+          {STEPS.map((s, idx) => {
+            const isLast = idx === STEPS.length - 1;
+            return (
+              <Fragment key={s.key}>
+                <div className="flex flex-col items-center" style={{ width: 80 }}>
+                  <div
+                    className={`grid h-10 w-10 place-items-center rounded-full ${
+                      isLast ? "bg-slate-900 text-white" : "bg-emerald-500 text-white"
+                    }`}
+                  >
+                    {isLast ? <QrCode className="h-5 w-5" /> : <Check className="h-5 w-5" strokeWidth={3} />}
+                  </div>
+                  <span className="mt-1.5 text-center text-[11px] font-bold tracking-wide text-slate-700">
+                    {s.label}
+                  </span>
                 </div>
-                <span className="mt-1 text-center text-[11px] font-bold text-slate-900">
-                  {s.short}
-                </span>
-              </div>
-              {idx < STEPS.length - 1 && (
-                <div className="mx-2 mt-5 h-0.5 flex-1 bg-emerald-500" />
-              )}
-            </Fragment>
-          ))}
+                {idx < STEPS.length - 1 && (
+                  <div className="mx-1 mt-5 h-0.5 flex-1 bg-emerald-500" />
+                )}
+              </Fragment>
+            );
+          })}
         </div>
 
-        {/* PIX card */}
+        {/* Pagamento card */}
         <section className="rounded-2xl bg-white p-5 shadow-sm">
-          <div className="rounded-xl border border-slate-200 p-5">
-            <h2 className="text-center text-lg font-bold text-slate-900">
-              Falta pouco! Seu pedido está quase concluído.
-            </h2>
-            <p className="mt-2 text-center text-sm text-slate-500">
-              Pague com PIX no app do seu banco seguindo as orientações a seguir
-            </p>
+          <div className="mb-4 flex items-center gap-2">
+            <QrCode className="h-5 w-5 text-slate-900" />
+            <h2 className="text-lg font-extrabold text-slate-900">Pagamento</h2>
+          </div>
 
-            <div className="mt-5 flex items-center justify-center gap-2 text-sm">
-              <Clock className="h-5 w-5 text-slate-700" />
-              <span className="font-semibold text-slate-900">Tempo restante para pagar:</span>
-              <span className="font-extrabold text-rose-600">{time}</span>
+          {/* PIX selected option */}
+          <div className="rounded-xl border-2 border-emerald-500 bg-white overflow-hidden">
+            <div className="flex items-center gap-2 bg-emerald-50/60 px-4 py-3">
+              <span className="grid h-5 w-5 place-items-center rounded-full border-2 border-emerald-500">
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+              </span>
+              <span className="text-sm font-extrabold text-slate-900">Pix</span>
             </div>
-
-            {/* QR Code */}
-            <div className="mt-5 flex justify-center">
-              <div className="rounded-md border-4 border-slate-200 bg-white p-2">
-                {qrUrl ? (
-                  <img src={qrUrl} alt="QR Code Pix" className="h-64 w-64" />
-                ) : (
-                  <div className="grid h-64 w-64 place-items-center text-xs text-slate-400">
-                    QR indisponível
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Pix code */}
-            <div className="mt-5">
-              <div className="truncate rounded-md border border-slate-200 bg-white px-3 py-3 text-xs text-slate-700">
-                {pixCode || "—"}
-              </div>
-              <button
-                onClick={onCopy}
-                className="mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-blue-600 py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-sm transition hover:bg-blue-700 active:scale-[.99]"
-              >
-                {copied ? <Check className="h-5 w-5" /> : <Copy className="h-5 w-5" />}
-                {copied ? "CÓDIGO COPIADO" : "COPIAR CÓDIGO"}
-              </button>
-            </div>
-
-            {/* Instructions */}
-            <ul className="mt-5 space-y-2 text-sm text-slate-700">
-              <li>Copie o código PIX;</li>
-              <li>Acesse o APP do seu banco;</li>
-              <li>Escolha pagar com PIX;</li>
-              <li>Cole o código do PIX;</li>
-              <li>Confirme o pagamento.</li>
-            </ul>
-
-            <div className="mt-5 flex items-center justify-center gap-2 text-sm font-semibold text-blue-700">
-              <HelpCircle className="h-4 w-4 text-rose-600" />
-              <a href="#help" className="hover:underline">Preciso de ajuda para pagar com PIX</a>
-            </div>
-
-            <div className="my-5 border-t border-slate-200" />
-
-            <p className="text-center text-sm text-slate-700">
-              Assim que o seu pagamento for confirmado pela instituição financeira nós te avisaremos pelo seu email:
-              {customerEmail && (
-                <>
-                  <br />
-                  <span className="font-bold text-blue-700">{customerEmail}</span>
-                </>
-              )}
-            </p>
-
-            <div className="mt-5 flex items-center justify-between rounded-md bg-slate-100 px-4 py-3 text-sm">
-              <span className="text-slate-600">Número do pedido:</span>
-              <span className="font-extrabold text-slate-900">{orderNumber}</span>
-            </div>
-
-            {/* Comprovante */}
-            <div className="mt-5 rounded-md border-2 border-dashed border-rose-400 p-4">
-              <div className="flex flex-col items-center">
-                <div className="grid h-10 w-10 place-items-center rounded-md bg-rose-500 text-white">
-                  <Upload className="h-5 w-5" />
-                </div>
-                <div className="mt-2 text-sm font-bold text-slate-900">Já pagou? Envie o comprovante</div>
-                <p className="mt-1 text-center text-xs text-slate-500">
-                  Se o sistema demorar para confirmar, anexe aqui o print/PDF do Pix para agilizar a liberação do seu pedido.
-                </p>
-              </div>
-
-              {order?.proofDataUrl ? (
-                <div className="mt-3">
-                  <img
-                    src={order.proofDataUrl}
-                    alt="Comprovante enviado"
-                    className="max-h-60 w-full rounded-md border border-slate-200 object-contain bg-slate-50"
-                  />
-                  <div className="mt-2 flex items-center justify-center gap-2 text-xs text-emerald-600">
-                    <Check className="h-4 w-4" />
-                    Comprovante recebido
-                  </div>
-                  <button
-                    onClick={() => fileRef.current?.click()}
-                    className="mt-3 w-full rounded-md border border-slate-200 py-2 text-sm font-bold"
-                  >
-                    Enviar outro comprovante
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => fileRef.current?.click()}
-                  disabled={uploading || !hash}
-                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-rose-500 py-3 text-sm font-extrabold uppercase text-white shadow-sm transition hover:bg-rose-600 disabled:opacity-60"
-                >
-                  <Upload className="h-4 w-4" />
-                  {uploading ? "Enviando..." : "↑ Anexar comprovante"}
-                </button>
-              )}
-
-              {uploadErr && (
-                <div className="mt-2 rounded-md bg-rose-50 px-2 py-1 text-center text-xs text-rose-600">
-                  {uploadErr}
-                </div>
-              )}
-
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/*,application/pdf"
-                className="hidden"
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) onPickProof(f);
-                  e.target.value = "";
+            <div className="flex flex-col items-center px-4 py-8">
+              <img
+                src="https://logospng.org/download/pix/logo-pix-icone-512.png"
+                alt="Pix"
+                className="h-14 w-auto"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = "none";
                 }}
               />
+              <div className="-mt-2 text-[11px] font-semibold text-slate-400">powered by Banco Central</div>
+              <p className="mt-5 text-center text-sm font-bold text-slate-900">
+                Para pagar, finalize sua compra abaixo
+              </p>
+              <ArrowDown className="mt-2 h-4 w-4 text-slate-400" />
             </div>
           </div>
+
+          {/* Finalizar button */}
+          <button
+            onClick={onFinalize}
+            className="mt-5 w-full rounded-full bg-emerald-500 py-4 text-sm font-extrabold text-white shadow-sm transition hover:bg-emerald-600 active:scale-[.99]"
+          >
+            Finalizar pedido · {brl(amount)}
+          </button>
         </section>
 
         {/* Resumo do pedido */}
         <section className="mt-4 rounded-2xl bg-white p-5 shadow-sm">
-          <div className="mb-3 flex items-center gap-2">
+          <div className="mb-4 flex items-center gap-2">
             <ShoppingBag className="h-5 w-5 text-slate-900" />
             <h3 className="text-base font-extrabold text-slate-900">Resumo do pedido</h3>
           </div>
-          <div className="border-t border-slate-100 pt-3 flex items-center gap-3">
+          <div className="flex items-start gap-3">
             <img src={productImage} alt="" className="h-20 w-20 rounded-lg object-cover" />
             <div className="flex-1">
-              <div className="text-sm font-bold text-slate-900 leading-snug">
-                1 Cinta — Cinta Modeladora Slim Belly (1 Cinta)
+              <div className="text-sm font-extrabold text-slate-900 leading-snug">
+                Cinta Modeladora Slim Belly
               </div>
-              <div className="mt-0.5 text-xs text-slate-500">Qtd: 1</div>
-              {color && <div className="text-xs text-slate-500">Cor: {color}</div>}
-              {size && <div className="text-xs text-slate-500">Tamanho: {size}</div>}
+              <div className="mt-0.5 text-xs text-slate-500">
+                {color || "Preta"}{size ? `, ${size}` : ""}
+              </div>
+              <div className="text-xs text-slate-500">Qtd: 1</div>
             </div>
             <div className="text-right">
               <div className="text-sm font-extrabold text-slate-900">{brl(UNIT_PRICE)}</div>
+              <div className="text-xs text-slate-400 line-through">{brl(ORIGINAL_PRICE)}</div>
             </div>
           </div>
 
-          <div className="mt-4 space-y-1.5 border-t border-slate-100 pt-3 text-sm">
+          <div className="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm">
             <div className="flex justify-between">
-              <span className="flex items-center gap-1.5 text-slate-500">
-                <span>🏷</span> Subtotal
-              </span>
+              <span className="text-slate-500">Subtotal</span>
               <span className="font-semibold text-slate-900">{brl(UNIT_PRICE)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Frete ({shippingLabel})</span>
-              <span className="font-bold text-emerald-600">{shipping === "sedex" ? "R$ 6,32" : "Grátis"}</span>
+              <span className="font-bold text-emerald-600">
+                {shipping === "sedex" ? "R$ 6,32" : "Grátis"}
+              </span>
             </div>
           </div>
-          <div className="mt-3 flex items-end justify-between border-t border-slate-100 pt-3">
-            <span className="text-base font-bold text-slate-900">Total</span>
+          <div className="mt-4 flex items-end justify-between border-t border-slate-100 pt-4">
+            <span className="text-base font-extrabold text-slate-900">Total</span>
             <span className="text-xl font-extrabold text-slate-900">{brl(amount)}</span>
           </div>
         </section>
 
         {/* Garantia / confiança */}
         <section className="mt-4 rounded-2xl bg-white p-5 shadow-sm">
-          <div className="mb-3 flex items-center justify-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-            <Check className="h-4 w-4" />
+          <div className="mb-4 flex items-center justify-center gap-2 rounded-lg bg-emerald-50 px-3 py-2.5 text-sm text-slate-800">
+            <Check className="h-4 w-4 text-emerald-600" />
             <span>Garantia de Devolução do Dinheiro em <strong>14 dias</strong></span>
           </div>
-          <h4 className="mb-3 text-sm font-extrabold text-slate-900">Compre com confiança!</h4>
-          <ul className="space-y-2.5 text-sm text-slate-700">
+          <h4 className="mb-4 text-center text-sm font-extrabold text-slate-900">Compre com confiança!</h4>
+          <ul className="space-y-3 text-sm text-slate-700">
             <TrustItem Icon={ShieldCheck} text="Garantia de Devolução de 100% do Dinheiro" />
             <TrustItem Icon={RotateCcw} text="Devoluções Sem Complicações" />
             <TrustItem Icon={Lock} text="Transações Seguras" />
             <TrustItem Icon={Headphones} text="Atendimento ao Cliente 24/7" />
           </ul>
+        </section>
 
-          <div className="mt-5 border-t border-slate-100 pt-4">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-sm font-bold text-slate-900">5000+ Avaliações de Clientes</span>
-              <div className="flex items-center gap-1">
-                {[0, 1, 2, 3, 4].map((i) => (
-                  <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
-                ))}
-                <span className="ml-1 text-sm font-extrabold text-slate-900">5/5</span>
+        {/* QR / Copy / Comprovante (revealed after clicking Finalizar pedido) */}
+        {revealed && (
+          <section ref={qrSectionRef} className="mt-4 rounded-2xl bg-white p-5 shadow-sm">
+            <div className="rounded-xl border border-slate-200 p-5">
+              <h2 className="text-center text-lg font-bold text-slate-900">
+                Falta pouco! Seu pedido está quase concluído.
+              </h2>
+              <p className="mt-2 text-center text-sm text-slate-500">
+                Pague com PIX no app do seu banco seguindo as orientações a seguir
+              </p>
+
+              <div className="mt-5 flex items-center justify-center gap-2 text-sm">
+                <Clock className="h-5 w-5 text-slate-700" />
+                <span className="font-semibold text-slate-900">Tempo restante para pagar:</span>
+                <span className="font-extrabold text-rose-600">{time}</span>
+              </div>
+
+              <div className="mt-5 flex justify-center">
+                <div className="rounded-md border-4 border-slate-200 bg-white p-2">
+                  {qrUrl ? (
+                    <img src={qrUrl} alt="QR Code Pix" className="h-64 w-64" />
+                  ) : (
+                    <div className="grid h-64 w-64 place-items-center text-xs text-slate-400">
+                      QR indisponível
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <div className="truncate rounded-md border border-slate-200 bg-white px-3 py-3 text-xs text-slate-700">
+                  {pixCode || "—"}
+                </div>
+                <button
+                  onClick={onCopy}
+                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-blue-600 py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-sm transition hover:bg-blue-700 active:scale-[.99]"
+                >
+                  {copied ? <Check className="h-5 w-5" /> : <Copy className="h-5 w-5" />}
+                  {copied ? "CÓDIGO COPIADO" : "COPIAR CÓDIGO"}
+                </button>
+              </div>
+
+              <ul className="mt-5 space-y-2 text-sm text-slate-700">
+                <li>Copie o código PIX;</li>
+                <li>Acesse o APP do seu banco;</li>
+                <li>Escolha pagar com PIX;</li>
+                <li>Cole o código do PIX;</li>
+                <li>Confirme o pagamento.</li>
+              </ul>
+
+              <div className="mt-5 flex items-center justify-center gap-2 text-sm font-semibold text-blue-700">
+                <HelpCircle className="h-4 w-4 text-rose-600" />
+                <a href="#help" className="hover:underline">Preciso de ajuda para pagar com PIX</a>
+              </div>
+
+              <div className="my-5 border-t border-slate-200" />
+
+              <p className="text-center text-sm text-slate-700">
+                Assim que o seu pagamento for confirmado pela instituição financeira nós te avisaremos pelo seu email:
+                {customerEmail && (
+                  <>
+                    <br />
+                    <span className="font-bold text-blue-700">{customerEmail}</span>
+                  </>
+                )}
+              </p>
+
+              <div className="mt-5 flex items-center justify-between rounded-md bg-slate-100 px-4 py-3 text-sm">
+                <span className="text-slate-600">Número do pedido:</span>
+                <span className="font-extrabold text-slate-900">{orderNumber}</span>
+              </div>
+
+              <div className="mt-5 rounded-md border-2 border-dashed border-rose-400 p-4">
+                <div className="flex flex-col items-center">
+                  <div className="grid h-10 w-10 place-items-center rounded-md bg-rose-500 text-white">
+                    <Upload className="h-5 w-5" />
+                  </div>
+                  <div className="mt-2 text-sm font-bold text-slate-900">Já pagou? Envie o comprovante</div>
+                  <p className="mt-1 text-center text-xs text-slate-500">
+                    Se o sistema demorar para confirmar, anexe aqui o print/PDF do Pix para agilizar a liberação do seu pedido.
+                  </p>
+                </div>
+
+                {order?.proofDataUrl ? (
+                  <div className="mt-3">
+                    <img
+                      src={order.proofDataUrl}
+                      alt="Comprovante enviado"
+                      className="max-h-60 w-full rounded-md border border-slate-200 object-contain bg-slate-50"
+                    />
+                    <div className="mt-2 flex items-center justify-center gap-2 text-xs text-emerald-600">
+                      <Check className="h-4 w-4" />
+                      Comprovante recebido
+                    </div>
+                    <button
+                      onClick={() => fileRef.current?.click()}
+                      className="mt-3 w-full rounded-md border border-slate-200 py-2 text-sm font-bold"
+                    >
+                      Enviar outro comprovante
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => fileRef.current?.click()}
+                    disabled={uploading || !hash}
+                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-rose-500 py-3 text-sm font-extrabold uppercase text-white shadow-sm transition hover:bg-rose-600 disabled:opacity-60"
+                  >
+                    <Upload className="h-4 w-4" />
+                    {uploading ? "Enviando..." : "↑ Anexar comprovante"}
+                  </button>
+                )}
+
+                {uploadErr && (
+                  <div className="mt-2 rounded-md bg-rose-50 px-2 py-1 text-center text-xs text-rose-600">
+                    {uploadErr}
+                  </div>
+                )}
+
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/*,application/pdf"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) onPickProof(f);
+                    e.target.value = "";
+                  }}
+                />
               </div>
             </div>
-            <p className="text-sm italic text-slate-600">
-              "Fiquei encantada com o atendimento! A entrega foi rápida e o processo de compra, super fácil. Recomendo a todos!"
-            </p>
-            <p className="mt-1 text-xs font-semibold text-slate-500">— Isabela Marcondes</p>
-          </div>
-        </section>
+
+            <div className="mt-5 border-t border-slate-100 pt-4">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-sm font-bold text-slate-900">5000+ Avaliações de Clientes</span>
+                <div className="flex items-center gap-1">
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                  ))}
+                  <span className="ml-1 text-sm font-extrabold text-slate-900">5/5</span>
+                </div>
+              </div>
+              <p className="text-sm italic text-slate-600">
+                "Fiquei encantada com o atendimento! A entrega foi rápida e o processo de compra, super fácil. Recomendo a todos!"
+              </p>
+              <p className="mt-1 text-xs font-semibold text-slate-500">— Isabela Marcondes</p>
+            </div>
+          </section>
+        )}
 
         <p className="mt-5 pb-8 text-center text-[11px] text-slate-400">
           Confia Shop LTDA · CNPJ 64.119.790/0001-01
@@ -460,7 +517,7 @@ function PaymentPage() {
 function TrustItem({ Icon, text }: { Icon: ComponentType<{ className?: string }>; text: string }) {
   return (
     <li className="flex items-center gap-3">
-      <Check className="h-4 w-4 shrink-0 text-emerald-600" />
+      <Icon className="h-4 w-4 shrink-0 text-emerald-600" />
       <span>{text}</span>
     </li>
   );
