@@ -4,8 +4,27 @@ import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { sendUtmifyOrder, utmifyDate } from "@/lib/utmify.server";
 
-const OFFER_HASH = "kdgz7sbksb";
-const PRODUCT_HASH = "opez6nfwqo";
+type KlivoAccount = {
+  label: string;
+  tokenEnv: string;
+  offerHash: string;
+  productHash: string;
+};
+
+const ACCOUNTS = {
+  default: {
+    label: "conta1",
+    tokenEnv: "KLIVOPAY_API_TOKEN",
+    offerHash: "kdgz7sbksb",
+    productHash: "opez6nfwqo",
+  },
+  conta2: {
+    label: "conta2",
+    tokenEnv: "KLIVOPAY_API_TOKEN_2",
+    offerHash: "s9w0xdvnpa",
+    productHash: "fq80rkspqs",
+  },
+} satisfies Record<string, KlivoAccount>;
 
 const trackingSchema = z
   .object({
@@ -44,6 +63,8 @@ const inputSchema = z.object({
   scope: z.enum(["slimbelly", "panini"]).optional(),
 });
 
+type KlivoInput = z.infer<typeof inputSchema>;
+
 function getClientIp(): string | null {
   try {
     const req = getRequest();
@@ -59,150 +80,154 @@ function getClientIp(): string | null {
   }
 }
 
-export const createKlivoTransaction = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => inputSchema.parse(input))
-  .handler(async ({ data }) => {
-    const token = process.env.KLIVOPAY_API_TOKEN;
-    if (!token) {
-      return { ok: false as const, error: "Pagamento não configurado." };
-    }
+async function runKlivoTransaction(data: KlivoInput, account: KlivoAccount) {
+  const token = process.env[account.tokenEnv];
+  if (!token) {
+    return { ok: false as const, error: "Pagamento não configurado." };
+  }
 
-    const ip = getClientIp();
-    const tracking = data.tracking ?? {};
+  const ip = getClientIp();
+  const tracking = data.tracking ?? {};
 
-    const cart = (data.cart ?? [
-      { title: "Pedido", quantity: 1, price: data.amount },
-    ]).map((i) => ({
-      ...i,
-      product_hash: PRODUCT_HASH,
-      operation_type: 1,
-    }));
+  const cart = (data.cart ?? [
+    { title: "Pedido", quantity: 1, price: data.amount },
+  ]).map((i) => ({
+    ...i,
+    product_hash: account.productHash,
+    operation_type: 1,
+  }));
 
-    try {
-      const res = await fetch(
-        "https://api.klivopay.com.br/api/public/v1/transactions",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            api_token: token,
-            amount: data.amount,
-            offer_hash: OFFER_HASH,
-            payment_method: "pix",
-            customer: {
-              name: data.customer.name,
-              email: data.customer.email,
-              phone_number: data.customer.phone,
-              document: data.customer.document,
-            },
-            cart,
-            tracking,
-            metadata: { client_ip: ip, ...tracking },
-          }),
-        },
-      );
-
-      const json = (await res.json().catch(() => null)) as
-        | Record<string, unknown>
-        | null;
-
-      if (!res.ok || !json || json.success === false) {
-        console.error("Klivopay error", res.status, json);
-        return {
-          ok: false as const,
-          error:
-            (json && (json.message as string)) ||
-            `Falha ao gerar pagamento (${res.status}).`,
-        };
-      }
-
-      const pix = (json.pix as Record<string, unknown> | undefined) ?? {};
-      const code = String(pix.pix_qr_code ?? "");
-      if (!code) {
-        return { ok: false as const, error: "Pix não retornado pela API." };
-      }
-
-      const hash = String(json.hash ?? "");
-      const amountCents = Number(json.amount ?? data.amount);
-
-      // Persist initial waiting_payment record (tracking will be merged on webhook)
-      try {
-        const rawPayload = JSON.parse(
-          JSON.stringify({
-            provider: "klivopay",
-            scope: data.scope ?? "slimbelly",
-            checkout_tracking: tracking,
-            tracking,
-            metadata: { client_ip: ip },
-            customer: { ...data.customer, ip },
-            cart,
-            initial_response: json,
-          }),
-        );
-        await supabaseAdmin.from("sales").upsert(
-          {
-            transaction_hash: hash,
-            status: "waiting_payment",
-            payment_method: "pix",
-            amount_cents: amountCents,
-            customer_name: data.customer.name,
-            customer_email: data.customer.email,
-            customer_phone: data.customer.phone,
-            customer_document: data.customer.document,
-            raw_payload: rawPayload,
-          },
-          { onConflict: "transaction_hash" },
-        );
-      } catch (err) {
-        console.error("[klivopay] failed to persist sale", err);
-      }
-
-      // Notify Utmify immediately as "waiting_payment" (InitiateCheckout)
-      try {
-        await sendUtmifyOrder({
-          orderId: hash,
-          status: "waiting_payment",
-          paymentMethod: "pix",
-          createdAt: utmifyDate(),
+  try {
+    const res = await fetch(
+      "https://api.klivopay.com.br/api/public/v1/transactions",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          api_token: token,
+          amount: data.amount,
+          offer_hash: account.offerHash,
+          payment_method: "pix",
           customer: {
             name: data.customer.name,
             email: data.customer.email,
-            phone: data.customer.phone,
+            phone_number: data.customer.phone,
             document: data.customer.document,
-            country: "BR",
-            ip,
           },
-          products: (data.cart ?? [{ title: "Pedido", quantity: 1, price: amountCents }]).map((c, idx) => ({
-            id: `item-${idx + 1}`,
-            name: c.title,
-            quantity: c.quantity,
-            priceInCents: c.price,
-          })),
-          tracking: {
-            src: tracking.src ?? null,
-            sck: tracking.sck ?? null,
-            utm_source: tracking.utm_source ?? null,
-            utm_campaign: tracking.utm_campaign ?? null,
-            utm_medium: tracking.utm_medium ?? null,
-            utm_content: tracking.utm_content ?? null,
-            utm_term: tracking.utm_term ?? null,
-          },
-          totalPriceInCents: amountCents,
-          userCommissionInCents: amountCents,
-        });
-      } catch (err) {
-        console.error("[klivopay] utmify waiting_payment failed", err);
-      }
+          cart,
+          tracking,
+          metadata: { client_ip: ip, ...tracking },
+        }),
+      },
+    );
 
+    const json = (await res.json().catch(() => null)) as
+      | Record<string, unknown>
+      | null;
+
+    if (!res.ok || !json || json.success === false) {
+      console.error(`Klivopay error [${account.label}]`, res.status, json);
       return {
-        ok: true as const,
-        hash,
-        pix_copy_paste: code,
-        amount: amountCents,
-        expires_at: null,
+        ok: false as const,
+        error:
+          (json && (json.message as string)) ||
+          `Falha ao gerar pagamento (${res.status}).`,
       };
-    } catch (err) {
-      console.error("Klivopay request failed", err);
-      return { ok: false as const, error: "Não foi possível gerar o Pix." };
     }
-  });
+
+    const pix = (json.pix as Record<string, unknown> | undefined) ?? {};
+    const code = String(pix.pix_qr_code ?? "");
+    if (!code) {
+      return { ok: false as const, error: "Pix não retornado pela API." };
+    }
+
+    const hash = String(json.hash ?? "");
+    const amountCents = Number(json.amount ?? data.amount);
+
+    try {
+      const rawPayload = JSON.parse(
+        JSON.stringify({
+          provider: "klivopay",
+          klivo_account: account.label,
+          scope: data.scope ?? "slimbelly",
+          checkout_tracking: tracking,
+          tracking,
+          metadata: { client_ip: ip },
+          customer: { ...data.customer, ip },
+          cart,
+          initial_response: json,
+        }),
+      );
+      await supabaseAdmin.from("sales").upsert(
+        {
+          transaction_hash: hash,
+          status: "waiting_payment",
+          payment_method: "pix",
+          amount_cents: amountCents,
+          customer_name: data.customer.name,
+          customer_email: data.customer.email,
+          customer_phone: data.customer.phone,
+          customer_document: data.customer.document,
+          raw_payload: rawPayload,
+        },
+        { onConflict: "transaction_hash" },
+      );
+    } catch (err) {
+      console.error("[klivopay] failed to persist sale", err);
+    }
+
+    try {
+      await sendUtmifyOrder({
+        orderId: hash,
+        status: "waiting_payment",
+        paymentMethod: "pix",
+        createdAt: utmifyDate(),
+        customer: {
+          name: data.customer.name,
+          email: data.customer.email,
+          phone: data.customer.phone,
+          document: data.customer.document,
+          country: "BR",
+          ip,
+        },
+        products: (data.cart ?? [{ title: "Pedido", quantity: 1, price: amountCents }]).map((c, idx) => ({
+          id: `item-${idx + 1}`,
+          name: c.title,
+          quantity: c.quantity,
+          priceInCents: c.price,
+        })),
+        tracking: {
+          src: tracking.src ?? null,
+          sck: tracking.sck ?? null,
+          utm_source: tracking.utm_source ?? null,
+          utm_campaign: tracking.utm_campaign ?? null,
+          utm_medium: tracking.utm_medium ?? null,
+          utm_content: tracking.utm_content ?? null,
+        },
+        totalPriceInCents: amountCents,
+        userCommissionInCents: amountCents,
+      });
+    } catch (err) {
+      console.error("[klivopay] utmify waiting_payment failed", err);
+    }
+
+    return {
+      ok: true as const,
+      hash,
+      pix_copy_paste: code,
+      amount: amountCents,
+      expires_at: null,
+    };
+  } catch (err) {
+    console.error("Klivopay request failed", err);
+    return { ok: false as const, error: "Não foi possível gerar o Pix." };
+  }
+}
+
+export const createKlivoTransaction = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => inputSchema.parse(input))
+  .handler(async ({ data }) => runKlivoTransaction(data, ACCOUNTS.default));
+
+export const createKlivoTransactionConta2 = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => inputSchema.parse(input))
+  .handler(async ({ data }) => runKlivoTransaction(data, ACCOUNTS.conta2));
