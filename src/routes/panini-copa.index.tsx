@@ -14,6 +14,7 @@ import p9 from "@/assets/panini/p9.png";
 import p10 from "@/assets/panini/p10.png";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { CartDrawer } from "@/components/panini/CartDrawer";
+import { paniniUtmifyHeadScripts } from "@/lib/utmify-head";
 
 export const Route = createFileRoute("/panini-copa/")({
   head: () => ({
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/panini-copa/")({
       { title: "Álbum 2026 — Panini Copa" },
       { name: "description", content: "Álbum 2026, figurinhas e envelopes Panini com frete grátis." },
     ],
+    scripts: paniniUtmifyHeadScripts,
   }),
   component: PaniniCopaRoot,
 });
