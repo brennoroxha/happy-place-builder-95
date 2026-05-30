@@ -91,7 +91,7 @@ function PaymentPage() {
   const productImage = (color && colorImages[color]) || slimBellyPreta;
   const shippingLabel = shipping === "sedex" ? "Sedex Express" : "Transportadora";
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const time = useCountdown(15 * 60);
