@@ -5,7 +5,7 @@ import { ChevronLeft, ShieldCheck, Truck, X, Gift, Check, QrCode, ArrowDown, Sho
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { trackInitiateCheckout, trackPurchase } from "@/lib/track";
 import { getTracking } from "@/lib/tracking";
-import { createKlivoTransaction } from "@/lib/klivopay.functions";
+import { createKlivoTransactionConta2 } from "@/lib/klivopay.functions";
 import { createFreepayTransaction } from "@/lib/freepay.functions";
 import { getActiveProvider } from "@/lib/admin.functions";
 import { paniniUtmifyHeadScripts } from "@/lib/utmify-head";
