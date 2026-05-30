@@ -127,6 +127,7 @@ function PaniniCheckoutPage() {
   const [pagamento, setPagamento] = useState("pix");
   const [processing, setProcessing] = useState(false);
   const [pixCode, setPixCode] = useState("");
+  const [paymentHash, setPaymentHash] = useState<string | null>(null);
   const [payError, setPayError] = useState<string | null>(null);
   const [pixCopied, setPixCopied] = useState(false);
 
