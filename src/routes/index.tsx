@@ -74,6 +74,7 @@ import reviewNew1 from "@/assets/review-new-1.png";
 import reviewNew2 from "@/assets/review-new-2.png";
 import reviewNew3 from "@/assets/review-new-3.png";
 import reviewNew4 from "@/assets/review-new-4.png";
+import { tiktokShopLogo } from "@/assets/external";
 
 const customerPhotos = [
   reviewNew1, reviewNew2, reviewNew3, reviewNew4,
