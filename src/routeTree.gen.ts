@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PaniniShopeCheckoutRouteImport } from './routes/panini-shope-checkout'
 import { Route as PaniniCheckoutRouteImport } from './routes/panini-checkout'
 import { Route as PagamentoRouteImport } from './routes/pagamento'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -23,6 +24,11 @@ import { Route as PaniniCopaSlugRouteImport } from './routes/panini-copa.$slug'
 import { Route as ApiPublicKlivopayWebhookRouteImport } from './routes/api/public/klivopay-webhook'
 import { Route as ApiPublicFreepayWebhookRouteImport } from './routes/api/public/freepay-webhook'
 
+const PaniniShopeCheckoutRoute = PaniniShopeCheckoutRouteImport.update({
+  id: '/panini-shope-checkout',
+  path: '/panini-shope-checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PaniniCheckoutRoute = PaniniCheckoutRouteImport.update({
   id: '/panini-checkout',
   path: '/panini-checkout',
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
   '/panini-checkout': typeof PaniniCheckoutRoute
+  '/panini-shope-checkout': typeof PaniniShopeCheckoutRoute
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
   '/panini-shope/$slug': typeof PaniniShopeSlugRoute
   '/panini-copa/': typeof PaniniCopaIndexRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
   '/panini-checkout': typeof PaniniCheckoutRoute
+  '/panini-shope-checkout': typeof PaniniShopeCheckoutRoute
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
   '/panini-shope/$slug': typeof PaniniShopeSlugRoute
   '/panini-copa': typeof PaniniCopaIndexRoute
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/pagamento': typeof PagamentoRoute
   '/panini-checkout': typeof PaniniCheckoutRoute
+  '/panini-shope-checkout': typeof PaniniShopeCheckoutRoute
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
   '/panini-shope/$slug': typeof PaniniShopeSlugRoute
   '/panini-copa/': typeof PaniniCopaIndexRoute
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/pagamento'
     | '/panini-checkout'
+    | '/panini-shope-checkout'
     | '/panini-copa/$slug'
     | '/panini-shope/$slug'
     | '/panini-copa/'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/pagamento'
     | '/panini-checkout'
+    | '/panini-shope-checkout'
     | '/panini-copa/$slug'
     | '/panini-shope/$slug'
     | '/panini-copa'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/pagamento'
     | '/panini-checkout'
+    | '/panini-shope-checkout'
     | '/panini-copa/$slug'
     | '/panini-shope/$slug'
     | '/panini-copa/'
@@ -192,6 +204,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   PagamentoRoute: typeof PagamentoRoute
   PaniniCheckoutRoute: typeof PaniniCheckoutRoute
+  PaniniShopeCheckoutRoute: typeof PaniniShopeCheckoutRoute
   PaniniCopaSlugRoute: typeof PaniniCopaSlugRoute
   PaniniShopeSlugRoute: typeof PaniniShopeSlugRoute
   PaniniCopaIndexRoute: typeof PaniniCopaIndexRoute
@@ -202,6 +215,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/panini-shope-checkout': {
+      id: '/panini-shope-checkout'
+      path: '/panini-shope-checkout'
+      fullPath: '/panini-shope-checkout'
+      preLoaderRoute: typeof PaniniShopeCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/panini-checkout': {
       id: '/panini-checkout'
       path: '/panini-checkout'
@@ -304,6 +324,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   PagamentoRoute: PagamentoRoute,
   PaniniCheckoutRoute: PaniniCheckoutRoute,
+  PaniniShopeCheckoutRoute: PaniniShopeCheckoutRoute,
   PaniniCopaSlugRoute: PaniniCopaSlugRoute,
   PaniniShopeSlugRoute: PaniniShopeSlugRoute,
   PaniniCopaIndexRoute: PaniniCopaIndexRoute,
