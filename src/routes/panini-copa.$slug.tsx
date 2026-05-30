@@ -7,6 +7,7 @@ import {
 import { paniniBySlug, type PaniniProduct } from "@/lib/panini-products";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { CartDrawer } from "@/components/panini/CartDrawer";
+import { paniniUtmifyHeadScripts } from "@/lib/utmify-head";
 
 export const Route = createFileRoute("/panini-copa/$slug")({
   loader: ({ params }) => {
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/panini-copa/$slug")({
           { property: "og:description", content: loaderData.product.descricao.slice(0, 160) },
         ]
       : [],
+    scripts: paniniUtmifyHeadScripts,
   }),
   notFoundComponent: () => (
     <div className="grid min-h-screen place-items-center bg-zinc-100 text-zinc-700">
