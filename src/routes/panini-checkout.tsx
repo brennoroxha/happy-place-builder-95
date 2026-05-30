@@ -710,7 +710,7 @@ function PaniniCheckoutPage() {
                 <div className="mt-2 border-t border-zinc-100 pt-2 flex justify-between">
                   <span className="font-bold text-zinc-900">Total</span>
                   <span className="text-lg font-extrabold text-zinc-900">
-                    {brl(subtotal + selectedShipping.price + upsellTotal)}
+                    {brl(subtotal + selectedShipping.price)}
                   </span>
                 </div>
               </div>
