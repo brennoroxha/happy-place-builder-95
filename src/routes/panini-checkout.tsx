@@ -278,9 +278,9 @@ function PaniniCheckoutPage() {
         {step !== 4 ? (
           <div className="mb-5 flex items-start justify-between">
             {[
-              { k: 1, label: "Identificação" },
-              { k: 2, label: "Entrega" },
-              { k: 3, label: "Pagamento" },
+              { k: 1, label: "DADOS" },
+              { k: 2, label: "ENDEREÇO" },
+              { k: 3, label: "PAGAMENTO" },
             ].map((s, idx, arr) => {
               const active = step === s.k;
               const done = step > s.k;
@@ -288,19 +288,25 @@ function PaniniCheckoutPage() {
                 <div key={s.k} className="flex flex-1 items-start">
                   <div className="flex flex-col items-center" style={{ width: 80 }}>
                     <div
-                      className={`grid h-9 w-9 place-items-center rounded-full text-sm font-bold ${
+                      className={`grid h-10 w-10 place-items-center rounded-full text-sm font-bold ${
                         done
-                          ? "bg-emerald-600 text-white"
+                          ? "bg-emerald-500 text-white"
                           : active
                           ? "bg-zinc-900 text-white"
                           : "bg-zinc-200 text-zinc-400"
                       }`}
                     >
-                      {s.k}
+                      {done ? (
+                        <Check className="h-5 w-5" strokeWidth={3} />
+                      ) : active && s.k === 3 ? (
+                        <QrCode className="h-5 w-5" />
+                      ) : (
+                        s.k
+                      )}
                     </div>
                     <span
-                      className={`mt-1 text-[11px] font-semibold ${
-                        active || done ? "text-zinc-900" : "text-zinc-400"
+                      className={`mt-1.5 text-center text-[11px] font-bold tracking-wide ${
+                        active || done ? "text-zinc-700" : "text-zinc-400"
                       }`}
                     >
                       {s.label}
@@ -308,8 +314,8 @@ function PaniniCheckoutPage() {
                   </div>
                   {idx < arr.length - 1 && (
                     <div
-                      className={`mx-1 mt-4 h-0.5 flex-1 ${
-                        step > s.k ? "bg-emerald-600" : "bg-zinc-200"
+                      className={`mx-1 mt-5 h-0.5 flex-1 ${
+                        step > s.k ? "bg-emerald-500" : "bg-zinc-200"
                       }`}
                     />
                   )}
