@@ -43,6 +43,8 @@ export type SendUtmifyArgs = {
   totalPriceInCents: number;
   userCommissionInCents: number;
   isTest?: boolean;
+  /** Override which env var holds the Utmify API token (default UTMIFY_API_TOKEN). */
+  tokenEnv?: string;
 };
 
 /** Format Date -> "YYYY-MM-DD HH:mm:ss" UTC (Utmify format). */
