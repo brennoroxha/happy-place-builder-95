@@ -97,38 +97,25 @@ function PaniniCopaPage() {
   return (
     <div className="min-h-screen bg-zinc-100 text-sm text-zinc-800 sm:py-6">
       <div className="mx-auto max-w-[480px] bg-white pb-10 sm:rounded-2xl sm:shadow-xl sm:ring-1 sm:ring-zinc-200 sm:overflow-hidden">
-        {/* Store logo banner */}
-        <div className="flex items-center justify-center bg-white px-4 py-2">
-          <img
-            src="https://sf16-website.neutral.ttwstatic.com/obj/tiktok_web_static/i18n_ecom_fe/tiktok_shop_web_mono/packages/apps/pdp_h5/static/image/tts-logo-light.28ce4ad8.png"
-            alt="TikTok Shop"
-            className="h-7 object-contain"
-          />
-        </div>
-        {/* Search header */}
-        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-zinc-200 bg-white px-3 py-3">
+        {/* Header */}
+        <header className="sticky top-0 z-20 flex items-center justify-between bg-white/95 px-4 py-3 backdrop-blur border-b border-zinc-100">
           <div className="flex items-center gap-2">
-            <button aria-label="Voltar"><ChevronLeft className="h-5 w-5" /></button>
-            <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
-              <input
-                placeholder="Pesquisar"
-                className="w-52 rounded-full bg-zinc-100 py-1.5 pl-8 pr-3 text-sm outline-none"
-              />
-            </div>
+            <button className="p-1" aria-label="Voltar"><ChevronLeft className="h-6 w-6" /></button>
+            <img
+              src="https://sf16-website.neutral.ttwstatic.com/obj/tiktok_web_static/i18n_ecom_fe/tiktok_shop_web_mono/packages/apps/pdp_h5/static/image/tts-logo-light.28ce4ad8.png"
+              alt="TikTok Shop"
+              className="h-10 w-auto"
+            />
           </div>
-          <div className="flex items-center gap-4 pr-2">
-            <Share2 className="h-5 w-5 text-zinc-700" />
+          <div className="flex items-center gap-4">
+            <Share2 className="h-5 w-5" />
             <button onClick={() => setOpen(true)} className="relative" aria-label="Abrir carrinho">
-              <ShoppingCart className="h-5 w-5 text-zinc-700" />
-              {count > 0 && (
-                <span className="absolute -top-2 -right-2 grid h-4 min-w-4 place-items-center rounded-full bg-rose-600 px-1 text-[10px] font-bold text-white">
-                  {count}
-                </span>
-              )}
+              <ShoppingCart className="h-5 w-5" />
+              <span className="absolute -top-2 -right-2 grid h-4 min-w-4 place-items-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white">{count}</span>
             </button>
           </div>
         </header>
+
 
         {/* Store header */}
         <section className="bg-white">
