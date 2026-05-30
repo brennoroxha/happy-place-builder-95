@@ -16,6 +16,7 @@ import { Route as BrindeRouteImport } from './routes/brinde'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AddressRouteImport } from './routes/address'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PaniniShopeIndexRouteImport } from './routes/panini-shope.index'
 import { Route as PaniniCopaIndexRouteImport } from './routes/panini-copa.index'
 import { Route as PaniniCopaSlugRouteImport } from './routes/panini-copa.$slug'
 import { Route as ApiPublicKlivopayWebhookRouteImport } from './routes/api/public/klivopay-webhook'
@@ -56,6 +57,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PaniniShopeIndexRoute = PaniniShopeIndexRouteImport.update({
+  id: '/panini-shope/',
+  path: '/panini-shope/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PaniniCopaIndexRoute = PaniniCopaIndexRouteImport.update({
   id: '/panini-copa/',
   path: '/panini-copa/',
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/panini-checkout': typeof PaniniCheckoutRoute
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
   '/panini-copa/': typeof PaniniCopaIndexRoute
+  '/panini-shope/': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
 }
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/panini-checkout': typeof PaniniCheckoutRoute
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
   '/panini-copa': typeof PaniniCopaIndexRoute
+  '/panini-shope': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
 }
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   '/panini-checkout': typeof PaniniCheckoutRoute
   '/panini-copa/$slug': typeof PaniniCopaSlugRoute
   '/panini-copa/': typeof PaniniCopaIndexRoute
+  '/panini-shope/': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
 }
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
     | '/panini-checkout'
     | '/panini-copa/$slug'
     | '/panini-copa/'
+    | '/panini-shope/'
     | '/api/public/freepay-webhook'
     | '/api/public/klivopay-webhook'
   fileRoutesByTo: FileRoutesByTo
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/panini-checkout'
     | '/panini-copa/$slug'
     | '/panini-copa'
+    | '/panini-shope'
     | '/api/public/freepay-webhook'
     | '/api/public/klivopay-webhook'
   id:
@@ -156,6 +167,7 @@ export interface FileRouteTypes {
     | '/panini-checkout'
     | '/panini-copa/$slug'
     | '/panini-copa/'
+    | '/panini-shope/'
     | '/api/public/freepay-webhook'
     | '/api/public/klivopay-webhook'
   fileRoutesById: FileRoutesById
@@ -170,6 +182,7 @@ export interface RootRouteChildren {
   PaniniCheckoutRoute: typeof PaniniCheckoutRoute
   PaniniCopaSlugRoute: typeof PaniniCopaSlugRoute
   PaniniCopaIndexRoute: typeof PaniniCopaIndexRoute
+  PaniniShopeIndexRoute: typeof PaniniShopeIndexRoute
   ApiPublicFreepayWebhookRoute: typeof ApiPublicFreepayWebhookRoute
   ApiPublicKlivopayWebhookRoute: typeof ApiPublicKlivopayWebhookRoute
 }
@@ -225,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/panini-shope/': {
+      id: '/panini-shope/'
+      path: '/panini-shope'
+      fullPath: '/panini-shope/'
+      preLoaderRoute: typeof PaniniShopeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/panini-copa/': {
       id: '/panini-copa/'
       path: '/panini-copa'
@@ -266,6 +286,7 @@ const rootRouteChildren: RootRouteChildren = {
   PaniniCheckoutRoute: PaniniCheckoutRoute,
   PaniniCopaSlugRoute: PaniniCopaSlugRoute,
   PaniniCopaIndexRoute: PaniniCopaIndexRoute,
+  PaniniShopeIndexRoute: PaniniShopeIndexRoute,
   ApiPublicFreepayWebhookRoute: ApiPublicFreepayWebhookRoute,
   ApiPublicKlivopayWebhookRoute: ApiPublicKlivopayWebhookRoute,
 }
