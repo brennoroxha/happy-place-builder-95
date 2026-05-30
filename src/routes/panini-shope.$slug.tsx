@@ -7,6 +7,7 @@ import {
 import { paniniBySlug, type PaniniProduct } from "@/lib/panini-products";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { CartDrawer } from "@/components/panini/CartDrawer";
+import { avatarCarla, avatarNandy, avatarCalifornices, avatarJose, avatarAndre, avatarJoyce, avatarMateus, avatarJuan, avatarJuliaRafael } from "@/assets/external";
 
 export const Route = createFileRoute("/panini-shope/$slug")({
   loader: ({ params }) => {
