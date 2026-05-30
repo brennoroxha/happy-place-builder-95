@@ -8,11 +8,6 @@ import { getTracking } from "@/lib/tracking";
 import { createKlivoTransaction } from "@/lib/klivopay.functions";
 import { createFreepayTransaction } from "@/lib/freepay.functions";
 import { getActiveProvider } from "@/lib/admin.functions";
-import upsellNeymarLote from "@/assets/upsell-neymar-lote.png";
-import upsellFigurinhasLegend from "@/assets/upsell-figurinhas-legend.png";
-import upsellCaixinha from "@/assets/upsell-caixinha.png";
-import upsellAdesivoNeymar from "@/assets/upsell-adesivo-neymar.png";
-import upsellCoca from "@/assets/upsell-coca.png";
 
 export const Route = createFileRoute("/panini-checkout")({
   head: () => ({
@@ -148,48 +143,7 @@ function PaniniCheckoutPage() {
     trackInitiateCheckout(subtotal || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const upsells: { id: string; name: string; img: string; original: number; price: number; note?: string }[] = [
-    {
-      id: "neymar-lote",
-      name: "[Lançamento] Novo Lote Neymar Edition chance de 12%. aumente sua chance ao adicionar mais!",
-      img: upsellNeymarLote,
-      original: 31.9,
-      price: 4.9,
-      note: "Após adicionar 1x: 12% de sorte",
-    },
-    {
-      id: "figurinhas-raras",
-      name: "Aumente suas chances para garantir Figurinhas Raras ✨",
-      img: upsellFigurinhasLegend,
-      original: 39.58,
-      price: 12.7,
-    },
-    {
-      id: "caixinha",
-      name: "Caixinha Temática Copa do Mundo 2026 - Capacidade até 500 Figurinhas",
-      img: upsellCaixinha,
-      original: 37.58,
-      price: 8.98,
-    },
-    {
-      id: "adesivo-neymar",
-      name: "Adesivo Autocolante Neymar Jr. & Mercado Livre",
-      img: upsellAdesivoNeymar,
-      original: 59.99,
-      price: 19.99,
-    },
-    {
-      id: "kit-coca",
-      name: "Kit 6 Garrafas Coca-cola 600ml Copa 2026 Panini Figurinhas",
-      img: upsellCoca,
-      original: 79.9,
-      price: 29.9,
-    },
-  ];
-  const [upsellQty, setUpsellQty] = useState<Record<string, number>>({});
-  const [upsellAdded, setUpsellAdded] = useState<Record<string, number>>({});
   const selectedShipping = shippingOptions.find((s) => s.id === shipping)!;
-  const upsellTotal = upsells.reduce((sum, u) => sum + (upsellAdded[u.id] ?? 0) * u.price, 0);
   const [cepLoading, setCepLoading] = useState(false);
   const maskCep = (v: string) => {
     const d = onlyDigits(v).slice(0, 8);
@@ -756,7 +710,7 @@ function PaniniCheckoutPage() {
                 <div className="mt-2 border-t border-zinc-100 pt-2 flex justify-between">
                   <span className="font-bold text-zinc-900">Total</span>
                   <span className="text-lg font-extrabold text-zinc-900">
-                    {brl(subtotal + selectedShipping.price + upsellTotal)}
+                    {brl(subtotal + selectedShipping.price)}
                   </span>
                 </div>
               </div>
@@ -766,82 +720,6 @@ function PaniniCheckoutPage() {
 
         {step === 3 && (
           <>
-            <div className="mb-3 mt-2 text-center text-sm font-bold text-zinc-900">
-              Acho que você vai gostar destas ofertas ;)
-            </div>
-
-            <div className="-mx-4 mb-4 space-y-3 px-4">
-              {upsells.map((u) => {
-                const qty = upsellQty[u.id] ?? 1;
-                const added = upsellAdded[u.id] ?? 0;
-                return (
-                  <div
-                    key={u.id}
-                    className="overflow-hidden rounded-xl border border-dashed border-zinc-300 bg-white"
-                  >
-                    <div className="flex gap-3 p-3">
-                      <img
-                        src={u.img}
-                        alt={u.name}
-                        className="h-20 w-20 flex-shrink-0 rounded-md bg-zinc-50 object-contain"
-                      />
-                      <div className="flex min-w-0 flex-1 flex-col">
-                        <div className="text-sm font-semibold leading-snug text-zinc-900">
-                          {u.name}
-                        </div>
-                        <div className="mt-1 text-xs text-zinc-400 line-through">
-                          {brl(u.original)}
-                        </div>
-                        <div className="text-sm font-bold text-zinc-900">
-                          {brl(u.price)}{" "}
-                          <span className="text-emerald-600">
-                            ({brl(u.original - u.price)} OFF)
-                          </span>
-                        </div>
-                        {u.note && (
-                          <div className="mt-0.5 text-xs font-semibold text-emerald-600">
-                            {u.note}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between px-3 pb-3">
-                      <div className="flex items-center gap-1 rounded-md bg-zinc-100">
-                        <button
-                          onClick={() =>
-                            setUpsellQty((s) => ({ ...s, [u.id]: Math.max(1, qty - 1) }))
-                          }
-                          className="grid h-8 w-8 place-items-center text-zinc-600"
-                        >
-                          -
-                        </button>
-                        <span className="w-6 text-center text-sm font-semibold tabular-nums">
-                          {qty}
-                        </span>
-                        <button
-                          onClick={() => setUpsellQty((s) => ({ ...s, [u.id]: qty + 1 }))}
-                          className="grid h-8 w-8 place-items-center text-zinc-600"
-                        >
-                          +
-                        </button>
-                      </div>
-                      <div className="text-xs text-zinc-500">
-                        {added > 0 ? `${added} no carrinho` : "Nenhum no carrinho"}
-                      </div>
-                    </div>
-                    <button
-                      onClick={() =>
-                        setUpsellAdded((s) => ({ ...s, [u.id]: (s[u.id] ?? 0) + qty }))
-                      }
-                      className={`w-full py-3 text-sm font-bold text-white ${added > 0 ? "bg-emerald-600 hover:bg-emerald-700" : "bg-teal-400 hover:bg-teal-500"}`}
-                    >
-                      {added > 0 ? "Adicionado" : "Adicionar item"}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-
             <section className="-mx-4 mb-4 bg-white px-4 py-4 shadow-sm ring-1 ring-zinc-100">
               <div className="mb-3 text-sm font-bold">Forma de pagamento</div>
               <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-zinc-900 p-3">
@@ -871,7 +749,7 @@ function PaniniCheckoutPage() {
               onClick={async () => {
                 setPayError(null);
                 setProcessing(true);
-                const total = subtotal + selectedShipping.price + upsellTotal;
+                const total = subtotal + selectedShipping.price;
                 const amountCents = Math.round(total * 100);
                 try {
                   const phone = onlyDigits(telefone);
@@ -882,13 +760,6 @@ function PaniniCheckoutPage() {
                       quantity: i.qty,
                       price: Math.round(i.price * 100),
                     })),
-                    ...upsells
-                      .filter((u) => (upsellAdded[u.id] ?? 0) > 0)
-                      .map((u) => ({
-                        title: u.name,
-                        quantity: upsellAdded[u.id]!,
-                        price: Math.round(u.price * 100),
-                      })),
                     ...(selectedShipping.price > 0
                       ? [{ title: `Frete ${selectedShipping.label}`, quantity: 1, price: Math.round(selectedShipping.price * 100) }]
                       : []),
@@ -1016,7 +887,7 @@ function PaniniCheckoutPage() {
             Total ({count} {count === 1 ? "item" : "itens"})
           </span>
           <span className="pr-1 text-lg font-extrabold text-zinc-900">
-            {brl(subtotal + (step >= 2 ? selectedShipping.price : 0) + upsellTotal)}
+            {brl(subtotal + (step >= 2 ? selectedShipping.price : 0))}
           </span>
         </div>
         <div className="bg-rose-600 py-2.5 text-center text-sm font-bold text-white">
