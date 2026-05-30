@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { ChevronLeft, ShieldCheck, Truck, X, Gift } from "lucide-react";
+import { ChevronLeft, ShieldCheck, Truck, X, Gift, Check, QrCode, ArrowDown, ShoppingBag, Lock, RotateCcw, Headphones } from "lucide-react";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { trackInitiateCheckout, trackPurchase } from "@/lib/track";
 import { getTracking } from "@/lib/tracking";
@@ -278,9 +278,9 @@ function PaniniCheckoutPage() {
         {step !== 4 ? (
           <div className="mb-5 flex items-start justify-between">
             {[
-              { k: 1, label: "Identificação" },
-              { k: 2, label: "Entrega" },
-              { k: 3, label: "Pagamento" },
+              { k: 1, label: "DADOS" },
+              { k: 2, label: "ENDEREÇO" },
+              { k: 3, label: "PAGAMENTO" },
             ].map((s, idx, arr) => {
               const active = step === s.k;
               const done = step > s.k;
@@ -288,19 +288,25 @@ function PaniniCheckoutPage() {
                 <div key={s.k} className="flex flex-1 items-start">
                   <div className="flex flex-col items-center" style={{ width: 80 }}>
                     <div
-                      className={`grid h-9 w-9 place-items-center rounded-full text-sm font-bold ${
+                      className={`grid h-10 w-10 place-items-center rounded-full text-sm font-bold ${
                         done
-                          ? "bg-emerald-600 text-white"
+                          ? "bg-emerald-500 text-white"
                           : active
                           ? "bg-zinc-900 text-white"
                           : "bg-zinc-200 text-zinc-400"
                       }`}
                     >
-                      {s.k}
+                      {done ? (
+                        <Check className="h-5 w-5" strokeWidth={3} />
+                      ) : active && s.k === 3 ? (
+                        <QrCode className="h-5 w-5" />
+                      ) : (
+                        s.k
+                      )}
                     </div>
                     <span
-                      className={`mt-1 text-[11px] font-semibold ${
-                        active || done ? "text-zinc-900" : "text-zinc-400"
+                      className={`mt-1.5 text-center text-[11px] font-bold tracking-wide ${
+                        active || done ? "text-zinc-700" : "text-zinc-400"
                       }`}
                     >
                       {s.label}
@@ -308,8 +314,8 @@ function PaniniCheckoutPage() {
                   </div>
                   {idx < arr.length - 1 && (
                     <div
-                      className={`mx-1 mt-4 h-0.5 flex-1 ${
-                        step > s.k ? "bg-emerald-600" : "bg-zinc-200"
+                      className={`mx-1 mt-5 h-0.5 flex-1 ${
+                        step > s.k ? "bg-emerald-500" : "bg-zinc-200"
                       }`}
                     />
                   )}
@@ -720,85 +726,150 @@ function PaniniCheckoutPage() {
 
         {step === 3 && (
           <>
-            <section className="-mx-4 mb-4 bg-white px-4 py-4 shadow-sm ring-1 ring-zinc-100">
-              <div className="mb-3 text-sm font-bold">Forma de pagamento</div>
-              <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-zinc-900 p-3">
-                <img
-                  src="https://img.icons8.com/color/512/pix.png"
-                  alt="PIX"
-                  className="h-10 w-10 object-contain"
-                />
-                <div className="flex-1 text-sm font-semibold text-zinc-900">PIX à vista</div>
-                <input
-                  type="radio"
-                  name="pagamento"
-                  checked={pagamento === "pix"}
-                  onChange={() => setPagamento("pix")}
-                  className="h-4 w-4 accent-zinc-900"
-                />
-              </label>
+            {/* Pagamento card */}
+            <section className="-mx-4 mb-4 bg-white px-4 py-5 shadow-sm ring-1 ring-zinc-100">
+              <div className="mb-4 flex items-center gap-2">
+                <QrCode className="h-5 w-5 text-zinc-900" />
+                <h2 className="text-lg font-extrabold text-zinc-900">Pagamento</h2>
+              </div>
+
+              {/* PIX selected option */}
+              <div className="overflow-hidden rounded-xl border-2 border-emerald-500 bg-white">
+                <div className="flex items-center gap-2 bg-emerald-50/60 px-4 py-3">
+                  <span className="grid h-5 w-5 place-items-center rounded-full border-2 border-emerald-500">
+                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                  </span>
+                  <span className="text-sm font-extrabold text-zinc-900">Pix</span>
+                </div>
+                <div className="flex flex-col items-center px-4 py-8">
+                  <img
+                    src="https://logospng.org/download/pix/logo-pix-icone-512.png"
+                    alt="Pix"
+                    className="h-14 w-auto"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = "none";
+                    }}
+                  />
+                  <div className="-mt-2 text-[11px] font-semibold text-zinc-400">powered by Banco Central</div>
+                  <p className="mt-5 text-center text-sm font-bold text-zinc-900">
+                    Para pagar, finalize sua compra abaixo
+                  </p>
+                  <ArrowDown className="mt-2 h-4 w-4 text-zinc-400" />
+                </div>
+              </div>
+
+              {payError && (
+                <p className="mt-3 rounded-md bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-600">
+                  {payError}
+                </p>
+              )}
+
+              {/* Finalizar button */}
+              <button
+                disabled={processing}
+                onClick={async () => {
+                  setPayError(null);
+                  setProcessing(true);
+                  const total = subtotal + selectedShipping.price;
+                  const amountCents = Math.round(total * 100);
+                  try {
+                    const phone = onlyDigits(telefone);
+                    const document = onlyDigits(doc);
+                    const cart = [
+                      ...items.map((i) => ({
+                        title: i.name,
+                        quantity: i.qty,
+                        price: Math.round(i.price * 100),
+                      })),
+                      ...(selectedShipping.price > 0
+                        ? [{ title: `Frete ${selectedShipping.label}`, quantity: 1, price: Math.round(selectedShipping.price * 100) }]
+                        : []),
+                    ];
+                    const fn = provider === "freepay" ? freepay : klivo;
+                    const res = await fn({
+                      data: {
+                        amount: amountCents,
+                        customer: { name: nome.trim(), email, phone, document },
+                        cart,
+                        tracking: getTracking(),
+                        scope: "panini",
+                      },
+                    });
+                    if (!res.ok) {
+                      setPayError(res.error);
+                      return;
+                    }
+                    setPixCode(res.pix_copy_paste);
+                    trackPurchase(total, res.hash);
+                    setStep(4);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  } catch {
+                    setPayError("Erro de conexão. Tente novamente.");
+                  } finally {
+                    setProcessing(false);
+                  }
+                }}
+                className="mt-5 w-full rounded-full bg-emerald-500 py-4 text-sm font-extrabold text-white shadow-sm transition hover:bg-emerald-600 active:scale-[.99] disabled:cursor-wait disabled:opacity-80"
+              >
+                {processing ? (
+                  <span className="inline-flex items-center justify-center gap-2">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                    PROCESSANDO...
+                  </span>
+                ) : (
+                  <>Finalizar pedido · {brl(subtotal + selectedShipping.price)}</>
+                )}
+              </button>
             </section>
 
-            {payError && (
-              <p className="mb-2 rounded-md bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-600">
-                {payError}
-              </p>
-            )}
-            <button
-              disabled={processing}
-              onClick={async () => {
-                setPayError(null);
-                setProcessing(true);
-                const total = subtotal + selectedShipping.price;
-                const amountCents = Math.round(total * 100);
-                try {
-                  const phone = onlyDigits(telefone);
-                  const document = onlyDigits(doc);
-                  const cart = [
-                    ...items.map((i) => ({
-                      title: i.name,
-                      quantity: i.qty,
-                      price: Math.round(i.price * 100),
-                    })),
-                    ...(selectedShipping.price > 0
-                      ? [{ title: `Frete ${selectedShipping.label}`, quantity: 1, price: Math.round(selectedShipping.price * 100) }]
-                      : []),
-                  ];
-                  const fn = provider === "freepay" ? freepay : klivo;
-                  const res = await fn({
-                    data: {
-                      amount: amountCents,
-                      customer: { name: nome.trim(), email, phone, document },
-                      cart,
-                      tracking: getTracking(),
-                      scope: "panini",
-                    },
-                  });
-                  if (!res.ok) {
-                    setPayError(res.error);
-                    return;
-                  }
-                  setPixCode(res.pix_copy_paste);
-                  trackPurchase(total, res.hash);
-                  setStep(4);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                } catch {
-                  setPayError("Erro de conexão. Tente novamente.");
-                } finally {
-                  setProcessing(false);
-                }
-              }}
-              className="mb-4 w-full rounded-lg bg-rose-500 py-3.5 text-sm font-extrabold tracking-wide text-white hover:bg-rose-600 disabled:cursor-wait disabled:opacity-80"
-            >
-              {processing ? (
-                <span className="inline-flex items-center justify-center gap-2">
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-                  PROCESSANDO...
+            {/* Resumo do pedido */}
+            <section className="-mx-4 mb-4 bg-white px-4 py-5 shadow-sm ring-1 ring-zinc-100">
+              <div className="mb-4 flex items-center gap-2">
+                <ShoppingBag className="h-5 w-5 text-zinc-900" />
+                <h3 className="text-base font-extrabold text-zinc-900">Resumo do pedido</h3>
+              </div>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-zinc-500">Subtotal</span>
+                  <span className="font-semibold text-zinc-900">{brl(subtotal)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-500">Desconto</span>
+                  <span className="font-semibold text-emerald-600">- {brl(discount)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-500">Frete ({selectedShipping.label})</span>
+                  <span className="font-bold text-zinc-900">
+                    {selectedShipping.price === 0 ? (
+                      <span className="text-emerald-600">Grátis</span>
+                    ) : (
+                      brl(selectedShipping.price)
+                    )}
+                  </span>
+                </div>
+              </div>
+              <div className="mt-4 flex items-end justify-between border-t border-zinc-100 pt-4">
+                <span className="text-base font-extrabold text-zinc-900">Total</span>
+                <span className="text-xl font-extrabold text-zinc-900">
+                  {brl(subtotal + selectedShipping.price)}
                 </span>
-              ) : (
-                "FINALIZAR COMPRA"
-              )}
-            </button>
+              </div>
+            </section>
+
+            {/* Garantia / confiança */}
+            <section className="-mx-4 mb-4 bg-white px-4 py-5 shadow-sm ring-1 ring-zinc-100">
+              <div className="mb-4 flex items-center justify-center gap-2 rounded-lg bg-emerald-50 px-3 py-2.5 text-sm text-zinc-800">
+                <Check className="h-4 w-4 text-emerald-600" />
+                <span>Garantia de Devolução do Dinheiro em <strong>14 dias</strong></span>
+              </div>
+              <h4 className="mb-4 text-center text-sm font-extrabold text-zinc-900">Compre com confiança!</h4>
+              <ul className="space-y-3 text-sm text-zinc-700">
+                <li className="flex items-center gap-3"><ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600" /><span>Garantia de Devolução de 100% do Dinheiro</span></li>
+                <li className="flex items-center gap-3"><RotateCcw className="h-4 w-4 shrink-0 text-emerald-600" /><span>Devoluções Sem Complicações</span></li>
+                <li className="flex items-center gap-3"><Lock className="h-4 w-4 shrink-0 text-emerald-600" /><span>Transações Seguras</span></li>
+                <li className="flex items-center gap-3"><Headphones className="h-4 w-4 shrink-0 text-emerald-600" /><span>Atendimento ao Cliente 24/7</span></li>
+              </ul>
+            </section>
           </>
         )}
 
