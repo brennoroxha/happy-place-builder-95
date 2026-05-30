@@ -8,10 +8,12 @@ import { getTracking } from "@/lib/tracking";
 import { createKlivoTransaction } from "@/lib/klivopay.functions";
 import { createFreepayTransaction } from "@/lib/freepay.functions";
 import { getActiveProvider } from "@/lib/admin.functions";
+import { paniniUtmifyHeadScripts } from "@/lib/utmify-head";
 
 export const Route = createFileRoute("/panini-checkout")({
   head: () => ({
     meta: [{ title: "Resumo do Pedido — Panini Copa" }],
+    scripts: paniniUtmifyHeadScripts,
   }),
   component: () => (
     <PaniniCartProvider>
