@@ -5,15 +5,16 @@ import { usePaniniCart } from "@/lib/panini-cart";
 const brl = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
-export function CartDrawer() {
+export function CartDrawer({ checkoutPath = "/panini-checkout" }: { checkoutPath?: string } = {}) {
   const { open, setOpen, items, subtotal, setQty, remove, count } = usePaniniCart();
   const navigate = useNavigate();
 
   const finalize = () => {
     if (!items.length) return;
     setOpen(false);
-    navigate({ to: "/panini-checkout" });
+    navigate({ to: checkoutPath });
   };
+
 
   return (
     <>

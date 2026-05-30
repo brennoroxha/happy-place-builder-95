@@ -64,7 +64,7 @@ function PaniniShopeRoot() {
   return (
     <PaniniCartProvider>
       <PaniniShopePage />
-      <CartDrawer />
+      <CartDrawer checkoutPath="/panini-shope-checkout" />
     </PaniniCartProvider>
   );
 }
@@ -221,13 +221,13 @@ function PaniniShopePage() {
                   {visibleProducts.slice(idx * 2, idx * 2 + 4).map((p, i) => (
                     <div key={i} className="flex flex-col rounded-lg border border-zinc-200 bg-white p-2">
                       <button
-                        onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
+                        onClick={() => navigate({ to: "/panini-shope/$slug", params: { slug: p.slug } })}
                         className="mb-2 aspect-square w-full"
                       >
                         <img src={p.img} alt={p.name} className="h-full w-full object-contain" />
                       </button>
                       <button
-                        onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
+                        onClick={() => navigate({ to: "/panini-shope/$slug", params: { slug: p.slug } })}
                         className="flex flex-col gap-1 text-left"
                       >
                         <div className="line-clamp-2 text-xs font-semibold text-zinc-900">{p.name}</div>
@@ -281,7 +281,7 @@ function PaniniShopePage() {
               {visibleProducts.map((p, i) => (
                 <div key={i} className="flex w-full max-w-[500px] flex-row rounded-lg bg-white">
                   <button
-                    onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
+                    onClick={() => navigate({ to: "/panini-shope/$slug", params: { slug: p.slug } })}
                     className="mr-3 flex-shrink-0"
                     style={{ width: 110, height: 120 }}
                   >
@@ -289,7 +289,7 @@ function PaniniShopePage() {
                   </button>
                   <div className="flex min-w-0 flex-1 flex-col justify-between pb-2" style={{ minHeight: 120 }}>
                     <button
-                      onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
+                      onClick={() => navigate({ to: "/panini-shope/$slug", params: { slug: p.slug } })}
                       className="flex flex-1 flex-col justify-center gap-0.5 text-left"
                     >
                       <div className="truncate text-xs font-semibold text-zinc-900">{p.name}</div>
@@ -315,7 +315,7 @@ function PaniniShopePage() {
                     </button>
                     <div className="mt-1 flex flex-row items-end justify-between">
                       <button
-                        onClick={() => navigate({ to: "/panini-copa/$slug", params: { slug: p.slug } })}
+                        onClick={() => navigate({ to: "/panini-shope/$slug", params: { slug: p.slug } })}
                         className="flex flex-col text-left"
                       >
                         <span className="text-base font-bold leading-tight" style={{ color: SHOPEE }}>{brl(p.price)}</span>
