@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { processWebhookEvent } from "@/lib/webhook.server";
 
 export type Provider = "klivopay" | "freepay";
 
@@ -93,14 +94,18 @@ export const markSaleConfirmed = createServerFn({ method: "POST" })
     return d;
   })
   .handler(async ({ data }) => {
-    const { error } = await supabaseAdmin
-      .from("sales")
-      .update({
+    const result = await processWebhookEvent({
+      hash: data.hash,
+      status: "paid",
+      paymentMethod: "pix",
+      paidAt: new Date().toISOString(),
+      rawPayload: {
+        provider: "manual_confirmation",
+        source: "admin_markSaleConfirmed",
         status: "paid",
-        paid_at: new Date().toISOString(),
-      })
-      .eq("transaction_hash", data.hash);
-    if (error) throw new Error(error.message);
+      },
+    });
+    if (!result.ok) throw new Error(String(result.reason ?? "erro ao confirmar"));
     return { ok: true };
   });
 
