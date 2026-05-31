@@ -117,10 +117,43 @@ export const getSaleStatus = createServerFn({ method: "GET" })
     return d;
   })
   .handler(async ({ data }) => {
-    const { data: row } = await supabaseAdmin
+    const { data: row, error } = await supabaseAdmin
       .from("sales")
-      .select("status")
+      .select("status, raw_payload, amount_cents, payment_method")
       .eq("transaction_hash", data.hash)
       .maybeSingle();
-    return { status: (row?.status as string) ?? "waiting_payment" };
+    if (error) throw new Error(error.message);
+
+    let status = (row?.status as string) ?? "waiting_payment";
+    const raw = (row?.raw_payload as Record<string, unknown>) ?? {};
+
+    if (status !== "paid" && raw.provider === "klivopay") {
+      const tokenEnv = raw.klivo_account === "conta2" ? "KLIVOPAY_API_TOKEN_2" : "KLIVOPAY_API_TOKEN";
+      const token = process.env[tokenEnv];
+      if (token) {
+        try {
+          const res = await fetch(
+            `${KLIVO_TRANSACTION_URL}/${encodeURIComponent(data.hash)}?api_token=${encodeURIComponent(token)}`,
+          );
+          const json = (await res.json().catch(() => null)) as Record<string, unknown> | null;
+          const tx = ((json?.data as Record<string, unknown> | undefined) ?? json ?? {}) as Record<string, unknown>;
+          const liveStatus = normalizeStatus(tx.status ?? tx.payment_status);
+          if (res.ok && liveStatus === "paid") {
+            await processWebhookEvent({
+              hash: data.hash,
+              status: "paid",
+              paymentMethod: String(tx.payment_method ?? row?.payment_method ?? "pix"),
+              amountCents: Number(tx.amount ?? row?.amount_cents ?? 0) || undefined,
+              paidAt: (tx.paid_at as string | undefined) ?? (tx.approved_at as string | undefined) ?? null,
+              rawPayload: { provider: "klivopay_status_poll", ...tx },
+            });
+            status = "paid";
+          }
+        } catch (err) {
+          console.error("[sales] failed to refresh Klivopay status", data.hash, err);
+        }
+      }
+    }
+
+    return { status };
   });
