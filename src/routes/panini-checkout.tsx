@@ -148,6 +148,36 @@ function PaniniCheckoutPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Restore pending payment on mount: if a hash is saved, check status —
+  // if paid, jump to upsell immediately; otherwise resume step 4 polling.
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("panini:pending-payment");
+      if (!raw) return;
+      const saved = JSON.parse(raw) as { hash?: string; code?: string; ts?: number };
+      if (!saved?.hash) return;
+      if (saved.ts && Date.now() - saved.ts > 2 * 60 * 60 * 1000) {
+        localStorage.removeItem("panini:pending-payment");
+        return;
+      }
+      (async () => {
+        try {
+          const { getSaleStatus } = await import("@/lib/admin.functions");
+          const { status } = await getSaleStatus({ data: { hash: saved.hash! } });
+          if (status === "paid" || status === "confirmed" || status === "approved") {
+            localStorage.removeItem("panini:pending-payment");
+            navigate({ to: "/upsell/taxa-envio", search: { hash: saved.hash! } });
+            return;
+          }
+          if (saved.code) setPixCode(saved.code);
+          setPaymentHash(saved.hash!);
+          setStep(4);
+        } catch {}
+      })();
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Poll for payment confirmation while on step 4 — redirect to upsell on approval
   const firedPurchase = useRef(false);
   useEffect(() => {
@@ -167,6 +197,9 @@ function PaniniCheckoutPage() {
             firedPurchase.current = true;
             trackPurchase(subtotal + selectedShipping.price, paymentHash);
           }
+          try {
+            localStorage.removeItem("panini:pending-payment");
+          } catch {}
           navigate({
             to: "/upsell/taxa-envio",
             search: { hash: paymentHash },
