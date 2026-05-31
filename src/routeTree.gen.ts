@@ -23,6 +23,7 @@ import { Route as UpsellTaxaEnvioRouteImport } from './routes/upsell.taxa-envio'
 import { Route as PaniniShopeSlugRouteImport } from './routes/panini-shope.$slug'
 import { Route as PaniniCopaSlugRouteImport } from './routes/panini-copa.$slug'
 import { Route as ApiPublicTestUtmifyRouteImport } from './routes/api/public/test-utmify'
+import { Route as ApiPublicReconcileSalesRouteImport } from './routes/api/public/reconcile-sales'
 import { Route as ApiPublicKlivopayWebhookRouteImport } from './routes/api/public/klivopay-webhook'
 import { Route as ApiPublicFreepayWebhookRouteImport } from './routes/api/public/freepay-webhook'
 
@@ -96,6 +97,11 @@ const ApiPublicTestUtmifyRoute = ApiPublicTestUtmifyRouteImport.update({
   path: '/api/public/test-utmify',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicReconcileSalesRoute = ApiPublicReconcileSalesRouteImport.update({
+  id: '/api/public/reconcile-sales',
+  path: '/api/public/reconcile-sales',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicKlivopayWebhookRoute =
   ApiPublicKlivopayWebhookRouteImport.update({
     id: '/api/public/klivopay-webhook',
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/panini-shope/': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
+  '/api/public/reconcile-sales': typeof ApiPublicReconcileSalesRoute
   '/api/public/test-utmify': typeof ApiPublicTestUtmifyRoute
 }
 export interface FileRoutesByTo {
@@ -142,6 +149,7 @@ export interface FileRoutesByTo {
   '/panini-shope': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
+  '/api/public/reconcile-sales': typeof ApiPublicReconcileSalesRoute
   '/api/public/test-utmify': typeof ApiPublicTestUtmifyRoute
 }
 export interface FileRoutesById {
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/panini-shope/': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
+  '/api/public/reconcile-sales': typeof ApiPublicReconcileSalesRoute
   '/api/public/test-utmify': typeof ApiPublicTestUtmifyRoute
 }
 export interface FileRouteTypes {
@@ -181,6 +190,7 @@ export interface FileRouteTypes {
     | '/panini-shope/'
     | '/api/public/freepay-webhook'
     | '/api/public/klivopay-webhook'
+    | '/api/public/reconcile-sales'
     | '/api/public/test-utmify'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/panini-shope'
     | '/api/public/freepay-webhook'
     | '/api/public/klivopay-webhook'
+    | '/api/public/reconcile-sales'
     | '/api/public/test-utmify'
   id:
     | '__root__'
@@ -217,6 +228,7 @@ export interface FileRouteTypes {
     | '/panini-shope/'
     | '/api/public/freepay-webhook'
     | '/api/public/klivopay-webhook'
+    | '/api/public/reconcile-sales'
     | '/api/public/test-utmify'
   fileRoutesById: FileRoutesById
 }
@@ -236,6 +248,7 @@ export interface RootRouteChildren {
   PaniniShopeIndexRoute: typeof PaniniShopeIndexRoute
   ApiPublicFreepayWebhookRoute: typeof ApiPublicFreepayWebhookRoute
   ApiPublicKlivopayWebhookRoute: typeof ApiPublicKlivopayWebhookRoute
+  ApiPublicReconcileSalesRoute: typeof ApiPublicReconcileSalesRoute
   ApiPublicTestUtmifyRoute: typeof ApiPublicTestUtmifyRoute
 }
 
@@ -339,6 +352,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicTestUtmifyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/reconcile-sales': {
+      id: '/api/public/reconcile-sales'
+      path: '/api/public/reconcile-sales'
+      fullPath: '/api/public/reconcile-sales'
+      preLoaderRoute: typeof ApiPublicReconcileSalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/klivopay-webhook': {
       id: '/api/public/klivopay-webhook'
       path: '/api/public/klivopay-webhook'
@@ -372,6 +392,7 @@ const rootRouteChildren: RootRouteChildren = {
   PaniniShopeIndexRoute: PaniniShopeIndexRoute,
   ApiPublicFreepayWebhookRoute: ApiPublicFreepayWebhookRoute,
   ApiPublicKlivopayWebhookRoute: ApiPublicKlivopayWebhookRoute,
+  ApiPublicReconcileSalesRoute: ApiPublicReconcileSalesRoute,
   ApiPublicTestUtmifyRoute: ApiPublicTestUtmifyRoute,
 }
 export const routeTree = rootRouteImport
