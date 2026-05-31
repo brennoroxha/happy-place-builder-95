@@ -165,7 +165,7 @@ function PaniniCheckoutPage() {
         ) {
           if (!firedPurchase.current) {
             firedPurchase.current = true;
-            trackPurchase(total, paymentHash);
+            trackPurchase(subtotal + selectedShipping.price, paymentHash);
           }
           navigate({
             to: "/upsell/taxa-envio",
