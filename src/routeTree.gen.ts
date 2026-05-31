@@ -22,6 +22,7 @@ import { Route as PaniniCopaIndexRouteImport } from './routes/panini-copa.index'
 import { Route as UpsellTaxaEnvioRouteImport } from './routes/upsell.taxa-envio'
 import { Route as PaniniShopeSlugRouteImport } from './routes/panini-shope.$slug'
 import { Route as PaniniCopaSlugRouteImport } from './routes/panini-copa.$slug'
+import { Route as ApiPublicTestUtmifyRouteImport } from './routes/api/public/test-utmify'
 import { Route as ApiPublicKlivopayWebhookRouteImport } from './routes/api/public/klivopay-webhook'
 import { Route as ApiPublicFreepayWebhookRouteImport } from './routes/api/public/freepay-webhook'
 
@@ -90,6 +91,11 @@ const PaniniCopaSlugRoute = PaniniCopaSlugRouteImport.update({
   path: '/panini-copa/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicTestUtmifyRoute = ApiPublicTestUtmifyRouteImport.update({
+  id: '/api/public/test-utmify',
+  path: '/api/public/test-utmify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicKlivopayWebhookRoute =
   ApiPublicKlivopayWebhookRouteImport.update({
     id: '/api/public/klivopay-webhook',
@@ -118,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/panini-shope/': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
+  '/api/public/test-utmify': typeof ApiPublicTestUtmifyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -135,6 +142,7 @@ export interface FileRoutesByTo {
   '/panini-shope': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
+  '/api/public/test-utmify': typeof ApiPublicTestUtmifyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   '/panini-shope/': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
+  '/api/public/test-utmify': typeof ApiPublicTestUtmifyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -172,6 +181,7 @@ export interface FileRouteTypes {
     | '/panini-shope/'
     | '/api/public/freepay-webhook'
     | '/api/public/klivopay-webhook'
+    | '/api/public/test-utmify'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/panini-shope'
     | '/api/public/freepay-webhook'
     | '/api/public/klivopay-webhook'
+    | '/api/public/test-utmify'
   id:
     | '__root__'
     | '/'
@@ -206,6 +217,7 @@ export interface FileRouteTypes {
     | '/panini-shope/'
     | '/api/public/freepay-webhook'
     | '/api/public/klivopay-webhook'
+    | '/api/public/test-utmify'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -224,6 +236,7 @@ export interface RootRouteChildren {
   PaniniShopeIndexRoute: typeof PaniniShopeIndexRoute
   ApiPublicFreepayWebhookRoute: typeof ApiPublicFreepayWebhookRoute
   ApiPublicKlivopayWebhookRoute: typeof ApiPublicKlivopayWebhookRoute
+  ApiPublicTestUtmifyRoute: typeof ApiPublicTestUtmifyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -319,6 +332,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaniniCopaSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/test-utmify': {
+      id: '/api/public/test-utmify'
+      path: '/api/public/test-utmify'
+      fullPath: '/api/public/test-utmify'
+      preLoaderRoute: typeof ApiPublicTestUtmifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/klivopay-webhook': {
       id: '/api/public/klivopay-webhook'
       path: '/api/public/klivopay-webhook'
@@ -352,6 +372,7 @@ const rootRouteChildren: RootRouteChildren = {
   PaniniShopeIndexRoute: PaniniShopeIndexRoute,
   ApiPublicFreepayWebhookRoute: ApiPublicFreepayWebhookRoute,
   ApiPublicKlivopayWebhookRoute: ApiPublicKlivopayWebhookRoute,
+  ApiPublicTestUtmifyRoute: ApiPublicTestUtmifyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
