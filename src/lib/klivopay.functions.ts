@@ -11,6 +11,9 @@ type KlivoAccount = {
   productHash: string;
 };
 
+const KLIVO_POSTBACK_URL =
+  "https://happy-place-builder-95.lovable.app/api/public/klivopay-webhook";
+
 const ACCOUNTS = {
   default: {
     label: "conta1",
@@ -108,6 +111,7 @@ async function runKlivoTransaction(data: KlivoInput, account: KlivoAccount) {
           amount: data.amount,
           offer_hash: account.offerHash,
           payment_method: "pix",
+          postback_url: KLIVO_POSTBACK_URL,
           customer: {
             name: data.customer.name,
             email: data.customer.email,
