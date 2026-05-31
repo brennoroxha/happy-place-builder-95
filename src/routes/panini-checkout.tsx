@@ -175,7 +175,7 @@ function PaniniCheckoutPage() {
       } catch {}
     };
     check();
-    const i = setInterval(check, 5000);
+    const i = setInterval(check, 2000);
     return () => {
       cancelled = true;
       clearInterval(i);
