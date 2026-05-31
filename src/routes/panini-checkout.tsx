@@ -908,6 +908,16 @@ function PaniniCheckoutPage() {
                     }
                     setPixCode(res.pix_copy_paste);
                     setPaymentHash(res.hash);
+                    try {
+                      localStorage.setItem(
+                        "panini:pending-payment",
+                        JSON.stringify({
+                          hash: res.hash,
+                          code: res.pix_copy_paste,
+                          ts: Date.now(),
+                        }),
+                      );
+                    } catch {}
                     setStep(4);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   } catch {
