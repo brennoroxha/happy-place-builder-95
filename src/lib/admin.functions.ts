@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import { processWebhookEvent } from "@/lib/webhook.server";
+import { normalizeStatus, processWebhookEvent } from "@/lib/webhook.server";
 
 export type Provider = "klivopay" | "freepay";
 
@@ -23,6 +23,8 @@ export type AdminSale = {
 
 const scopeKey = (scope?: string) =>
   scope && scope !== "default" ? `active_provider_${scope}` : "active_provider";
+
+const KLIVO_TRANSACTION_URL = "https://api.klivopay.com.br/api/public/v1/transactions";
 
 export const getActiveProvider = createServerFn({ method: "GET" })
   .inputValidator((d: { scope?: string } | undefined) => d ?? {})
