@@ -149,6 +149,7 @@ function PaniniCheckoutPage() {
   }, []);
 
   // Poll for payment confirmation while on step 4 — redirect to upsell on approval
+  const firedPurchase = useRef(false);
   useEffect(() => {
     if (step !== 4 || !paymentHash) return;
     let cancelled = false;
@@ -162,6 +163,10 @@ function PaniniCheckoutPage() {
           status === "confirmed" ||
           status === "approved"
         ) {
+          if (!firedPurchase.current) {
+            firedPurchase.current = true;
+            trackPurchase(total, paymentHash);
+          }
           navigate({
             to: "/upsell/taxa-envio",
             search: { hash: paymentHash },
@@ -175,6 +180,7 @@ function PaniniCheckoutPage() {
       cancelled = true;
       clearInterval(i);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, paymentHash, navigate]);
   const selectedShipping = shippingOptions.find((s) => s.id === shipping)!;
   const [cepLoading, setCepLoading] = useState(false);
