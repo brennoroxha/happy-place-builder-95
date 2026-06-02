@@ -13,9 +13,12 @@ import {
 import {
   getActiveProvider,
   setActiveProvider,
+  getKlivoAccount,
+  setKlivoAccount,
   listSales,
   markSaleConfirmed,
   type AdminSale,
+  type KlivoAccount,
 } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin")({
@@ -179,6 +182,8 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
   const [tab, setTab] = useState<Tab>("slimbelly");
   const [provider, setProvider] = useState<Provider>("klivopay");
   const [paniniProvider, setPaniniProvider] = useState<Provider>("klivopay");
+  const [klivoAccount, setKlivoAccountState] = useState<KlivoAccount>("conta1");
+  const [paniniKlivoAccount, setPaniniKlivoAccountState] = useState<KlivoAccount>("conta2");
   const [saved, setSaved] = useState(false);
   const [savingProvider, setSavingProvider] = useState(false);
   const [sales, setSales] = useState<AdminSale[]>([]);
@@ -187,6 +192,8 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
 
   const fetchProvider = useServerFn(getActiveProvider);
   const saveProviderFn = useServerFn(setActiveProvider);
+  const fetchKlivoAccount = useServerFn(getKlivoAccount);
+  const saveKlivoAccountFn = useServerFn(setKlivoAccount);
   const fetchSales = useServerFn(listSales);
   const confirmSale = useServerFn(markSaleConfirmed);
 
@@ -209,6 +216,12 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
     fetchProvider({ data: { scope: "panini" } })
       .then((r) => setPaniniProvider(r.provider))
       .catch(() => {});
+    fetchKlivoAccount({ data: { scope: "slimbelly" } })
+      .then((r) => setKlivoAccountState(r.account))
+      .catch(() => {});
+    fetchKlivoAccount({ data: { scope: "panini" } })
+      .then((r) => setPaniniKlivoAccountState(r.account))
+      .catch(() => {});
     refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -216,10 +229,12 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
   const save = async () => {
     setSavingProvider(true);
     try {
-      if (tab === "panini") {
-        await saveProviderFn({ data: { provider: paniniProvider, scope: "panini" } });
-      } else {
-        await saveProviderFn({ data: { provider } });
+      const scope = tab;
+      const currentProvider = tab === "panini" ? paniniProvider : provider;
+      const currentAccount = tab === "panini" ? paniniKlivoAccount : klivoAccount;
+      await saveProviderFn({ data: { provider: currentProvider, scope } });
+      if (currentProvider === "klivopay") {
+        await saveKlivoAccountFn({ data: { account: currentAccount, scope } });
       }
       setSaved(true);
       setTimeout(() => setSaved(false), 1800);
@@ -324,6 +339,33 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
             })}
           </div>
 
+          {(tab === "panini" ? paniniProvider : provider) === "klivopay" && (
+            <div className="mt-4 rounded-xl border border-zinc-200 p-3">
+              <div className="text-xs font-bold text-zinc-700">Conta KlivoPay</div>
+              <p className="mt-0.5 text-[11px] text-zinc-500">
+                Escolha qual API key da KlivoPay será usada (Conta 1 ou Conta 2).
+              </p>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                {(["conta1", "conta2"] as KlivoAccount[]).map((acc) => {
+                  const current = tab === "panini" ? paniniKlivoAccount : klivoAccount;
+                  const setCurrent = tab === "panini" ? setPaniniKlivoAccountState : setKlivoAccountState;
+                  const active = current === acc;
+                  return (
+                    <button
+                      key={acc}
+                      onClick={() => setCurrent(acc)}
+                      className={`rounded-lg border-2 py-2 text-xs font-bold ${
+                        active ? "border-rose-500 bg-rose-50/30 text-rose-600" : "border-zinc-200 text-zinc-600"
+                      }`}
+                    >
+                      {acc === "conta1" ? "Conta 1 (Key 1)" : "Conta 2 (Key 2)"}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           <button
             onClick={save}
             disabled={savingProvider}
@@ -337,6 +379,9 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
             Ativo agora:{" "}
             <strong className="text-zinc-700">
               {tab === "panini" ? paniniProvider : provider}
+              {(tab === "panini" ? paniniProvider : provider) === "klivopay"
+                ? ` · ${tab === "panini" ? paniniKlivoAccount : klivoAccount}`
+                : ""}
             </strong>
           </div>
         </div>
