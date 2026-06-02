@@ -13,9 +13,12 @@ import {
 import {
   getActiveProvider,
   setActiveProvider,
+  getKlivoAccount,
+  setKlivoAccount,
   listSales,
   markSaleConfirmed,
   type AdminSale,
+  type KlivoAccount,
 } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin")({
