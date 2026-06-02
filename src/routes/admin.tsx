@@ -182,6 +182,8 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
   const [tab, setTab] = useState<Tab>("slimbelly");
   const [provider, setProvider] = useState<Provider>("klivopay");
   const [paniniProvider, setPaniniProvider] = useState<Provider>("klivopay");
+  const [klivoAccount, setKlivoAccountState] = useState<KlivoAccount>("conta1");
+  const [paniniKlivoAccount, setPaniniKlivoAccountState] = useState<KlivoAccount>("conta2");
   const [saved, setSaved] = useState(false);
   const [savingProvider, setSavingProvider] = useState(false);
   const [sales, setSales] = useState<AdminSale[]>([]);
@@ -190,6 +192,8 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
 
   const fetchProvider = useServerFn(getActiveProvider);
   const saveProviderFn = useServerFn(setActiveProvider);
+  const fetchKlivoAccount = useServerFn(getKlivoAccount);
+  const saveKlivoAccountFn = useServerFn(setKlivoAccount);
   const fetchSales = useServerFn(listSales);
   const confirmSale = useServerFn(markSaleConfirmed);
 
@@ -211,6 +215,12 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
       .catch(() => {});
     fetchProvider({ data: { scope: "panini" } })
       .then((r) => setPaniniProvider(r.provider))
+      .catch(() => {});
+    fetchKlivoAccount({ data: { scope: "slimbelly" } })
+      .then((r) => setKlivoAccountState(r.account))
+      .catch(() => {});
+    fetchKlivoAccount({ data: { scope: "panini" } })
+      .then((r) => setPaniniKlivoAccountState(r.account))
       .catch(() => {});
     refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
