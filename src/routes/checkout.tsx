@@ -1,8 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Fragment, useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { createKlivoTransaction } from "@/lib/klivopay.functions";
-import { createFreepayTransaction } from "@/lib/freepay.functions";
+import { createKlivoTransaction, createKlivoTransactionConta2 } from "@/lib/klivopay.functions";
 import { getActiveProvider } from "@/lib/admin.functions";
 import { upsertOrder } from "@/lib/orders";
 import { getTracking } from "@/lib/tracking";
