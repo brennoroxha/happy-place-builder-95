@@ -249,7 +249,7 @@ function CheckoutPage() {
     try {
       const phone = v.telefone.replace(/\D/g, "");
       const document = v.cpf.replace(/\D/g, "");
-      const fn = provider === "freepay" ? freepay : klivo;
+      const fn = provider === "klivopay2" ? klivo2 : klivo;
       const total = UNIT_PRICE + (shipping === "sedex" ? SEDEX_COST : 0);
       const res = await fn({
         data: {
