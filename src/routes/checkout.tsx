@@ -126,10 +126,10 @@ function CheckoutPage() {
   const [cepLoading, setCepLoading] = useState(false);
 
   const klivo = useServerFn(createKlivoTransaction);
-  const freepay = useServerFn(createFreepayTransaction);
+  const klivo2 = useServerFn(createKlivoTransactionConta2);
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
-  const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
+  const [provider, setProvider] = useState<"klivopay" | "klivopay2">("klivopay");
   const fetchProvider = useServerFn(getActiveProvider);
 
   // Restore from localStorage (returning users)
