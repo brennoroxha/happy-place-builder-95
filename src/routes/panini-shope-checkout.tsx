@@ -802,7 +802,7 @@ function PaniniCheckoutPage() {
                         ? [{ title: `Frete ${selectedShipping.label}`, quantity: 1, price: Math.round(selectedShipping.price * 100) }]
                         : []),
                     ];
-                    const fn = provider === "freepay" ? freepay : klivo;
+                    const fn = provider === "klivopay2" ? klivo2 : klivo;
                     const res = await fn({
                       data: {
                         amount: amountCents,
