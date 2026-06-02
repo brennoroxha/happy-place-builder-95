@@ -16,6 +16,7 @@ import {
   listSales,
   markSaleConfirmed,
   type AdminSale,
+  type Provider,
 } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin")({
