@@ -67,7 +67,7 @@ function BrindePage() {
     try {
       const phone = address.telefone.replace(/\D/g, "").replace(/^55/, "");
       const document = address.cpf.replace(/\D/g, "");
-      const fn = provider === "freepay" ? freepay : klivo;
+      const fn = provider === "klivopay2" ? klivo2 : klivo;
       const res = await fn({
         data: {
           amount: Math.round(FEE * 100),
