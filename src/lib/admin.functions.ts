@@ -56,6 +56,46 @@ export const setActiveProvider = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export type KlivoAccount = "conta1" | "conta2";
+
+const klivoAccountKey = (scope?: string) =>
+  `klivo_account_${scope && scope !== "default" ? scope : "slimbelly"}`;
+
+const defaultKlivoAccount = (scope?: string): KlivoAccount =>
+  scope === "panini" ? "conta2" : "conta1";
+
+export const getKlivoAccount = createServerFn({ method: "GET" })
+  .inputValidator((d: { scope?: string } | undefined) => d ?? {})
+  .handler(async ({ data }) => {
+    const { data: row } = await supabaseAdmin
+      .from("app_settings")
+      .select("value")
+      .eq("key", klivoAccountKey(data.scope))
+      .maybeSingle();
+    const v = row?.value;
+    const account: KlivoAccount =
+      v === "conta1" || v === "conta2" ? v : defaultKlivoAccount(data.scope);
+    return { account };
+  });
+
+export const setKlivoAccount = createServerFn({ method: "POST" })
+  .inputValidator((d: { account: KlivoAccount; scope?: string }) => {
+    if (d.account !== "conta1" && d.account !== "conta2") {
+      throw new Error("conta inválida");
+    }
+    return d;
+  })
+  .handler(async ({ data }) => {
+    const { error } = await supabaseAdmin
+      .from("app_settings")
+      .upsert(
+        { key: klivoAccountKey(data.scope), value: data.account, updated_at: new Date().toISOString() },
+        { onConflict: "key" },
+      );
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 export const listSales = createServerFn({ method: "GET" }).handler(async () => {
   const { data, error } = await supabaseAdmin
     .from("sales")
