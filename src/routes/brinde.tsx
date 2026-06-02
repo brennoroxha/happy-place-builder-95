@@ -41,11 +41,11 @@ function BrindePage() {
   const { hash } = Route.useSearch();
   const navigate = useNavigate();
   const klivo = useServerFn(createKlivoTransaction);
-  const freepay = useServerFn(createFreepayTransaction);
+  const klivo2 = useServerFn(createKlivoTransactionConta2);
   const fetchProvider = useServerFn(getActiveProvider);
 
   const [address, setAddress] = useState<Address | null>(null);
-  const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
+  const [provider, setProvider] = useState<"klivopay" | "klivopay2">("klivopay");
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
 
