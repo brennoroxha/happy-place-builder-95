@@ -230,10 +230,33 @@ async function runKlivoTransaction(data: KlivoInput, account: KlivoAccount) {
   }
 }
 
+async function resolveAccount(scope: string | undefined, fallback: KlivoAccount): Promise<KlivoAccount> {
+  const s = scope === "panini" ? "panini" : "slimbelly";
+  try {
+    const { data: row } = await supabaseAdmin
+      .from("app_settings")
+      .select("value")
+      .eq("key", `klivo_account_${s}`)
+      .maybeSingle();
+    const v = row?.value;
+    if (v === "conta2") return ACCOUNTS.conta2;
+    if (v === "conta1") return ACCOUNTS.default;
+  } catch (err) {
+    console.error("[klivopay] resolveAccount failed", err);
+  }
+  return fallback;
+}
+
 export const createKlivoTransaction = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => inputSchema.parse(input))
-  .handler(async ({ data }) => runKlivoTransaction(data, ACCOUNTS.default));
+  .handler(async ({ data }) => {
+    const account = await resolveAccount(data.scope, ACCOUNTS.default);
+    return runKlivoTransaction(data, account);
+  });
 
 export const createKlivoTransactionConta2 = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => inputSchema.parse(input))
-  .handler(async ({ data }) => runKlivoTransaction(data, ACCOUNTS.conta2));
+  .handler(async ({ data }) => {
+    const account = await resolveAccount(data.scope, ACCOUNTS.conta2);
+    return runKlivoTransaction(data, account);
+  });
