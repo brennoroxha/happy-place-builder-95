@@ -130,7 +130,7 @@ function CheckoutPage() {
   const freepay = useServerFn(createFreepayTransaction);
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
-  const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
+  const [provider, setProvider] = useState<"klivopay" | "freepay" | "ironpay">("klivopay");
   const fetchProvider = useServerFn(getActiveProvider);
 
   // Restore from localStorage (returning users)

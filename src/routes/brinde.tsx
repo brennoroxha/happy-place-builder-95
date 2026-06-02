@@ -46,7 +46,7 @@ function BrindePage() {
   const fetchProvider = useServerFn(getActiveProvider);
 
   const [address, setAddress] = useState<Address | null>(null);
-  const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
+  const [provider, setProvider] = useState<"klivopay" | "freepay" | "ironpay">("klivopay");
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
 
