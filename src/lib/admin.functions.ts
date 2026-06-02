@@ -40,7 +40,7 @@ export const getActiveProvider = createServerFn({ method: "GET" })
 
 export const setActiveProvider = createServerFn({ method: "POST" })
   .inputValidator((d: { provider: Provider; scope?: string }) => {
-    if (d.provider !== "klivopay" && d.provider !== "freepay") {
+    if (d.provider !== "klivopay" && d.provider !== "klivopay2") {
       throw new Error("provider inválido");
     }
     return d;
