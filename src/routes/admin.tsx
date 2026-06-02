@@ -229,10 +229,12 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
   const save = async () => {
     setSavingProvider(true);
     try {
-      if (tab === "panini") {
-        await saveProviderFn({ data: { provider: paniniProvider, scope: "panini" } });
-      } else {
-        await saveProviderFn({ data: { provider } });
+      const scope = tab;
+      const currentProvider = tab === "panini" ? paniniProvider : provider;
+      const currentAccount = tab === "panini" ? paniniKlivoAccount : klivoAccount;
+      await saveProviderFn({ data: { provider: currentProvider, scope } });
+      if (currentProvider === "klivopay") {
+        await saveKlivoAccountFn({ data: { account: currentAccount, scope } });
       }
       setSaved(true);
       setTimeout(() => setSaved(false), 1800);
