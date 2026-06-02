@@ -5,6 +5,7 @@ import { Gift, AlertTriangle, Check, ShieldCheck } from "lucide-react";
 import brindeImg from "@/assets/crioterapico.png";
 import { createKlivoTransaction } from "@/lib/klivopay.functions";
 import { createFreepayTransaction } from "@/lib/freepay.functions";
+import { createIronpayTransaction } from "@/lib/ironpay.functions";
 import { getActiveProvider } from "@/lib/admin.functions";
 import { upsertOrder } from "@/lib/orders";
 import { getTracking } from "@/lib/tracking";
@@ -43,6 +44,7 @@ function BrindePage() {
   const navigate = useNavigate();
   const klivo = useServerFn(createKlivoTransaction);
   const freepay = useServerFn(createFreepayTransaction);
+  const ironpay = useServerFn(createIronpayTransaction);
   const fetchProvider = useServerFn(getActiveProvider);
 
   const [address, setAddress] = useState<Address | null>(null);
@@ -68,7 +70,7 @@ function BrindePage() {
     try {
       const phone = address.telefone.replace(/\D/g, "").replace(/^55/, "");
       const document = address.cpf.replace(/\D/g, "");
-      const fn = provider === "freepay" ? freepay : klivo;
+      const fn = provider === "freepay" ? freepay : provider === "ironpay" ? ironpay : klivo;
       const res = await fn({
         data: {
           amount: Math.round(FEE * 100),
