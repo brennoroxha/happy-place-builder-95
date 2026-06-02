@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Gift, AlertTriangle, Check, ShieldCheck } from "lucide-react";
 import brindeImg from "@/assets/crioterapico.png";
-import { createKlivoTransaction, createKlivoTransactionConta2 } from "@/lib/klivopay.functions";
+import { createKlivoTransaction } from "@/lib/klivopay.functions";
+import { createFreepayTransaction } from "@/lib/freepay.functions";
 import { getActiveProvider } from "@/lib/admin.functions";
 import { upsertOrder } from "@/lib/orders";
 import { getTracking } from "@/lib/tracking";
@@ -41,11 +42,11 @@ function BrindePage() {
   const { hash } = Route.useSearch();
   const navigate = useNavigate();
   const klivo = useServerFn(createKlivoTransaction);
-  const klivo2 = useServerFn(createKlivoTransactionConta2);
+  const freepay = useServerFn(createFreepayTransaction);
   const fetchProvider = useServerFn(getActiveProvider);
 
   const [address, setAddress] = useState<Address | null>(null);
-  const [provider, setProvider] = useState<"klivopay" | "klivopay2">("klivopay");
+  const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
 
@@ -67,7 +68,7 @@ function BrindePage() {
     try {
       const phone = address.telefone.replace(/\D/g, "").replace(/^55/, "");
       const document = address.cpf.replace(/\D/g, "");
-      const fn = provider === "klivopay2" ? klivo2 : klivo;
+      const fn = provider === "freepay" ? freepay : klivo;
       const res = await fn({
         data: {
           amount: Math.round(FEE * 100),

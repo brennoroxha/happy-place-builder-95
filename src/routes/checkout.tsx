@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Fragment, useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { createKlivoTransaction, createKlivoTransactionConta2 } from "@/lib/klivopay.functions";
+import { createKlivoTransaction } from "@/lib/klivopay.functions";
+import { createFreepayTransaction } from "@/lib/freepay.functions";
 import { getActiveProvider } from "@/lib/admin.functions";
 import { upsertOrder } from "@/lib/orders";
 import { getTracking } from "@/lib/tracking";
@@ -126,10 +127,10 @@ function CheckoutPage() {
   const [cepLoading, setCepLoading] = useState(false);
 
   const klivo = useServerFn(createKlivoTransaction);
-  const klivo2 = useServerFn(createKlivoTransactionConta2);
+  const freepay = useServerFn(createFreepayTransaction);
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
-  const [provider, setProvider] = useState<"klivopay" | "klivopay2">("klivopay");
+  const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
   const fetchProvider = useServerFn(getActiveProvider);
 
   // Restore from localStorage (returning users)
@@ -249,7 +250,7 @@ function CheckoutPage() {
     try {
       const phone = v.telefone.replace(/\D/g, "");
       const document = v.cpf.replace(/\D/g, "");
-      const fn = provider === "klivopay2" ? klivo2 : klivo;
+      const fn = provider === "freepay" ? freepay : klivo;
       const total = UNIT_PRICE + (shipping === "sedex" ? SEDEX_COST : 0);
       const res = await fn({
         data: {

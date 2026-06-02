@@ -2,7 +2,7 @@ export type OrderStatus = "pending" | "confirmed";
 
 export type Order = {
   hash: string;
-  provider: "klivopay" | "klivopay2";
+  provider: "klivopay" | "freepay";
   total: number;
   code: string;
   createdAt: string; // ISO
