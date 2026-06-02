@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { normalizeStatus, processWebhookEvent } from "@/lib/webhook.server";
 
-export type Provider = "klivopay" | "freepay";
+export type Provider = "klivopay" | "freepay" | "ironpay";
 
 export type AdminSale = {
   hash: string;
@@ -35,12 +35,14 @@ export const getActiveProvider = createServerFn({ method: "GET" })
       .eq("key", scopeKey(data.scope))
       .maybeSingle();
     const v = row?.value;
-    return { provider: (v === "freepay" ? "freepay" : "klivopay") as Provider };
+    const provider: Provider =
+      v === "freepay" ? "freepay" : v === "ironpay" ? "ironpay" : "klivopay";
+    return { provider };
   });
 
 export const setActiveProvider = createServerFn({ method: "POST" })
   .inputValidator((d: { provider: Provider; scope?: string }) => {
-    if (d.provider !== "klivopay" && d.provider !== "freepay") {
+    if (d.provider !== "klivopay" && d.provider !== "freepay" && d.provider !== "ironpay") {
       throw new Error("provider inválido");
     }
     return d;
