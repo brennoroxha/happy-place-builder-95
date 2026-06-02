@@ -35,7 +35,7 @@ export const getActiveProvider = createServerFn({ method: "GET" })
       .eq("key", scopeKey(data.scope))
       .maybeSingle();
     const v = row?.value;
-    return { provider: (v === "freepay" ? "freepay" : "klivopay") as Provider };
+    return { provider: (v === "klivopay2" ? "klivopay2" : "klivopay") as Provider };
   });
 
 export const setActiveProvider = createServerFn({ method: "POST" })
