@@ -3,6 +3,7 @@ import { Fragment, useEffect, useMemo, useRef, useState, type ComponentType, typ
 import { useServerFn } from "@tanstack/react-start";
 import { createKlivoTransaction } from "@/lib/klivopay.functions";
 import { createFreepayTransaction } from "@/lib/freepay.functions";
+import { createIronpayTransaction } from "@/lib/ironpay.functions";
 import { getActiveProvider } from "@/lib/admin.functions";
 import { upsertOrder } from "@/lib/orders";
 import { getTracking } from "@/lib/tracking";
@@ -128,9 +129,10 @@ function CheckoutPage() {
 
   const klivo = useServerFn(createKlivoTransaction);
   const freepay = useServerFn(createFreepayTransaction);
+  const ironpay = useServerFn(createIronpayTransaction);
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
-  const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
+  const [provider, setProvider] = useState<"klivopay" | "freepay" | "ironpay">("klivopay");
   const fetchProvider = useServerFn(getActiveProvider);
 
   // Restore from localStorage (returning users)
@@ -250,7 +252,7 @@ function CheckoutPage() {
     try {
       const phone = v.telefone.replace(/\D/g, "");
       const document = v.cpf.replace(/\D/g, "");
-      const fn = provider === "freepay" ? freepay : klivo;
+      const fn = provider === "freepay" ? freepay : provider === "ironpay" ? ironpay : klivo;
       const total = UNIT_PRICE + (shipping === "sedex" ? SEDEX_COST : 0);
       const res = await fn({
         data: {

@@ -133,12 +133,13 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
   );
 }
 
-type Provider = "klivopay" | "freepay";
+type Provider = "klivopay" | "freepay" | "ironpay";
 const KEY = "slimbelly:provider";
 
 const OPTIONS: { id: Provider; name: string; desc: string }[] = [
   { id: "klivopay", name: "KlivoPay", desc: "Gateway Pix via KlivoPay (Pagar.me)." },
   { id: "freepay", name: "Freepay", desc: "Gateway Pix via Freepay Brasil." },
+  { id: "ironpay", name: "IronPay", desc: "Gateway Pix via IronPay." },
 ];
 
 const brl = (v: number) =>

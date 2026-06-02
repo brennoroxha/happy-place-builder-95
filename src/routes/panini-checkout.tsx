@@ -7,6 +7,7 @@ import { trackInitiateCheckout, trackPurchase } from "@/lib/track";
 import { getTracking } from "@/lib/tracking";
 import { createKlivoTransactionConta2 } from "@/lib/klivopay.functions";
 import { createFreepayTransaction } from "@/lib/freepay.functions";
+import { createIronpayTransaction } from "@/lib/ironpay.functions";
 import { getActiveProvider } from "@/lib/admin.functions";
 import { paniniUtmifyHeadScripts } from "@/lib/utmify-head";
 import { tiktokShopLogo, pixLogo, maoCelular } from "@/assets/external";
@@ -134,8 +135,9 @@ function PaniniCheckoutPage() {
   // Provider selection (managed in /admin → Panini tab)
   const klivo = useServerFn(createKlivoTransactionConta2);
   const freepay = useServerFn(createFreepayTransaction);
+  const ironpay = useServerFn(createIronpayTransaction);
   const fetchProvider = useServerFn(getActiveProvider);
-  const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
+  const [provider, setProvider] = useState<"klivopay" | "freepay" | "ironpay">("klivopay");
   useEffect(() => {
     fetchProvider({ data: { scope: "panini" } })
       .then((r) => setProvider(r.provider))
@@ -874,7 +876,7 @@ function PaniniCheckoutPage() {
                         ? [{ title: `Frete ${selectedShipping.label}`, quantity: 1, price: Math.round(selectedShipping.price * 100) }]
                         : []),
                     ];
-                    const fn = provider === "freepay" ? freepay : klivo;
+                    const fn = provider === "freepay" ? freepay : provider === "ironpay" ? ironpay : klivo;
                     try {
                       localStorage.setItem(
                         "panini:address",
