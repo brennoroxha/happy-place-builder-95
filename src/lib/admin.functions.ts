@@ -67,7 +67,7 @@ export const listSales = createServerFn({ method: "GET" }).handler(async () => {
     const raw = (s.raw_payload as Record<string, unknown>) ?? {};
     const providerRaw = raw.provider as string | undefined;
     const provider: Provider | null =
-      providerRaw === "freepay" || providerRaw === "klivopay" ? providerRaw : null;
+      providerRaw === "klivopay2" || providerRaw === "klivopay" ? providerRaw : null;
     const scopeRaw = raw.scope as string | undefined;
     const scope: "slimbelly" | "panini" = scopeRaw === "panini" ? "panini" : "slimbelly";
     return {
