@@ -25,6 +25,7 @@ import { Route as PaniniCopaSlugRouteImport } from './routes/panini-copa.$slug'
 import { Route as ApiPublicTestUtmifyRouteImport } from './routes/api/public/test-utmify'
 import { Route as ApiPublicReconcileSalesRouteImport } from './routes/api/public/reconcile-sales'
 import { Route as ApiPublicKlivopayWebhookRouteImport } from './routes/api/public/klivopay-webhook'
+import { Route as ApiPublicIronpayWebhookRouteImport } from './routes/api/public/ironpay-webhook'
 import { Route as ApiPublicFreepayWebhookRouteImport } from './routes/api/public/freepay-webhook'
 
 const PaniniShopeCheckoutRoute = PaniniShopeCheckoutRouteImport.update({
@@ -108,6 +109,11 @@ const ApiPublicKlivopayWebhookRoute =
     path: '/api/public/klivopay-webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicIronpayWebhookRoute = ApiPublicIronpayWebhookRouteImport.update({
+  id: '/api/public/ironpay-webhook',
+  path: '/api/public/ironpay-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicFreepayWebhookRoute = ApiPublicFreepayWebhookRouteImport.update({
   id: '/api/public/freepay-webhook',
   path: '/api/public/freepay-webhook',
@@ -129,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/panini-copa/': typeof PaniniCopaIndexRoute
   '/panini-shope/': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
+  '/api/public/ironpay-webhook': typeof ApiPublicIronpayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
   '/api/public/reconcile-sales': typeof ApiPublicReconcileSalesRoute
   '/api/public/test-utmify': typeof ApiPublicTestUtmifyRoute
@@ -148,6 +155,7 @@ export interface FileRoutesByTo {
   '/panini-copa': typeof PaniniCopaIndexRoute
   '/panini-shope': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
+  '/api/public/ironpay-webhook': typeof ApiPublicIronpayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
   '/api/public/reconcile-sales': typeof ApiPublicReconcileSalesRoute
   '/api/public/test-utmify': typeof ApiPublicTestUtmifyRoute
@@ -168,6 +176,7 @@ export interface FileRoutesById {
   '/panini-copa/': typeof PaniniCopaIndexRoute
   '/panini-shope/': typeof PaniniShopeIndexRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
+  '/api/public/ironpay-webhook': typeof ApiPublicIronpayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
   '/api/public/reconcile-sales': typeof ApiPublicReconcileSalesRoute
   '/api/public/test-utmify': typeof ApiPublicTestUtmifyRoute
@@ -189,6 +198,7 @@ export interface FileRouteTypes {
     | '/panini-copa/'
     | '/panini-shope/'
     | '/api/public/freepay-webhook'
+    | '/api/public/ironpay-webhook'
     | '/api/public/klivopay-webhook'
     | '/api/public/reconcile-sales'
     | '/api/public/test-utmify'
@@ -208,6 +218,7 @@ export interface FileRouteTypes {
     | '/panini-copa'
     | '/panini-shope'
     | '/api/public/freepay-webhook'
+    | '/api/public/ironpay-webhook'
     | '/api/public/klivopay-webhook'
     | '/api/public/reconcile-sales'
     | '/api/public/test-utmify'
@@ -227,6 +238,7 @@ export interface FileRouteTypes {
     | '/panini-copa/'
     | '/panini-shope/'
     | '/api/public/freepay-webhook'
+    | '/api/public/ironpay-webhook'
     | '/api/public/klivopay-webhook'
     | '/api/public/reconcile-sales'
     | '/api/public/test-utmify'
@@ -247,6 +259,7 @@ export interface RootRouteChildren {
   PaniniCopaIndexRoute: typeof PaniniCopaIndexRoute
   PaniniShopeIndexRoute: typeof PaniniShopeIndexRoute
   ApiPublicFreepayWebhookRoute: typeof ApiPublicFreepayWebhookRoute
+  ApiPublicIronpayWebhookRoute: typeof ApiPublicIronpayWebhookRoute
   ApiPublicKlivopayWebhookRoute: typeof ApiPublicKlivopayWebhookRoute
   ApiPublicReconcileSalesRoute: typeof ApiPublicReconcileSalesRoute
   ApiPublicTestUtmifyRoute: typeof ApiPublicTestUtmifyRoute
@@ -366,6 +379,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicKlivopayWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/ironpay-webhook': {
+      id: '/api/public/ironpay-webhook'
+      path: '/api/public/ironpay-webhook'
+      fullPath: '/api/public/ironpay-webhook'
+      preLoaderRoute: typeof ApiPublicIronpayWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/freepay-webhook': {
       id: '/api/public/freepay-webhook'
       path: '/api/public/freepay-webhook'
@@ -391,6 +411,7 @@ const rootRouteChildren: RootRouteChildren = {
   PaniniCopaIndexRoute: PaniniCopaIndexRoute,
   PaniniShopeIndexRoute: PaniniShopeIndexRoute,
   ApiPublicFreepayWebhookRoute: ApiPublicFreepayWebhookRoute,
+  ApiPublicIronpayWebhookRoute: ApiPublicIronpayWebhookRoute,
   ApiPublicKlivopayWebhookRoute: ApiPublicKlivopayWebhookRoute,
   ApiPublicReconcileSalesRoute: ApiPublicReconcileSalesRoute,
   ApiPublicTestUtmifyRoute: ApiPublicTestUtmifyRoute,
