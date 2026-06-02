@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { normalizeStatus, processWebhookEvent } from "@/lib/webhook.server";
 
-export type Provider = "klivopay" | "freepay";
+export type Provider = "klivopay" | "klivopay2";
 
 export type AdminSale = {
   hash: string;
@@ -35,12 +35,12 @@ export const getActiveProvider = createServerFn({ method: "GET" })
       .eq("key", scopeKey(data.scope))
       .maybeSingle();
     const v = row?.value;
-    return { provider: (v === "freepay" ? "freepay" : "klivopay") as Provider };
+    return { provider: (v === "klivopay2" ? "klivopay2" : "klivopay") as Provider };
   });
 
 export const setActiveProvider = createServerFn({ method: "POST" })
   .inputValidator((d: { provider: Provider; scope?: string }) => {
-    if (d.provider !== "klivopay" && d.provider !== "freepay") {
+    if (d.provider !== "klivopay" && d.provider !== "klivopay2") {
       throw new Error("provider inválido");
     }
     return d;
@@ -67,7 +67,7 @@ export const listSales = createServerFn({ method: "GET" }).handler(async () => {
     const raw = (s.raw_payload as Record<string, unknown>) ?? {};
     const providerRaw = raw.provider as string | undefined;
     const provider: Provider | null =
-      providerRaw === "freepay" || providerRaw === "klivopay" ? providerRaw : null;
+      providerRaw === "klivopay2" || providerRaw === "klivopay" ? providerRaw : null;
     const scopeRaw = raw.scope as string | undefined;
     const scope: "slimbelly" | "panini" = scopeRaw === "panini" ? "panini" : "slimbelly";
     return {

@@ -16,6 +16,7 @@ import {
   listSales,
   markSaleConfirmed,
   type AdminSale,
+  type Provider,
 } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin")({
@@ -130,12 +131,12 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
   );
 }
 
-type Provider = "klivopay" | "freepay";
+type ProviderLocal = Provider;
 const KEY = "slimbelly:provider";
 
-const OPTIONS: { id: Provider; name: string; desc: string }[] = [
-  { id: "klivopay", name: "KlivoPay", desc: "Gateway Pix via KlivoPay (Pagar.me)." },
-  { id: "freepay", name: "Freepay", desc: "Gateway Pix via Freepay Brasil." },
+const OPTIONS: { id: ProviderLocal; name: string; desc: string }[] = [
+  { id: "klivopay", name: "KlivoPay · Conta 1", desc: "Gateway Pix via KlivoPay (conta principal)." },
+  { id: "klivopay2", name: "KlivoPay · Conta 2", desc: "Gateway Pix via KlivoPay (segunda conta)." },
 ];
 
 const brl = (v: number) =>

@@ -5,8 +5,7 @@ import { ChevronLeft, ShieldCheck, Truck, X, Gift, Check, QrCode, ArrowDown, Sho
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { trackInitiateCheckout, trackPurchase } from "@/lib/track";
 import { getTracking } from "@/lib/tracking";
-import { createKlivoTransactionConta2 } from "@/lib/klivopay.functions";
-import { createFreepayTransaction } from "@/lib/freepay.functions";
+import { createKlivoTransaction, createKlivoTransactionConta2 } from "@/lib/klivopay.functions";
 import { getActiveProvider } from "@/lib/admin.functions";
 import { paniniUtmifyHeadScripts } from "@/lib/utmify-head";
 import { tiktokShopLogo, pixLogo, maoCelular } from "@/assets/external";
@@ -132,10 +131,10 @@ function PaniniCheckoutPage() {
   const [pixCopied, setPixCopied] = useState(false);
 
   // Provider selection (managed in /admin → Panini tab)
-  const klivo = useServerFn(createKlivoTransactionConta2);
-  const freepay = useServerFn(createFreepayTransaction);
+  const klivo = useServerFn(createKlivoTransaction);
+  const klivo2 = useServerFn(createKlivoTransactionConta2);
   const fetchProvider = useServerFn(getActiveProvider);
-  const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
+  const [provider, setProvider] = useState<"klivopay" | "klivopay2">("klivopay2");
   useEffect(() => {
     fetchProvider({ data: { scope: "panini" } })
       .then((r) => setProvider(r.provider))
@@ -874,7 +873,7 @@ function PaniniCheckoutPage() {
                         ? [{ title: `Frete ${selectedShipping.label}`, quantity: 1, price: Math.round(selectedShipping.price * 100) }]
                         : []),
                     ];
-                    const fn = provider === "freepay" ? freepay : klivo;
+                    const fn = provider === "klivopay2" ? klivo2 : klivo;
                     try {
                       localStorage.setItem(
                         "panini:address",
