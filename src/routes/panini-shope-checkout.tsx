@@ -129,9 +129,9 @@ function PaniniCheckoutPage() {
 
   // Provider selection (managed in /admin → Panini tab)
   const klivo = useServerFn(createKlivoTransaction);
-  const freepay = useServerFn(createFreepayTransaction);
+  const klivo2 = useServerFn(createKlivoTransactionConta2);
   const fetchProvider = useServerFn(getActiveProvider);
-  const [provider, setProvider] = useState<"klivopay" | "freepay">("klivopay");
+  const [provider, setProvider] = useState<"klivopay" | "klivopay2">("klivopay");
   useEffect(() => {
     fetchProvider({ data: { scope: "panini" } })
       .then((r) => setProvider(r.provider))
