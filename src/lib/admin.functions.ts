@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { normalizeStatus, processWebhookEvent } from "@/lib/webhook.server";
 
-export type Provider = "klivopay" | "freepay";
+export type Provider = "klivopay" | "klivopay2";
 
 export type AdminSale = {
   hash: string;
