@@ -3,9 +3,7 @@ import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { sendUtmifyOrder, utmifyDate } from "@/lib/utmify.server";
-
-const IRONPAY_POSTBACK_URL =
-  "https://happy-place-builder-95.lovable.app/api/public/ironpay-webhook";
+import { getBaseUrl } from "./utils.server";
 
 const IRONPAY_OFFER_HASH = "uqftytyrci";
 const IRONPAY_PRODUCT_HASH = "dhax2fql90";
@@ -91,7 +89,7 @@ async function runIronTransaction(data: IronInput) {
         amount: data.amount,
         offer_hash: IRONPAY_OFFER_HASH,
         payment_method: "pix",
-        postback_url: IRONPAY_POSTBACK_URL,
+        postback_url: `${getBaseUrl()}/api/public/ironpay-webhook`,
         customer: {
           name: data.customer.name,
           email: data.customer.email,

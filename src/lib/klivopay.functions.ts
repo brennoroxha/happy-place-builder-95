@@ -3,6 +3,7 @@ import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { sendUtmifyOrder, utmifyDate } from "@/lib/utmify.server";
+import { getBaseUrl } from "./utils.server";
 
 type KlivoAccount = {
   label: string;
@@ -10,9 +11,6 @@ type KlivoAccount = {
   offerHash: string;
   productHash: string;
 };
-
-const KLIVO_POSTBACK_URL =
-  "https://happy-place-builder-95.lovable.app/api/public/klivopay-webhook";
 
 const ACCOUNTS = {
   default: {
@@ -111,7 +109,7 @@ async function runKlivoTransaction(data: KlivoInput, account: KlivoAccount) {
           amount: data.amount,
           offer_hash: account.offerHash,
           payment_method: "pix",
-          postback_url: KLIVO_POSTBACK_URL,
+          postback_url: `${getBaseUrl()}/api/public/klivopay-webhook`,
           customer: {
             name: data.customer.name,
             email: data.customer.email,
