@@ -160,10 +160,12 @@ const fmtTime = (iso: string) =>
 
 
 function localDateKey(d: Date | string): string {
+  // Use Brazil time (UTC-3) for the dashboard
   const date = typeof d === "string" ? new Date(d) : d;
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+  const brDate = new Date(date.getTime() - 3 * 3600000);
+  const y = brDate.getUTCFullYear();
+  const m = String(brDate.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(brDate.getUTCDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
 }
 
