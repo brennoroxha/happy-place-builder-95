@@ -366,6 +366,56 @@ function PaymentPage() {
           </ul>
         </section>
 
+        {/* Comprovante card (sempre visível) */}
+        <section className="mt-4 rounded-2xl border-2 border-rose-200 bg-rose-50/40 p-5 text-center shadow-sm">
+          <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-white shadow-sm">
+            <Upload className="h-5 w-5 text-rose-500" />
+          </div>
+          <div className="mt-3 text-sm font-extrabold text-zinc-900">
+            Já pagou? Envie o comprovante
+          </div>
+          <p className="mt-1 text-xs leading-relaxed text-zinc-600">
+            Se o sistema demorar para confirmar, anexe aqui o print/PDF do Pix
+            para agilizar a liberação do seu pedido.
+          </p>
+
+          {order?.proofDataUrl ? (
+            <div className="mt-3">
+              <img
+                src={order.proofDataUrl}
+                alt="Comprovante enviado"
+                className="max-h-60 w-full rounded-md border border-rose-200 bg-white object-contain"
+              />
+              <div className="mt-2 flex items-center justify-center gap-2 text-xs font-semibold text-emerald-600">
+                <Check className="h-4 w-4" />
+                Comprovante recebido
+              </div>
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="mt-3 w-full rounded-xl border border-rose-200 bg-white py-2.5 text-sm font-bold text-rose-600"
+              >
+                Enviar outro comprovante
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              disabled={uploading || !hash}
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-rose-500 py-3.5 text-sm font-extrabold uppercase tracking-wide text-white shadow-sm hover:bg-rose-600 disabled:opacity-60"
+            >
+              <Upload className="h-4 w-4" />
+              {uploading ? "Enviando..." : "Anexar comprovante"}
+            </button>
+          )}
+
+          {uploadErr && (
+            <div className="mt-2 rounded-md bg-rose-50 px-2 py-1 text-center text-xs text-rose-600">
+              {uploadErr}
+            </div>
+          )}
+        </section>
+
         {/* QR / Copy / Comprovante (revealed after clicking Finalizar pedido) */}
         {revealed && (
           <section ref={qrSectionRef} className="mt-4 rounded-2xl bg-white p-5 shadow-sm">
