@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { ChevronLeft, ShieldCheck, Truck, X, Gift, Check, QrCode, ArrowDown, ShoppingBag, Lock, RotateCcw, Headphones } from "lucide-react";
+import { ChevronLeft, ShieldCheck, Truck, X, Gift, Check, QrCode, ArrowDown, ShoppingBag, Lock, RotateCcw, Headphones, Upload } from "lucide-react";
+import { fileToDataUrl, updateOrder, upsertOrder, getOrder } from "@/lib/orders";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { trackInitiateCheckout, trackPurchase } from "@/lib/track";
 import { getTracking } from "@/lib/tracking";
