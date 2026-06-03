@@ -20,6 +20,7 @@ import {
   type AdminSale,
   type KlivoAccount,
 } from "@/lib/admin.functions";
+import { backfillUtmifyOrders } from "@/lib/backfill.functions";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -207,6 +208,9 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
   const saveKlivoAccountFn = useServerFn(setKlivoAccount);
   const fetchSales = useServerFn(listSales);
   const confirmSale = useServerFn(markSaleConfirmed);
+  const backfillFn = useServerFn(backfillUtmifyOrders);
+  const [backfilling, setBackfilling] = useState(false);
+  const [backfillResult, setBackfillResult] = useState<{ processed: number; found: number } | null>(null);
 
   const refresh = async () => {
     setLoading(true);
@@ -310,6 +314,41 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
             );
           })}
         </div>
+
+        {/* Utmify Sync */}
+        {tab === "panini" && (
+          <div className="m-3 rounded-lg bg-white p-4 shadow-sm border border-orange-100">
+            <h2 className="text-sm font-bold text-orange-700">Utmify Sync</h2>
+            <p className="mt-1 text-xs text-zinc-500">
+              Sincroniza pedidos pagos do scope Panini que não foram enviados ao Utmify.
+            </p>
+            <button
+              onClick={async () => {
+                setBackfilling(true);
+                setBackfillResult(null);
+                try {
+                  const res = (await backfillFn()) as { processed: number; found: number };
+                  setBackfillResult({ processed: res.processed, found: res.found });
+                  await refresh();
+                } catch (e) {
+                  console.error(e);
+                } finally {
+                  setBackfilling(false);
+                }
+              }}
+              disabled={backfilling}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-orange-500 py-2.5 text-xs font-bold text-white shadow-sm disabled:opacity-70"
+            >
+              <RefreshCw className={`h-4 w-4 ${backfilling ? "animate-spin" : ""}`} />
+              {backfilling ? "Sincronizando..." : "Sincronizar Pedidos Pagos"}
+            </button>
+            {backfillResult && (
+              <p className="mt-2 text-center text-[11px] font-semibold text-emerald-600">
+                Sucesso: {backfillResult.processed} de {backfillResult.found} sincronizados.
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Provedor */}
         <div className="m-3 rounded-lg bg-white p-4 shadow-sm">

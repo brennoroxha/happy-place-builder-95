@@ -199,6 +199,8 @@ export const createFreepayTransaction = createServerFn({ method: "POST" })
           },
           totalPriceInCents: amountCents,
           userCommissionInCents: amountCents,
+          tokenEnv:
+            data.scope === "panini" ? "UTMIFY_API_TOKEN_PANINI" : "UTMIFY_API_TOKEN",
         });
       } catch (err) {
         console.error("[freepay] utmify waiting_payment failed", err);
