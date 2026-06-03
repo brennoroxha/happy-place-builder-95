@@ -965,7 +965,7 @@ function PaniniCheckoutPage() {
                 onClick={async () => {
                   setPayError(null);
                   setProcessing(true);
-                  const total = subtotal + selectedShipping.price;
+                  const total = subtotal + selectedShipping.price + bumpExtra;
                   const amountCents = Math.round(total * 100);
                   try {
                     const phone = onlyDigits(telefone);
@@ -978,6 +978,9 @@ function PaniniCheckoutPage() {
                       })),
                       ...(selectedShipping.price > 0
                         ? [{ title: `Frete ${selectedShipping.label}`, quantity: 1, price: Math.round(selectedShipping.price * 100) }]
+                        : []),
+                      ...(bumpAdded
+                        ? [{ title: "Porta figurinhas Caixa Maleta Premium", quantity: 1, price: Math.round(BUMP_PRICE * 100) }]
                         : []),
                     ];
                     const fn = provider === "freepay" ? freepay : provider === "ironpay" ? ironpay : klivo;
