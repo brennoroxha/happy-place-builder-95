@@ -3,6 +3,7 @@ import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { sendUtmifyOrder, utmifyDate } from "@/lib/utmify.server";
+import { getBaseUrl } from "./utils.server";
 
 const trackingSchema = z
   .object({
@@ -94,8 +95,7 @@ export const createFreepayTransaction = createServerFn({ method: "POST" })
           body: JSON.stringify({
             amount: data.amount,
             payment_method: "pix",
-            postback_url:
-              "https://happy-place-builder-95.lovable.app/api/public/freepay-webhook",
+            postback_url: `${getBaseUrl()}/api/public/freepay-webhook`,
             customer: {
               name: data.customer.name,
               email: data.customer.email,
