@@ -402,9 +402,9 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
 
         {/* Dashboard do dia */}
         {(() => {
-          const todayKey = new Date().toISOString().slice(0, 10);
+          const todayKey = localDateKey(new Date());
           const todayItems = scopedSales.filter(
-            (o) => new Date(o.createdAt).toISOString().slice(0, 10) === todayKey,
+            (o) => localDateKey(o.createdAt) === todayKey,
           );
           const paid = todayItems.filter(isPaid);
           const pending = todayItems.filter((o) => !isPaid(o));
