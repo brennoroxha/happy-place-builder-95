@@ -1043,7 +1043,7 @@ function PaniniCheckoutPage() {
                     PROCESSANDO...
                   </span>
                 ) : (
-                  <>Finalizar pedido · {brl(subtotal + selectedShipping.price)}</>
+                  <>Finalizar pedido · {brl(subtotal + selectedShipping.price + bumpExtra)}</>
                 )}
               </button>
             </section>
