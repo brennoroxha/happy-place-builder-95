@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { ChevronLeft, ShieldCheck, Truck, X, Gift, Check, QrCode, ArrowDown, ShoppingBag, Lock, RotateCcw, Headphones } from "lucide-react";
+import { ChevronLeft, ShieldCheck, Truck, X, Gift, Check, QrCode, ArrowDown, ShoppingBag, Lock, RotateCcw, Headphones, Upload } from "lucide-react";
+import { fileToDataUrl, updateOrder, upsertOrder, getOrder } from "@/lib/orders";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { trackInitiateCheckout, trackPurchase } from "@/lib/track";
 import { getTracking } from "@/lib/tracking";
@@ -128,6 +129,56 @@ function PaniniCheckoutPage() {
   const [pixCode, setPixCode] = useState("");
   const [payError, setPayError] = useState<string | null>(null);
   const [pixCopied, setPixCopied] = useState(false);
+  const [paymentHash, setPaymentHash] = useState<string | null>(null);
+  const [proofUrl, setProofUrl] = useState<string | null>(null);
+  const [proofUploading, setProofUploading] = useState(false);
+  const [proofErr, setProofErr] = useState<string | null>(null);
+  const proofFileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!paymentHash) return;
+    const o = getOrder(paymentHash);
+    if (o?.proofDataUrl) setProofUrl(o.proofDataUrl);
+  }, [paymentHash]);
+
+  const onPickProof = async (file: File) => {
+    setProofErr(null);
+    if (!paymentHash) {
+      setProofErr("Pedido não identificado.");
+      return;
+    }
+    if (!file.type.startsWith("image/") && file.type !== "application/pdf") {
+      setProofErr("Envie uma imagem ou PDF.");
+      return;
+    }
+    if (file.size > 4 * 1024 * 1024) {
+      setProofErr("Arquivo grande demais (máx. 4MB).");
+      return;
+    }
+    setProofUploading(true);
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      const updated = updateOrder(paymentHash, {
+        proofDataUrl: dataUrl,
+        proofUploadedAt: new Date().toISOString(),
+      });
+      if (!updated) {
+        upsertOrder({
+          hash: paymentHash,
+          status: "pending",
+          createdAt: new Date().toISOString(),
+          proofDataUrl: dataUrl,
+          proofUploadedAt: new Date().toISOString(),
+        } as never);
+      }
+      setProofUrl(dataUrl);
+    } catch {
+      setProofErr("Não foi possível ler o arquivo.");
+    } finally {
+      setProofUploading(false);
+    }
+  };
+
 
   // Provider selection (managed in /admin → Panini tab)
   const klivo = useServerFn(createKlivoTransaction);
@@ -820,6 +871,7 @@ function PaniniCheckoutPage() {
                       return;
                     }
                     setPixCode(res.pix_copy_paste);
+                    setPaymentHash(res.hash);
                     trackPurchase(total, res.hash);
                     setStep(4);
                     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -934,6 +986,72 @@ function PaniniCheckoutPage() {
                 Copie o código Pix abaixo para pagar.
               </p>
             </section>
+
+            <section className="-mx-4 mb-4 px-4">
+              <div className="rounded-2xl border-2 border-rose-200 bg-rose-50/40 p-5 text-center shadow-sm">
+                <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-white shadow-sm">
+                  <Upload className="h-5 w-5 text-rose-500" />
+                </div>
+                <div className="mt-3 text-sm font-extrabold text-zinc-900">
+                  Já pagou? Envie o comprovante
+                </div>
+                <p className="mt-1 text-xs leading-relaxed text-zinc-600">
+                  Se o sistema demorar para confirmar, anexe aqui o print/PDF do Pix
+                  para agilizar a liberação do seu pedido.
+                </p>
+
+                {proofUrl ? (
+                  <div className="mt-3">
+                    <img
+                      src={proofUrl}
+                      alt="Comprovante enviado"
+                      className="max-h-60 w-full rounded-md border border-rose-200 bg-white object-contain"
+                    />
+                    <div className="mt-2 flex items-center justify-center gap-2 text-xs font-semibold text-emerald-600">
+                      <Check className="h-4 w-4" />
+                      Comprovante recebido
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => proofFileRef.current?.click()}
+                      className="mt-3 w-full rounded-xl border border-rose-200 bg-white py-2.5 text-sm font-bold text-rose-600"
+                    >
+                      Enviar outro comprovante
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => proofFileRef.current?.click()}
+                    disabled={proofUploading || !paymentHash}
+                    className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-rose-500 py-3.5 text-sm font-extrabold uppercase tracking-wide text-white shadow-sm hover:bg-rose-600 disabled:opacity-60"
+                  >
+                    <Upload className="h-4 w-4" />
+                    {proofUploading ? "Enviando..." : "Anexar comprovante"}
+                  </button>
+                )}
+
+                {proofErr && (
+                  <div className="mt-2 rounded-md bg-rose-50 px-2 py-1 text-center text-xs text-rose-600">
+                    {proofErr}
+                  </div>
+                )}
+
+                <input
+                  ref={proofFileRef}
+                  type="file"
+                  accept="image/*,application/pdf"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) onPickProof(f);
+                    e.target.value = "";
+                  }}
+                />
+              </div>
+            </section>
+
+
 
             <section className="-mx-4 mb-4 px-4">
               <h2 className="mb-3 text-base font-extrabold text-zinc-900">
