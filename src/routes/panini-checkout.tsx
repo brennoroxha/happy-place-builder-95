@@ -132,6 +132,10 @@ function PaniniCheckoutPage() {
   const [paymentHash, setPaymentHash] = useState<string | null>(null);
   const [payError, setPayError] = useState<string | null>(null);
   const [pixCopied, setPixCopied] = useState(false);
+  const [bumpAdded, setBumpAdded] = useState(false);
+  const BUMP_PRICE = 39.9;
+  const BUMP_ORIGINAL = 149;
+  const bumpExtra = bumpAdded ? BUMP_PRICE : 0;
   const [proofUrl, setProofUrl] = useState<string | null>(null);
   const [proofUploading, setProofUploading] = useState(false);
   const [proofErr, setProofErr] = useState<string | null>(null);
