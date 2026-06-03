@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { ChevronLeft, ShieldCheck, Truck, X, Gift, Check, QrCode, ArrowDown, ShoppingBag, Lock, RotateCcw, Headphones, Upload } from "lucide-react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { fileToDataUrl, updateOrder, upsertOrder, getOrder } from "@/lib/orders";
 import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { trackInitiateCheckout, trackPurchase } from "@/lib/track";
@@ -131,6 +132,7 @@ function PaniniCheckoutPage() {
   const [pixCopied, setPixCopied] = useState(false);
   const [paymentHash, setPaymentHash] = useState<string | null>(null);
   const [bumpAdded, setBumpAdded] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const BUMP_PRICE = 39.9;
   const BUMP_ORIGINAL = 149;
   const bumpExtra = bumpAdded ? BUMP_PRICE : 0;
@@ -825,7 +827,8 @@ function PaniniCheckoutPage() {
                     key={src}
                     src={src}
                     alt="Porta figurinhas Caixa Maleta Premium"
-                    className="h-24 w-24 flex-shrink-0 rounded-md object-cover ring-1 ring-zinc-200"
+                    className="h-24 w-24 flex-shrink-0 cursor-pointer rounded-md object-cover ring-1 ring-zinc-200 transition active:scale-95"
+                    onClick={() => setLightboxImage(src)}
                   />
                 ))}
               </div>
@@ -1156,6 +1159,19 @@ function PaniniCheckoutPage() {
         )}
       </main>
 
+      {/* Lightbox */}
+      <Dialog open={!!lightboxImage} onOpenChange={(open) => !open && setLightboxImage(null)}>
+        <DialogContent className="max-w-[95vw] border-0 bg-transparent p-0 shadow-none sm:max-w-xl">
+          {lightboxImage && (
+            <img
+              src={lightboxImage}
+              alt="Ampliado"
+              className="w-full rounded-xl object-contain"
+              onClick={() => setLightboxImage(null)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
