@@ -27,6 +27,7 @@ import { Route as ApiPublicReconcileSalesRouteImport } from './routes/api/public
 import { Route as ApiPublicKlivopayWebhookRouteImport } from './routes/api/public/klivopay-webhook'
 import { Route as ApiPublicIronpayWebhookRouteImport } from './routes/api/public/ironpay-webhook'
 import { Route as ApiPublicFreepayWebhookRouteImport } from './routes/api/public/freepay-webhook'
+import { Route as ApiPublicBackfillUtmifyRouteImport } from './routes/api/public/backfill-utmify'
 
 const PaniniShopeCheckoutRoute = PaniniShopeCheckoutRouteImport.update({
   id: '/panini-shope-checkout',
@@ -119,6 +120,11 @@ const ApiPublicFreepayWebhookRoute = ApiPublicFreepayWebhookRouteImport.update({
   path: '/api/public/freepay-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicBackfillUtmifyRoute = ApiPublicBackfillUtmifyRouteImport.update({
+  id: '/api/public/backfill-utmify',
+  path: '/api/public/backfill-utmify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/upsell/taxa-envio': typeof UpsellTaxaEnvioRoute
   '/panini-copa/': typeof PaniniCopaIndexRoute
   '/panini-shope/': typeof PaniniShopeIndexRoute
+  '/api/public/backfill-utmify': typeof ApiPublicBackfillUtmifyRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/ironpay-webhook': typeof ApiPublicIronpayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
@@ -154,6 +161,7 @@ export interface FileRoutesByTo {
   '/upsell/taxa-envio': typeof UpsellTaxaEnvioRoute
   '/panini-copa': typeof PaniniCopaIndexRoute
   '/panini-shope': typeof PaniniShopeIndexRoute
+  '/api/public/backfill-utmify': typeof ApiPublicBackfillUtmifyRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/ironpay-webhook': typeof ApiPublicIronpayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
@@ -175,6 +183,7 @@ export interface FileRoutesById {
   '/upsell/taxa-envio': typeof UpsellTaxaEnvioRoute
   '/panini-copa/': typeof PaniniCopaIndexRoute
   '/panini-shope/': typeof PaniniShopeIndexRoute
+  '/api/public/backfill-utmify': typeof ApiPublicBackfillUtmifyRoute
   '/api/public/freepay-webhook': typeof ApiPublicFreepayWebhookRoute
   '/api/public/ironpay-webhook': typeof ApiPublicIronpayWebhookRoute
   '/api/public/klivopay-webhook': typeof ApiPublicKlivopayWebhookRoute
@@ -197,6 +206,7 @@ export interface FileRouteTypes {
     | '/upsell/taxa-envio'
     | '/panini-copa/'
     | '/panini-shope/'
+    | '/api/public/backfill-utmify'
     | '/api/public/freepay-webhook'
     | '/api/public/ironpay-webhook'
     | '/api/public/klivopay-webhook'
@@ -217,6 +227,7 @@ export interface FileRouteTypes {
     | '/upsell/taxa-envio'
     | '/panini-copa'
     | '/panini-shope'
+    | '/api/public/backfill-utmify'
     | '/api/public/freepay-webhook'
     | '/api/public/ironpay-webhook'
     | '/api/public/klivopay-webhook'
@@ -237,6 +248,7 @@ export interface FileRouteTypes {
     | '/upsell/taxa-envio'
     | '/panini-copa/'
     | '/panini-shope/'
+    | '/api/public/backfill-utmify'
     | '/api/public/freepay-webhook'
     | '/api/public/ironpay-webhook'
     | '/api/public/klivopay-webhook'
@@ -258,6 +270,7 @@ export interface RootRouteChildren {
   UpsellTaxaEnvioRoute: typeof UpsellTaxaEnvioRoute
   PaniniCopaIndexRoute: typeof PaniniCopaIndexRoute
   PaniniShopeIndexRoute: typeof PaniniShopeIndexRoute
+  ApiPublicBackfillUtmifyRoute: typeof ApiPublicBackfillUtmifyRoute
   ApiPublicFreepayWebhookRoute: typeof ApiPublicFreepayWebhookRoute
   ApiPublicIronpayWebhookRoute: typeof ApiPublicIronpayWebhookRoute
   ApiPublicKlivopayWebhookRoute: typeof ApiPublicKlivopayWebhookRoute
@@ -393,6 +406,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicFreepayWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/backfill-utmify': {
+      id: '/api/public/backfill-utmify'
+      path: '/api/public/backfill-utmify'
+      fullPath: '/api/public/backfill-utmify'
+      preLoaderRoute: typeof ApiPublicBackfillUtmifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -410,6 +430,7 @@ const rootRouteChildren: RootRouteChildren = {
   UpsellTaxaEnvioRoute: UpsellTaxaEnvioRoute,
   PaniniCopaIndexRoute: PaniniCopaIndexRoute,
   PaniniShopeIndexRoute: PaniniShopeIndexRoute,
+  ApiPublicBackfillUtmifyRoute: ApiPublicBackfillUtmifyRoute,
   ApiPublicFreepayWebhookRoute: ApiPublicFreepayWebhookRoute,
   ApiPublicIronpayWebhookRoute: ApiPublicIronpayWebhookRoute,
   ApiPublicKlivopayWebhookRoute: ApiPublicKlivopayWebhookRoute,
