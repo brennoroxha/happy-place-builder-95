@@ -1159,6 +1159,19 @@ function PaniniCheckoutPage() {
         )}
       </main>
 
+      {/* Lightbox */}
+      <Dialog open={!!lightboxImage} onOpenChange={(open) => !open && setLightboxImage(null)}>
+        <DialogContent className="max-w-[95vw] border-0 bg-transparent p-0 shadow-none sm:max-w-xl">
+          {lightboxImage && (
+            <img
+              src={lightboxImage}
+              alt="Ampliado"
+              className="w-full rounded-xl object-contain"
+              onClick={() => setLightboxImage(null)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
