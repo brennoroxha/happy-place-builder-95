@@ -16,7 +16,7 @@ import { PaniniCartProvider, usePaniniCart } from "@/lib/panini-cart";
 import { CartDrawer } from "@/components/panini/CartDrawer";
 import { shopeeLogo } from "@/assets/external";
 
-export const Route = createFileRoute("/panini-shope")({
+export const Route = createFileRoute("/panini-shope/")({
   head: () => ({
     meta: [
       { title: "Álbum 2026 — Shopee" },
