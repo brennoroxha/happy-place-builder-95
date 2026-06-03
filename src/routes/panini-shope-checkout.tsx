@@ -158,20 +158,28 @@ function PaniniCheckoutPage() {
     setProofUploading(true);
     try {
       const dataUrl = await fileToDataUrl(file);
+      const uploadedAt = new Date().toISOString();
       const updated = updateOrder(paymentHash, {
         proofDataUrl: dataUrl,
-        proofUploadedAt: new Date().toISOString(),
+        proofUploadedAt: uploadedAt,
       });
       if (!updated) {
         upsertOrder({
           hash: paymentHash,
           status: "pending",
-          createdAt: new Date().toISOString(),
+          createdAt: uploadedAt,
           proofDataUrl: dataUrl,
-          proofUploadedAt: new Date().toISOString(),
+          proofUploadedAt: uploadedAt,
         } as never);
       }
       setProofUrl(dataUrl);
+      try {
+        const { uploadProof } = await import("@/lib/proof.functions");
+        await uploadProof({ data: { hash: paymentHash, dataUrl } });
+      } catch (err) {
+        console.error("uploadProof failed", err);
+        setProofErr("Comprovante salvo localmente, mas não foi enviado ao servidor.");
+      }
     } catch {
       setProofErr("Não foi possível ler o arquivo.");
     } finally {
