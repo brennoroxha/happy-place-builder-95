@@ -155,7 +155,7 @@ export async function processWebhookEvent(evt: NormalizedEvent) {
       (existingPayload.scope as string | undefined) ?? "",
     );
     const tokenEnv =
-      klivoAccount === "conta2" || scope === "panini"
+      klivoAccount === "conta2" || scope === "panini" || evt.rawPayload.scope === "panini" || evt.rawPayload.klivo_account === "conta2"
         ? "UTMIFY_API_TOKEN_PANINI"
         : "UTMIFY_API_TOKEN";
 
