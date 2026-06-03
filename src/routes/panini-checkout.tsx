@@ -881,42 +881,59 @@ function PaniniCheckoutPage() {
             {/* Order Bump - Porta figurinhas */}
             <section className="-mx-4 mb-4 overflow-hidden bg-white shadow-sm ring-1 ring-zinc-100">
               <div className="bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-2 text-center text-[13px] font-extrabold uppercase tracking-wide text-white">
-                🔥 Oferta exclusiva · só agora no checkout
+                🔥 Oferta exclusiva
               </div>
-              <label className={`flex cursor-pointer items-stretch gap-3 px-3 py-3 transition ${bumpAdded ? "bg-emerald-50/60" : "bg-white"}`}>
+
+              {/* Galeria de imagens */}
+              <div className="flex gap-2 overflow-x-auto px-3 pt-3 scrollbar-hide">
+                {[
+                  "https://http2.mlstatic.com/D_NQ_NP_2X_812865-MLA110125149288_042026-F.webp",
+                  "https://http2.mlstatic.com/D_NQ_NP_2X_812450-MLA110125149278_042026-F.webp",
+                  "https://http2.mlstatic.com/D_NQ_NP_2X_644580-MLA110011991746_042026-F.webp",
+                ].map((src) => (
+                  <img
+                    key={src}
+                    src={src}
+                    alt="Porta figurinhas Caixa Maleta Premium"
+                    className="h-24 w-24 flex-shrink-0 rounded-md object-cover ring-1 ring-zinc-200"
+                  />
+                ))}
+              </div>
+
+              {/* Título + descrição */}
+              <div className="px-3 pt-3">
+                <h3 className="text-[14px] font-extrabold leading-tight text-zinc-900">
+                  Porta figurinhas Caixa Maleta Premium
+                </h3>
+                <p className="mt-1 text-[12px] leading-snug text-zinc-600">
+                  Oficial Copa 2026 — guarde e proteja toda sua coleção em segurança 🏆
+                </p>
+
+                {/* Preço */}
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <span className="text-[12px] text-zinc-400 line-through">{brl(BUMP_ORIGINAL)}</span>
+                  <span className="rounded-md bg-rose-500 px-2 py-0.5 text-[13px] font-extrabold text-white">
+                    por {brl(BUMP_PRICE)}
+                  </span>
+                  <span className="text-[11px] font-bold text-emerald-600">-73%</span>
+                </div>
+              </div>
+
+              {/* CTA checkbox */}
+              <label
+                className={`mt-3 flex cursor-pointer items-center gap-3 border-t border-dashed border-zinc-200 px-3 py-3 transition ${
+                  bumpAdded ? "bg-emerald-50/60" : "bg-amber-50/40"
+                }`}
+              >
                 <input
                   type="checkbox"
                   checked={bumpAdded}
                   onChange={(e) => setBumpAdded(e.target.checked)}
-                  className="mt-1 h-5 w-5 flex-shrink-0 accent-emerald-500"
+                  className="h-5 w-5 flex-shrink-0 accent-emerald-500"
                 />
-                <div className="flex gap-2">
-                  <img
-                    src="https://http2.mlstatic.com/D_NQ_NP_2X_812865-MLA110125149288_042026-F.webp"
-                    alt="Porta figurinhas Caixa Maleta Premium"
-                    className="h-20 w-20 flex-shrink-0 rounded-md object-cover ring-1 ring-zinc-200"
-                  />
-                  <img
-                    src="https://http2.mlstatic.com/D_NQ_NP_2X_812450-MLA110125149278_042026-F.webp"
-                    alt="Porta figurinhas Caixa Maleta Premium"
-                    className="h-20 w-20 flex-shrink-0 rounded-md object-cover ring-1 ring-zinc-200"
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="text-[13px] font-extrabold leading-tight text-zinc-900">
-                    SIM! Quero proteger minha coleção com a Caixa Maleta Premium
-                  </div>
-                  <div className="mt-1 text-[11px] leading-snug text-zinc-600">
-                    Porta figurinhas oficial Copa 2026 — guarde sua coleção em segurança 🏆
-                  </div>
-                  <div className="mt-1.5 flex items-center gap-2">
-                    <span className="text-[11px] text-zinc-400 line-through">{brl(BUMP_ORIGINAL)}</span>
-                    <span className="rounded-md bg-rose-500 px-2 py-0.5 text-[12px] font-extrabold text-white">
-                      por {brl(BUMP_PRICE)}
-                    </span>
-                    <span className="text-[10px] font-bold text-emerald-600">-73%</span>
-                  </div>
-                </div>
+                <span className="text-[13px] font-extrabold leading-tight text-zinc-900">
+                  SIM! Adicionar ao meu pedido por {brl(BUMP_PRICE)}
+                </span>
               </label>
             </section>
 
