@@ -17,7 +17,7 @@ import { CartDrawer } from "@/components/panini/CartDrawer";
 import { paniniUtmifyHeadScripts } from "@/lib/utmify-head";
 import { tiktokShopLogo } from "@/assets/external";
 
-export const Route = createFileRoute("/panini-copa/")({
+export const Route = createFileRoute("/panini-copa")({
   head: () => ({
     meta: [
       { title: "Álbum 2026 — Panini Copa" },
