@@ -159,10 +159,18 @@ const fmtTime = (iso: string) =>
   new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
 
+function localDateKey(d: Date | string): string {
+  const date = typeof d === "string" ? new Date(d) : d;
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 function groupSalesByDate(sales: AdminSale[]) {
   const map = new Map<string, AdminSale[]>();
   for (const s of sales) {
-    const key = new Date(s.createdAt).toISOString().slice(0, 10);
+    const key = localDateKey(s.createdAt);
     if (!map.has(key)) map.set(key, []);
     map.get(key)!.push(s);
   }
