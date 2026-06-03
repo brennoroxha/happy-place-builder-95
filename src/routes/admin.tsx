@@ -327,7 +327,7 @@ function AdminPage({ onLogout }: { onLogout: () => void }) {
                 setBackfilling(true);
                 setBackfillResult(null);
                 try {
-                  const res = await backfillFn();
+                  const res = (await backfillFn()) as { processed: number; found: number };
                   setBackfillResult({ processed: res.processed, found: res.found });
                   await refresh();
                 } catch (e) {
