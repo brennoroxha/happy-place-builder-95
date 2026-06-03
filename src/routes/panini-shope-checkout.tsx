@@ -129,6 +129,56 @@ function PaniniCheckoutPage() {
   const [pixCode, setPixCode] = useState("");
   const [payError, setPayError] = useState<string | null>(null);
   const [pixCopied, setPixCopied] = useState(false);
+  const [paymentHash, setPaymentHash] = useState<string | null>(null);
+  const [proofUrl, setProofUrl] = useState<string | null>(null);
+  const [proofUploading, setProofUploading] = useState(false);
+  const [proofErr, setProofErr] = useState<string | null>(null);
+  const proofFileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!paymentHash) return;
+    const o = getOrder(paymentHash);
+    if (o?.proofDataUrl) setProofUrl(o.proofDataUrl);
+  }, [paymentHash]);
+
+  const onPickProof = async (file: File) => {
+    setProofErr(null);
+    if (!paymentHash) {
+      setProofErr("Pedido não identificado.");
+      return;
+    }
+    if (!file.type.startsWith("image/") && file.type !== "application/pdf") {
+      setProofErr("Envie uma imagem ou PDF.");
+      return;
+    }
+    if (file.size > 4 * 1024 * 1024) {
+      setProofErr("Arquivo grande demais (máx. 4MB).");
+      return;
+    }
+    setProofUploading(true);
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      const updated = updateOrder(paymentHash, {
+        proofDataUrl: dataUrl,
+        proofUploadedAt: new Date().toISOString(),
+      });
+      if (!updated) {
+        upsertOrder({
+          hash: paymentHash,
+          status: "pending",
+          createdAt: new Date().toISOString(),
+          proofDataUrl: dataUrl,
+          proofUploadedAt: new Date().toISOString(),
+        } as never);
+      }
+      setProofUrl(dataUrl);
+    } catch {
+      setProofErr("Não foi possível ler o arquivo.");
+    } finally {
+      setProofUploading(false);
+    }
+  };
+
 
   // Provider selection (managed in /admin → Panini tab)
   const klivo = useServerFn(createKlivoTransaction);
