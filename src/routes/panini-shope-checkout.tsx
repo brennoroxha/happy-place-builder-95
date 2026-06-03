@@ -827,7 +827,8 @@ function PaniniCheckoutPage() {
                     key={src}
                     src={src}
                     alt="Porta figurinhas Caixa Maleta Premium"
-                    className="h-24 w-24 flex-shrink-0 rounded-md object-cover ring-1 ring-zinc-200"
+                    className="h-24 w-24 flex-shrink-0 cursor-pointer rounded-md object-cover ring-1 ring-zinc-200 transition active:scale-95"
+                    onClick={() => setLightboxImage(src)}
                   />
                 ))}
               </div>
