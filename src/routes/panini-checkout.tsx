@@ -1073,11 +1073,17 @@ function PaniniCheckoutPage() {
                     )}
                   </span>
                 </div>
+                {bumpAdded && (
+                  <div className="flex justify-between">
+                    <span className="text-zinc-500">Caixa Maleta Premium</span>
+                    <span className="font-bold text-zinc-900">{brl(BUMP_PRICE)}</span>
+                  </div>
+                )}
               </div>
               <div className="mt-4 flex items-end justify-between border-t border-zinc-100 pt-4">
                 <span className="text-base font-extrabold text-zinc-900">Total</span>
                 <span className="text-xl font-extrabold text-zinc-900">
-                  {brl(subtotal + selectedShipping.price)}
+                  {brl(subtotal + selectedShipping.price + bumpExtra)}
                 </span>
               </div>
             </section>
