@@ -54,6 +54,10 @@ async function backfill() {
 export const Route = createFileRoute("/api/public/backfill-utmify")({
   server: {
     handlers: {
+      POST: async () => {
+        const result = await backfill();
+        return Response.json(result);
+      },
       GET: async () => {
         const result = await backfill();
         return Response.json(result);
