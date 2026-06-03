@@ -179,11 +179,19 @@ function PaymentPage() {
     setUploading(true);
     try {
       const dataUrl = await fileToDataUrl(file);
+      const uploadedAt = new Date().toISOString();
       const updated = updateOrder(hash, {
         proofDataUrl: dataUrl,
-        proofUploadedAt: new Date().toISOString(),
+        proofUploadedAt: uploadedAt,
       });
       if (updated) setOrder(updated);
+      try {
+        const { uploadProof } = await import("@/lib/proof.functions");
+        await uploadProof({ data: { hash, dataUrl } });
+      } catch (err) {
+        console.error("uploadProof failed", err);
+        setUploadErr("Comprovante salvo localmente, mas não foi enviado ao servidor.");
+      }
     } catch {
       setUploadErr("Não foi possível ler o arquivo.");
     } finally {
