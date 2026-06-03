@@ -132,6 +132,7 @@ function PaniniCheckoutPage() {
   const [pixCopied, setPixCopied] = useState(false);
   const [paymentHash, setPaymentHash] = useState<string | null>(null);
   const [bumpAdded, setBumpAdded] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const BUMP_PRICE = 39.9;
   const BUMP_ORIGINAL = 149;
   const bumpExtra = bumpAdded ? BUMP_PRICE : 0;
