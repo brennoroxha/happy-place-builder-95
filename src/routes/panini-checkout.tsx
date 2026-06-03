@@ -878,12 +878,55 @@ function PaniniCheckoutPage() {
 
         {step === 3 && (
           <>
+            {/* Order Bump - Porta figurinhas */}
+            <section className="-mx-4 mb-4 overflow-hidden bg-white shadow-sm ring-1 ring-zinc-100">
+              <div className="bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-2 text-center text-[13px] font-extrabold uppercase tracking-wide text-white">
+                🔥 Oferta exclusiva · só agora no checkout
+              </div>
+              <label className={`flex cursor-pointer items-stretch gap-3 px-3 py-3 transition ${bumpAdded ? "bg-emerald-50/60" : "bg-white"}`}>
+                <input
+                  type="checkbox"
+                  checked={bumpAdded}
+                  onChange={(e) => setBumpAdded(e.target.checked)}
+                  className="mt-1 h-5 w-5 flex-shrink-0 accent-emerald-500"
+                />
+                <div className="flex gap-2">
+                  <img
+                    src="https://http2.mlstatic.com/D_NQ_NP_2X_812865-MLA110125149288_042026-F.webp"
+                    alt="Porta figurinhas Caixa Maleta Premium"
+                    className="h-20 w-20 flex-shrink-0 rounded-md object-cover ring-1 ring-zinc-200"
+                  />
+                  <img
+                    src="https://http2.mlstatic.com/D_NQ_NP_2X_812450-MLA110125149278_042026-F.webp"
+                    alt="Porta figurinhas Caixa Maleta Premium"
+                    className="h-20 w-20 flex-shrink-0 rounded-md object-cover ring-1 ring-zinc-200"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-[13px] font-extrabold leading-tight text-zinc-900">
+                    SIM! Quero proteger minha coleção com a Caixa Maleta Premium
+                  </div>
+                  <div className="mt-1 text-[11px] leading-snug text-zinc-600">
+                    Porta figurinhas oficial Copa 2026 — guarde sua coleção em segurança 🏆
+                  </div>
+                  <div className="mt-1.5 flex items-center gap-2">
+                    <span className="text-[11px] text-zinc-400 line-through">{brl(BUMP_ORIGINAL)}</span>
+                    <span className="rounded-md bg-rose-500 px-2 py-0.5 text-[12px] font-extrabold text-white">
+                      por {brl(BUMP_PRICE)}
+                    </span>
+                    <span className="text-[10px] font-bold text-emerald-600">-73%</span>
+                  </div>
+                </div>
+              </label>
+            </section>
+
             {/* Pagamento card */}
             <section className="-mx-4 mb-4 bg-white px-4 py-5 shadow-sm ring-1 ring-zinc-100">
               <div className="mb-4 flex items-center gap-2">
                 <QrCode className="h-5 w-5 text-zinc-900" />
                 <h2 className="text-lg font-extrabold text-zinc-900">Pagamento</h2>
               </div>
+
 
               {/* PIX selected option */}
               <div className="overflow-hidden rounded-xl border-2 border-emerald-500 bg-white">
