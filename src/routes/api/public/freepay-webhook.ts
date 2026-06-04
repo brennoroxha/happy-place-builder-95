@@ -19,16 +19,15 @@ export const Route = createFileRoute("/api/public/freepay-webhook")({
           body;
 
         const hash = String(
-          data.id ?? data.transaction_id ?? body.id ?? body.hash ?? "",
+          data.id ?? data.transaction_id ?? body.id ?? body.hash ?? body.transaction_id ?? "",
         );
         if (!hash) {
-          console.warn("[freepay-webhook] missing id", body);
+          console.warn("[freepay-webhook] missing id", JSON.stringify(body));
           return new Response("ok", { status: 200 });
         }
 
-        const status = normalizeStatus(
-          data.status ?? data.payment_status ?? body.event ?? body.status,
-        );
+        const statusRaw = data.status ?? data.payment_status ?? body.event ?? body.status ?? body.payment_status;
+        const status = normalizeStatus(statusRaw);
 
         const customer = (data.customer as Record<string, unknown>) ?? {};
         const phoneRaw = customer.phone as string | undefined;
