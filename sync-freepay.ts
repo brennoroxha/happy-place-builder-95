@@ -6,18 +6,19 @@ async function forceSync() {
     .from("sales")
     .select("*")
     .eq("status", "waiting_payment")
-    .eq("raw_payload->>'provider'", "freepay")
     .order("created_at", { ascending: false })
-    .limit(20);
+    .limit(50);
 
-  if (!sales || sales.length === 0) {
+  const freepaySales = sales?.filter(s => (s.raw_payload as any)?.provider === 'freepay') || [];
+
+  if (freepaySales.length === 0) {
     console.log("No pending freepay sales found.");
     return;
   }
 
-  console.log(`Checking ${sales.length} pending freepay sales...`);
+  console.log(`Checking ${freepaySales.length} pending freepay sales...`);
 
-  for (const sale of sales) {
+  for (const sale of freepaySales) {
     const pub = process.env.FREEPAY_PUBLIC_KEY;
     const sec = process.env.FREEPAY_SECRET_KEY;
     if (!pub || !sec) {
