@@ -30,7 +30,7 @@ async function forceSync() {
     const hash = sale.transaction_hash;
 
     try {
-      const res = await fetch(`https://api.freepaybrasil.com/v1/payment-transaction/get/${hash}`, {
+      const res = await fetch(`https://api.freepaybrasil.com/v1/payment-transaction/get-by-transaction-id/${hash}`, {
         headers: { Authorization: auth }
       });
 
