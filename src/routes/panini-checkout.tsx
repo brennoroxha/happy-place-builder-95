@@ -959,10 +959,9 @@ function PaniniCheckoutPage() {
                     alt="Pix"
                     className="h-14 w-auto"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = "none";
+                    (e.target as HTMLImageElement).style.display = "none";
                     }}
                   />
-                  <div className="-mt-2 text-[11px] font-semibold text-zinc-400">powered by Banco Central</div>
                   <p className="mt-5 text-center text-sm font-bold text-zinc-900">
                     Para pagar, finalize sua compra abaixo
                   </p>
